@@ -1,0 +1,846 @@
+     1→     1→     1→     1→import Link from "next/link";
+     2→     2→     2→     2→import type { Metadata } from "next";
+     3→     3→     3→     3→import { notFound } from "next/navigation";
+     4→     4→     4→     4→import { db } from "@/lib/db";
+     5→     5→     5→     5→import {
+     6→     6→     6→     6→  ArrowLeft,
+     7→     7→     7→     7→  Calendar,
+     8→     8→     8→     8→  User,
+     9→     9→     9→     9→  Star,
+    10→    10→    10→    10→  Eye,
+    11→    11→    11→    11→  Heart,
+    12→    12→    12→    12→  BookOpen,
+    13→    13→    13→    13→  Clock,
+    14→    14→    14→    14→  Bookmark,
+    15→    15→    15→    15→  Share2,
+    16→    16→    16→    16→  ChevronRight,
+    17→    17→    17→    17→  Sparkles,
+    18→    18→    18→    18→  MessageSquare,
+    19→    19→    19→    19→  ChevronLeft,
+    20→    20→    20→    20→  ArrowRight,
+    21→    21→    21→    21→  Type,
+    22→    22→    22→    22→  BookMarked,
+    23→    23→    23→    23→  Layers,
+    24→    24→    24→    24→  Timer,
+    25→    25→    25→    25→} from "lucide-react";
+    26→    26→    26→    26→import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+    27→    27→    27→    27→import { Badge } from "@/components/ui/badge";
+    28→    28→    28→    28→import { Button } from "@/components/ui/button";
+    29→    29→    29→    29→import { Separator } from "@/components/ui/separator";
+    30→    30→    30→    30→import {
+    31→    31→    31→    31→  Breadcrumb,
+    32→    32→    32→    32→  BreadcrumbItem,
+    33→    33→    33→    33→  BreadcrumbLink,
+    34→    34→    34→    34→  BreadcrumbList,
+    35→    35→    35→    35→  BreadcrumbPage,
+    36→    36→    36→    36→  BreadcrumbSeparator,
+    37→    37→    37→    37→} from "@/components/ui/breadcrumb";
+    38→    38→    38→    38→import { ThemeBadge } from "@/components/theme-badge";
+    39→    39→    39→    39→import { StoryCard, StoryCardData } from "@/components/story-card";
+    40→    40→    40→    40→import { Header } from "@/components/header";
+    41→    41→    41→    41→import { Footer } from "@/components/footer";
+    42→    42→    42→    42→import { ReadingControls } from "@/components/story-reading-controls";
+    43→    43→    43→    43→import { StoryNavigation } from "@/components/story-navigation";
+    44→    44→    44→    44→import { StoryClientWrapper } from "@/components/story-client-wrapper";
+    45→    45→    45→    45→
+    46→    46→    46→    46→// Types
+    47→    47→    47→    47→interface StoryPageParams {
+    48→    48→    48→    48→  params: Promise<{ id: string; slug?: string[] }>;
+    49→    49→    49→    49→}
+    50→    50→    50→    50→
+    51→    51→    51→    51→interface StoryAuthor {
+    52→    52→    52→    52→  id: string;
+    53→    53→    53→    53→  name: string;
+    54→    54→    54→    54→  slug: string;
+    55→    55→    55→    55→  bio: string | null;
+    56→    56→    56→    56→  memberSince?: Date | null;
+    57→    57→    57→    57→}
+    58→    58→    58→    58→
+    59→    59→    59→    59→interface StoryGenre {
+    60→    60→    60→    60→  id: string;
+    61→    61→    61→    61→  name: string;
+    62→    62→    62→    62→  slug: string;
+    63→    63→    63→    63→}
+    64→    64→    64→    64→
+    65→    65→    65→    65→interface StoryTheme {
+    66→    66→    66→    66→  id: string;
+    67→    67→    67→    67→  name: string;
+    68→    68→    68→    68→  slug: string;
+    69→    69→    69→    69→}
+    70→    70→    70→    70→
+    71→    71→    71→    71→interface StoryData {
+    72→    72→    72→    72→  id: string;
+    73→    73→    73→    73→  title: string;
+    74→    74→    74→    74→  slug: string;
+    75→    75→    75→    75→  description: string | null;
+    76→    76→    76→    76→  content: string | null;
+    77→    77→    77→    77→  rating: number;
+    78→    78→    78→    78→  votesCount: number;
+    79→    79→    79→    79→  readsCount: number;
+    80→    80→    80→    80→  commentsCount: number;
+    81→    81→    81→    81→  publishedAt: Date | null | string;
+    82→    82→    82→    82→  author: StoryAuthor;
+    83→    83→    83→    83→  genre: StoryGenre;
+    84→    84→    84→    84→  themes: StoryTheme[];
+    85→    85→    85→    85→}
+    86→    86→    86→    86→
+    87→    87→    87→    87→interface StoryResponse {
+    88→    88→    88→    88→  success: boolean;
+    89→    89→    89→    89→  data: StoryData;
+    90→    90→    90→    90→  error?: string;
+    91→    91→    91→    91→}
+    92→    92→    92→    92→
+    93→    93→    93→    93→// Fetch story data directly from database
+    94→    94→    94→    94→async function getStory(id: string): Promise<StoryResponse> {
+    95→    95→    95→    95→  try {
+    96→    96→    96→    96→    const story = await db.story.findUnique({
+    97→    97→    97→    97→      where: { id },
+    98→    98→    98→    98→      include: {
+    99→    99→    99→    99→        author: true,
+   100→   100→   100→   100→        genre: { select: { id: true, name: true, slug: true } },
+   101→   101→   101→   101→        themes: {
+   102→   102→   102→   102→          include: { theme: true },
+   103→   103→   103→   103→        },
+   104→   104→   104→   104→      },
+   105→   105→   105→   105→    });
+   106→   106→   106→   106→
+   107→   107→   107→   107→    if (!story) {
+   108→   108→   108→   108→      return { success: false, data: {} as StoryData, error: "Story not found" };
+   109→   109→   109→   109→    }
+   110→   110→   110→   110→
+   111→   111→   111→   111→    return {
+   112→   112→   112→   112→      success: true,
+   113→   113→   113→   113→      data: {
+   114→   114→   114→   114→        id: story.id,
+   115→   115→   115→   115→        title: story.title,
+   116→   116→   116→   116→        slug: story.slug,
+   117→   117→   117→   117→        description: story.description,
+   118→   118→   118→   118→        content: story.content,
+   119→   119→   119→   119→        rating: story.rating,
+   120→   120→   120→   120→        votesCount: story.votesCount,
+   121→   121→   121→   121→        readsCount: story.readsCount,
+   122→   122→   122→   122→        commentsCount: story.commentsCount,
+   123→   123→   123→   123→        publishedAt: story.publishedAt,
+   124→   124→   124→   124→        author: {
+   125→   125→   125→   125→          id: story.author.id,
+   126→   126→   126→   126→          name: story.author.name,
+   127→   127→   127→   127→          slug: story.author.slug,
+   128→   128→   128→   128→          bio: story.author.bio,
+   129→   129→   129→   129→          memberSince: story.author.memberSince as Date | null | undefined,
+   130→   130→   130→   130→        },
+   131→   131→   131→   131→        genre: story.genre,
+   132→   132→   132→   132→        themes: story.themes.map((st) => ({
+   133→   133→   133→   133→          id: st.theme.id,
+   134→   134→   134→   134→          name: st.theme.name,
+   135→   135→   135→   135→          slug: st.theme.slug,
+   136→   136→   136→   136→        })),
+   137→   137→   137→   137→      },
+   138→   138→   138→   138→    };
+   139→   139→   139→   139→  } catch (error) {
+   140→   140→   140→   140→    console.error("Error fetching story:", error);
+   141→   141→   141→   141→    return { success: false, data: {} as StoryData, error: String(error) };
+   142→   142→   142→   142→  }
+   143→   143→   143→   143→}
+   144→   144→   144→   144→
+   145→   145→   145→   145→// Get previous and next stories for navigation
+   146→   146→   146→   146→async function getAdjacentStories(
+   147→   147→   147→   147→  currentId: string,
+   148→   148→   148→   148→  genreId: string
+   149→   149→   149→   149→): Promise<{
+   150→   150→   150→   150→  previous: { id: string; title: string; slug: string; authorName: string } | null;
+   151→   151→   151→   151→  next: { id: string; title: string; slug: string; authorName: string } | null;
+   152→   152→   152→   152→}> {
+   153→   153→   153→   153→  try {
+   154→   154→   154→   154→    // Get stories in the same genre ordered by published date
+   155→   155→   155→   155→    const stories = await db.story.findMany({
+   156→   156→   156→   156→      where: {
+   157→   157→   157→   157→        publishedAt: { not: null },
+   158→   158→   158→   158→        genreId,
+   159→   159→   159→   159→      },
+   160→   160→   160→   160→      select: {
+   161→   161→   161→   161→        id: true,
+   162→   162→   162→   162→        title: true,
+   163→   163→   163→   163→        slug: true,
+   164→   164→   164→   164→        publishedAt: true,
+   165→   165→   165→   165→        author: { select: { name: true } },
+   166→   166→   166→   166→      },
+   167→   167→   167→   167→      orderBy: { publishedAt: "desc" },
+   168→   168→   168→   168→      take: 50, // Get enough to find neighbors
+   169→   169→   169→   169→    });
+   170→   170→   170→   170→
+   171→   171→   171→   171→    const currentIndex = stories.findIndex((s) => s.id === currentId);
+   172→   172→   172→   172→    
+   173→   173→   173→   173→    if (currentIndex === -1) {
+   174→   174→   174→   174→      return { previous: null, next: null };
+   175→   175→   175→   175→    }
+   176→   176→   176→   176→
+   177→   177→   177→   177→    return {
+   178→   178→   178→   178→      previous: currentIndex < stories.length - 1
+   179→   179→   179→   179→        ? {
+   180→   180→   180→   180→            id: stories[currentIndex + 1].id,
+   181→   181→   181→   181→            title: stories[currentIndex + 1].title,
+   182→   182→   182→   182→            slug: stories[currentIndex + 1].slug,
+   183→   183→   183→   183→            authorName: stories[currentIndex + 1].author.name,
+   184→   184→   184→   184→          }
+   185→   185→   185→   185→        : null,
+   186→   186→   186→   186→      next: currentIndex > 0
+   187→   187→   187→   187→        ? {
+   188→   188→   188→   188→            id: stories[currentIndex - 1].id,
+   189→   189→   189→   189→            title: stories[currentIndex - 1].title,
+   190→   190→   190→   190→            slug: stories[currentIndex - 1].slug,
+   191→   191→   191→   191→            authorName: stories[currentIndex - 1].author.name,
+   192→   192→   192→   192→          }
+   193→   193→   193→   193→        : null,
+   194→   194→   194→   194→    };
+   195→   195→   195→   195→  } catch (error) {
+   196→   196→   196→   196→    console.error("Error fetching adjacent stories:", error);
+   197→   197→   197→   197→    return { previous: null, next: null };
+   198→   198→   198→   198→  }
+   199→   199→   199→   199→}
+   200→   200→   200→   200→
+   201→   201→   201→   201→// Generate metadata for SEO
+   202→   202→   202→   202→export async function generateMetadata({
+   203→   203→   203→   203→  params,
+   204→   204→   204→   204→}: StoryPageParams): Promise<Metadata> {
+   205→   205→   205→   205→  const { id } = await params;
+   206→   206→   206→   206→  const response = await getStory(id);
+   207→   207→   207→   207→
+   208→   208→   208→   208→  if (!response.success || !response.data?.title) {
+   209→   209→   209→   209→    return {
+   210→   210→   210→   210→      title: "História Não Encontrada | FaceLove",
+   211→   211→   211→   211→      description: "A história solicitada não foi encontrada.",
+   212→   212→   212→   212→    };
+   213→   213→   213→   213→  }
+   214→   214→   214→   214→
+   215→   215→   215→   215→  const story = response.data;
+   216→   216→   216→   216→  return {
+   217→   217→   217→   217→    title: `${story.title} - ${story.genre.name} | FaceLove`,
+   218→   218→   218→   218→    description:
+   219→   219→   219→   219→      story.description ||
+   220→   220→   220→   220→      `Leia "${story.title}" por ${story.author.name}. Uma história ${story.genre.name.toLowerCase()} no FaceLove.`,
+   221→   221→   221→   221→    keywords: [
+   222→   222→   222→   222→      story.title,
+   223→   223→   223→   223→      story.author.name,
+   224→   224→   224→   224→      story.genre.name,
+   225→   225→   225→   225→      ...story.themes.map((t) => t.name),
+   226→   226→   226→   226→      "história",
+   227→   227→   227→   227→      "leitura",
+   228→   228→   228→   228→    ],
+   229→   229→   229→   229→    openGraph: {
+   230→   230→   230→   230→      title: `${story.title} por ${story.author.name}`,
+   231→   231→   231→   231→      description:
+   232→   232→   232→   232→        story.description || `Uma história ${story.genre.name.toLowerCase()}`,
+   233→   233→   233→   233→      type: "article",
+   234→   234→   234→   234→      publishedTime: story.publishedAt ? new Date(story.publishedAt as string).toISOString() : undefined,
+   235→   235→   235→   235→      authors: [story.author.name],
+   236→   236→   236→   236→      tags: [story.genre.name, ...story.themes.map((t) => t.name)],
+   237→   237→   237→   237→    },
+   238→   238→   238→   238→  };
+   239→   239→   239→   239→}
+   240→   240→   240→   240→
+   241→   241→   241→   241→// Format date helper
+   242→   242→   242→   242→function formatDate(date: Date | string | null): string {
+   243→   243→   243→   243→  if (!date) return "N/A";
+   244→   244→   244→   244→  return new Intl.DateTimeFormat("pt-BR", {
+   245→   245→   245→   245→    day: "numeric",
+   246→   246→   246→   246→    month: "long",
+   247→   247→   247→   247→    year: "numeric",
+   248→   248→   248→   248→  }).format(new Date(date));
+   249→   249→   249→   249→}
+   250→   250→   250→   250→
+   251→   251→   251→   251→// Calculate reading time with more detail
+   252→   252→   252→   252→function calculateReadingTime(content: string): {
+   253→   253→   253→   253→  minutes: number;
+   254→   254→   254→   254→  words: number;
+   255→   255→   255→   255→  displayText: string;
+   256→   256→   256→   256→} {
+   257→   257→   257→   257→  const words = content.split(/\s+/).filter(w => w.length > 0).length;
+   258→   258→   258→   258→  const readingSpeed = 200; // words per minute
+   259→   259→   259→   259→  const minutes = Math.ceil(words / readingSpeed);
+   260→   260→   260→   260→  
+   261→   261→   261→   261→  let displayText: string;
+   262→   262→   262→   262→  if (minutes < 1) {
+   263→   263→   263→   263→    displayText = "< 1 min";
+   264→   264→   264→   264→  } else if (minutes === 1) {
+   265→   265→   265→   265→    displayText = "1 min de leitura";
+   266→   266→   266→   266→  } else if (minutes <= 5) {
+   267→   267→   267→   267→    displayText = `${minutes} mins de leitura`;
+   268→   268→   268→   268→  } else if (minutes <= 15) {
+   269→   269→   269→   269→    displayText = `${minutes} mins de leitura • Curta`;
+   270→   270→   270→   270→  } else if (minutes <= 30) {
+   271→   271→   271→   271→    displayText = `${minutes} mins de leitura • Média`;
+   272→   272→   272→   272→  } else {
+   273→   273→   273→   273→    displayText = `${minutes} mins de leitura • Longa`;
+   274→   274→   274→   274→  }
+   275→   275→   275→   275→  
+   276→   276→   276→   276→  return { minutes, words, displayText };
+   277→   277→   277→   277→}
+   278→   278→   278→   278→
+   279→   279→   279→   279→export default async function StoryDetailPage({
+   280→   280→   280→   280→  params,
+   281→   281→   281→   281→}: StoryPageParams) {
+   282→   282→   282→   282→  const { id } = await params;
+   283→   283→   283→   283→
+   284→   284→   284→   284→  const response = await getStory(id);
+   285→   285→   285→   285→
+   286→   286→   286→   286→  // Handle 404
+   287→   287→   287→   287→  if (!response.success || !response.data?.title) {
+   288→   288→   288→   288→    notFound();
+   289→   289→   289→   289→  }
+   290→   290→   290→   290→
+   291→   291→   291→   291→  const story = response.data;
+   292→   292→   292→   292→
+   293→   293→   293→   293→  // Get adjacent stories for navigation
+   294→   294→   294→   294→  const { previous: previousStory, next: nextStory } = await getAdjacentStories(
+   295→   295→   295→   295→    id,
+   296→   296→   296→   296→    story.genre.id
+   297→   297→   297→   297→  );
+   298→   298→   298→   298→
+   299→   299→   299→   299→  // Parse content
+   300→   300→   300→   300→  const rawContent = story.content || "";
+   301→   301→   301→   301→  const hasIntro = rawContent.includes("Introduction:");
+   302→   302→   302→   302→
+   303→   303→   303→   303→  let introduction = "";
+   304→   304→   304→   304→  let mainContent = "";
+   305→   305→   305→   305→
+   306→   306→   306→   306→  if (hasIntro) {
+   307→   307→   307→   307→    const parts = rawContent.split("Introduction:");
+   308→   308→   308→   308→    introduction = parts[0]?.trim() || "";
+   309→   309→   309→   309→    mainContent = parts.slice(1).join("Introduction:").trim();
+   310→   310→   310→   310→  } else {
+   311→   311→   311→   311→    mainContent = rawContent;
+   312→   312→   312→   312→  }
+   313→   313→   313→   313→
+   314→   314→   314→   314→  // Better paragraph splitting - handle various formats
+   315→   315→   315→   315→  const paragraphs = mainContent
+   316→   316→   316→   316→    .split(/\n\s*\n|\n(?=[A-Z])/)
+   317→   317→   317→   317→    .filter((p) => p.trim().length > 0)
+   318→   318→   318→   318→    .map((p) => p.trim());
+   319→   319→   319→   319→
+   320→   320→   320→   320→  // Get related stories directly from database
+   321→   321→   321→   321→  let relatedStories: StoryCardData[] = [];
+   322→   322→   322→   322→  try {
+   323→   323→   323→   323→    const storiesDb = await db.story.findMany({
+   324→   324→   324→   324→      where: {
+   325→   325→   325→   325→        publishedAt: { not: null },
+   326→   326→   326→   326→        genreId: story.genre.id,
+   327→   327→   327→   327→        id: { not: id },
+   328→   328→   328→   328→      },
+   329→   329→   329→   329→      include: {
+   330→   330→   330→   330→        author: { select: { name: true, slug: true } },
+   331→   331→   331→   331→        genre: { select: { name: true, slug: true } },
+   332→   332→   332→   332→        themes: {
+   333→   333→   333→   333→          include: { theme: true },
+   334→   334→   334→   334→          take: 3,
+   335→   335→   335→   335→        },
+   336→   336→   336→   336→      },
+   337→   337→   337→   337→      take: 6,
+   338→   338→   338→   338→      orderBy: { rating: "desc" },
+   339→   339→   339→   339→    });
+   340→   340→   340→   340→
+   341→   341→   341→   341→    relatedStories = storiesDb.map((s) => ({
+   342→   342→   342→   342→      id: s.id,
+   343→   343→   343→   343→      title: s.title,
+   344→   344→   344→   344→      slug: s.slug,
+   345→   345→   345→   345→      description: s.description,
+   346→   346→   346→   346→      author: s.author,
+   347→   347→   347→   347→      genre: s.genre,
+   348→   348→   348→   348→      themes: s.themes.map((t) => ({
+   349→   349→   349→   349→        id: t.theme.id,
+   350→   350→   350→   350→        name: t.theme.name,
+   351→   351→   351→   351→        slug: t.theme.slug,
+   352→   352→   352→   352→      })),
+   353→   353→   353→   353→      rating: s.rating,
+   354→   354→   354→   354→      votesCount: s.votesCount,
+   355→   355→   355→   355→      readsCount: s.readsCount,
+   356→   356→   356→   356→      publishedAt: s.publishedAt ? new Date(s.publishedAt) : null,
+   357→   357→   357→   357→    }));
+   358→   358→   358→   358→  } catch (e) {
+   359→   359→   359→   359→    // Silently fail - related stories are optional
+   360→   360→   360→   360→  }
+   361→   361→   361→   361→
+   362→   362→   362→   362→  const readingTime = calculateReadingTime(rawContent);
+   363→   363→   363→   363→  const isLongStory = readingTime.minutes > 15;
+   364→   364→   364→   364→
+   365→   365→   365→   365→  return (
+   366→   366→   366→   366→    <StoryClientWrapper>
+   367→   367→   367→   367→    <div className="flex flex-col min-h-screen">
+   368→   368→   368→   368→      <Header />
+   369→   369→   369→   369→      
+   370→   370→   370→   370→      {/* Reading Controls - Progress Bar & Font Size Toggle */}
+   371→   371→   371→   371→      <ReadingControls contentId="story-content" />
+   372→   372→   372→   372→
+   373→   373→   373→   373→      <main className="flex-1">
+   374→   374→   374→   374→        {/* Enhanced Hero Section */}
+   375→   375→   375→   375→        <section className="relative overflow-hidden bg-gradient-to-br from-purple-500/15 via-fuchsia-500/10 to-pink-500/10 py-10 md:py-14 lg:py-18 border-b border-purple-200/30 dark:border-purple-800/30">
+   376→   376→   376→   376→          {/* Background decorations */}
+   377→   377→   377→   377→          <div className="absolute inset-0 -z-10 overflow-hidden">
+   378→   378→   378→   378→            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-purple-400/20 to-transparent rounded-full blur-3xl" />
+   379→   379→   379→   379→            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-pink-400/20 to-transparent rounded-full blur-3xl" />
+   380→   380→   380→   380→            <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-fuchsia-400/10 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2" />
+   381→   381→   381→   381→          </div>
+   382→   382→   382→   382→          
+   383→   383→   383→   383→          {/* Subtle pattern overlay */}
+   384→   384→   384→   384→          <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]" 
+   385→   385→   385→   385→               style={{ 
+   386→   386→   386→   386→                 backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` 
+   387→   387→   387→   387→               }} 
+   388→   388→   388→   388→          />
+   389→   389→   389→   389→
+   390→   390→   390→   390→          <div className="container mx-auto px-4">
+   391→   391→   391→   391→            <div className="max-w-4xl mx-auto">
+   392→   392→   392→   392→              {/* Breadcrumb */}
+   393→   393→   393→   393→              <Breadcrumb className="mb-6">
+   394→   394→   394→   394→                <BreadcrumbList>
+   395→   395→   395→   395→                  <BreadcrumbItem>
+   396→   396→   396→   396→                    <BreadcrumbLink asChild>
+   397→   397→   397→   397→                      <Link href="/" className="text-muted-foreground hover:text-purple-600 transition-colors">
+   398→   398→   398→   398→                        Home
+   399→   399→   399→   399→                      </Link>
+   400→   400→   400→   400→                    </BreadcrumbLink>
+   401→   401→   401→   401→                  </BreadcrumbItem>
+   402→   402→   402→   402→                  <BreadcrumbSeparator />
+   403→   403→   403→   403→                  <BreadcrumbItem>
+   404→   404→   404→   404→                    <BreadcrumbLink asChild>
+   405→   405→   405→   405→                      <Link href={`/genres/${story.genre.slug}`} className="text-muted-foreground hover:text-purple-600 transition-colors">
+   406→   406→   406→   406→                        {story.genre.name}
+   407→   407→   407→   407→                      </Link>
+   408→   408→   408→   408→                    </BreadcrumbLink>
+   409→   409→   409→   409→                  </BreadcrumbItem>
+   410→   410→   410→   410→                  <BreadcrumbSeparator />
+   411→   411→   411→   411→                  <BreadcrumbPage className="font-medium text-purple-700 dark:text-purple-300 max-w-[200px] truncate">
+   412→   412→   412→   412→                    {story.title}
+   413→   413→   413→   413→                  </BreadcrumbPage>
+   414→   414→   414→   414→                </BreadcrumbList>
+   415→   415→   415→   415→              </Breadcrumb>
+   416→   416→   416→   416→
+   417→   417→   417→   417→              {/* Genre badge with enhanced styling */}
+   418→   418→   418→   418→              <Badge 
+   419→   419→   419→   419→                variant="secondary"
+   420→   420→   420→   420→                className="bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 hover:from-purple-200 hover:to-pink-200 dark:from-purple-900/50 dark:to-pink-900/50 dark:text-purple-300 border border-purple-200/50 dark:border-purple-700/50 transition-all duration-300 mb-4 px-4 py-1.5"
+   421→   421→   421→   421→              >
+   422→   422→   422→   422→                <BookOpen className="w-3.5 h-3.5 mr-1.5" />
+   423→   423→   423→   423→                {story.genre.name}
+   424→   424→   424→   424→              </Badge>
+   425→   425→   425→   425→
+   426→   426→   426→   426→              {/* Title with enhanced typography */}
+   427→   427→   427→   427→              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4 bg-gradient-to-r from-purple-900 via-fuchsia-800 to-pink-900 dark:from-purple-100 dark:via-fuchsia-200 dark:to-pink-100 bg-clip-text text-transparent leading-tight">
+   428→   428→   428→   428→                {story.title}
+   429→   429→   429→   429→              </h1>
+   430→   430→   430→   430→
+   431→   431→   431→   431→              {/* Description if available */}
+   432→   432→   432→   432→              {story.description && (
+   433→   433→   433→   433→                <p className="text-base md:text-lg text-muted-foreground mb-5 max-w-2xl leading-relaxed">
+   434→   434→   434→   434→                  {story.description}
+   435→   435→   435→   435→                </p>
+   436→   436→   436→   436→              )}
+   437→   437→   437→   437→
+   438→   438→   438→   438→              {/* Meta info with better layout */}
+   439→   439→   439→   439→              <div className="flex flex-wrap items-center gap-x-5 gap-y-3 mt-5 text-sm text-muted-foreground bg-white/40 dark:bg-gray-900/40 backdrop-blur-sm rounded-xl p-4 border border-white/20 dark:border-gray-700/20">
+   440→   440→   440→   440→                <span className="flex items-center gap-2">
+   441→   441→   441→   441→                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-sm font-bold">
+   442→   442→   442→   442→                    {story.author.name.charAt(0)}
+   443→   443→   443→   443→                  </div>
+   444→   444→   444→   444→                  <span>
+   445→   445→   445→   445→                    por{" "}
+   446→   446→   446→   446→                    <Link 
+   447→   447→   447→   447→                      href={`/authors/${story.author.slug}`}
+   448→   448→   448→   448→                      className="font-semibold text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 underline decoration-purple-300 dark:decoration-purple-700 underline-offset-2 transition-colors"
+   449→   449→   449→   449→                    >
+   450→   450→   450→   450→                      {story.author.name}
+   451→   451→   451→   451→                    </Link>
+   452→   452→   452→   452→                  </span>
+   453→   453→   453→   453→                </span>
+   454→   454→   454→   454→                
+   455→   455→   455→   455→                <span className="hidden sm:inline-flex items-center gap-1 text-muted-foreground/50">•</span>
+   456→   456→   456→   456→                
+   457→   457→   457→   457→                <span className="flex items-center gap-1.5 text-muted-foreground">
+   458→   458→   458→   458→                  <Calendar className="w-4 h-4 text-purple-500/70" />
+   459→   459→   459→   459→                  <time dateTime={story.publishedAt ? new Date(story.publishedAt as string).toISOString() : ""}>
+   460→   460→   460→   460→                    {formatDate(story.publishedAt)}
+   461→   461→   461→   461→                  </time>
+   462→   462→   462→   462→                </span>
+   463→   463→   463→   463→                
+   464→   464→   464→   464→                <span className="hidden md:inline-flex items-center gap-1 text-muted-foreground/50">•</span>
+   465→   465→   465→   465→                
+   466→   466→   466→   466→                <span className="flex items-center gap-1.5 text-muted-foreground">
+   467→   467→   467→   467→                  <Eye className="w-4 h-4 text-pink-500/70" />
+   468→   468→   468→   468→                  <span className="font-medium">{story.readsCount.toLocaleString()}</span>
+   469→   469→   469→   469→                  <span className="hidden sm:inline">leituras</span>
+   470→   470→   470→   470→                </span>
+   471→   471→   471→   471→
+   472→   472→   472→   472→                <span className="hidden md:inline-flex items-center gap-1 text-muted-foreground/50">•</span>
+   473→   473→   473→   473→
+   474→   474→   474→   474→                <span className="flex items-center gap-1.5 text-muted-foreground">
+   475→   475→   475→   475→                  <Timer className="w-4 h-4 text-fuchsia-500/70" />
+   476→   476→   476→   476→                  <span className="font-medium">{readingTime.displayText}</span>
+   477→   477→   477→   477→                </span>
+   478→   478→   478→   478→              </div>
+   479→   479→   479→   479→
+   480→   480→   480→   480→              {/* Tags with enhanced styling */}
+   481→   481→   481→   481→              <div className="flex flex-wrap gap-2 mt-4">
+   482→   482→   482→   482→                {story.themes.map((theme) => (
+   483→   483→   483→   483→                  <ThemeBadge key={theme.id} theme={theme} size="sm" />
+   484→   484→   484→   484→                ))}
+   485→   485→   485→   485→              </div>
+   486→   486→   486→   486→            </div>
+   487→   487→   487→   487→          </div>
+   488→   488→   488→   488→        </section>
+   489→   489→   489→   489→
+   490→   490→   490→   490→        {/* Enhanced Stats Bar */}
+   491→   491→   491→   491→        <section className="border-b bg-gradient-to-r from-muted/50 via-purple-50/30 to-muted/50 dark:from-muted/30 dark:via-purple-950/20 dark:to-muted/30 sticky top-[33px] z-30 backdrop-blur-md bg-opacity-80">
+   492→   492→   492→   492→          <div className="container mx-auto px-4 py-4">
+   493→   493→   493→   493→            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+   494→   494→   494→   494→              <div className="p-3 md:p-4 rounded-xl bg-card/80 border border-purple-100/50 dark:border-purple-800/30 shadow-sm hover:shadow-md hover:border-purple-300/60 dark:hover:border-purple-700/50 transition-all duration-300 group">
+   495→   495→   495→   495→                <div className="flex items-center justify-center gap-2 mb-1">
+   496→   496→   496→   496→                  <Star className="w-5 h-5 text-yellow-500 fill-yellow-500 group-hover:scale-110 transition-transform" />
+   497→   497→   497→   497→                </div>
+   498→   498→   498→   498→                <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-yellow-600 to-orange-500 bg-clip-text text-transparent">
+   499→   499→   499→   499→                  {story.rating.toFixed(1)}
+   500→   500→   500→   500→                </div>
+   501→   501→   501→   501→                <div className="text-xs text-muted-foreground flex items-center justify-center gap-1 mt-0.5">
+   502→   502→   502→   502→                  <span>{story.votesCount}</span> votos
+   503→   503→   503→   503→                </div>
+   504→   504→   504→   504→              </div>
+   505→   505→   505→   505→              
+   506→   506→   506→   506→              <div className="p-3 md:p-4 rounded-xl bg-card/80 border border-pink-100/50 dark:border-pink-800/30 shadow-sm hover:shadow-md hover:border-pink-300/60 dark:hover:border-pink-700/50 transition-all duration-300 group">
+   507→   507→   507→   507→                <div className="flex items-center justify-center gap-2 mb-1">
+   508→   508→   508→   508→                  <Eye className="w-5 h-5 text-pink-500 group-hover:scale-110 transition-transform" />
+   509→   509→   509→   509→                </div>
+   510→   510→   510→   510→                <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent">
+   511→   511→   511→   511→                  {story.readsCount.toLocaleString()}
+   512→   512→   512→   512→                </div>
+   513→   513→   513→   513→                <div className="text-xs text-muted-foreground mt-0.5">leituras</div>
+   514→   514→   514→   514→              </div>
+   515→   515→   515→   515→              
+   516→   516→   516→   516→              <div className="p-3 md:p-4 rounded-xl bg-card/80 border border-fuchsia-100/50 dark:border-fuchsia-800/30 shadow-sm hover:shadow-md hover:border-fuchsia-300/60 dark:hover:border-fuchsia-700/50 transition-all duration-300 group">
+   517→   517→   517→   517→                <div className="flex items-center justify-center gap-2 mb-1">
+   518→   518→   518→   518→                  <Clock className="w-5 h-5 text-fuchsia-500 group-hover:scale-110 transition-transform" />
+   519→   519→   519→   519→                </div>
+   520→   520→   520→   520→                <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-fuchsia-600 to-purple-500 bg-clip-text text-transparent">
+   521→   521→   521→   521→                  {readingTime.minutes}
+   522→   522→   522→   522→                </div>
+   523→   523→   523→   523→                <div className="text-xs text-muted-foreground mt-0.5">min de leitura</div>
+   524→   524→   524→   524→              </div>
+   525→   525→   525→   525→              
+   526→   526→   526→   526→              <div className="p-3 md:p-4 rounded-xl bg-card/80 border border-purple-100/50 dark:border-purple-800/30 shadow-sm hover:shadow-md hover:border-purple-300/60 dark:hover:border-purple-700/50 transition-all duration-300 group">
+   527→   527→   527→   527→                <div className="flex items-center justify-center gap-2 mb-1">
+   528→   528→   528→   528→                  <MessageSquare className="w-5 h-5 text-purple-500 group-hover:scale-110 transition-transform" />
+   529→   529→   529→   529→                </div>
+   530→   530→   530→   530→                <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-500 bg-clip-text text-transparent">
+   531→   531→   531→   531→                  {story.commentsCount}
+   532→   532→   532→   532→                </div>
+   533→   533→   533→   533→                <div className="text-xs text-muted-foreground mt-0.5">comentários</div>
+   534→   534→   534→   534→              </div>
+   535→   535→   535→   535→            </div>
+   536→   536→   536→   536→            
+   537→   537→   537→   537→            {/* Reading tips bar */}
+   538→   538→   538→   538→            <div className="flex items-center justify-center gap-4 mt-3 pt-3 border-t border-dashed border-purple-200/30 dark:border-purple-700/20 text-xs text-muted-foreground">
+   539→   539→   539→   539→              <span className="flex items-center gap-1">
+   540→   540→   540→   540→                <Type className="w-3.5 h-3.5 text-purple-500/70" />
+   541→   541→   541→   541→                Ajuste a fonte acima
+   542→   542→   542→   542→              </span>
+   543→   543→   543→   543→              <span className="text-muted-foreground/30">|</span>
+   544→   544→   544→   544→              <span className="flex items-center gap-1">
+   545→   545→   545→   545→                <BookMarked className="w-3.5 h-3.5 text-pink-500/70" />
+   546→   546→   546→   546→                Barra de progresso ativa
+   547→   547→   547→   547→              </span>
+   548→   548→   548→   548→            </div>
+   549→   549→   549→   549→          </div>
+   550→   550→   550→   550→        </section>
+   551→   551→   551→   551→
+   552→   552→   552→   552→        {/* Introduction Section - Enhanced */}
+   553→   553→   553→   553→        {introduction && (
+   554→   554→   554→   554→          <section className="border-b bg-gradient-to-r from-purple-50 via-fuchsia-50/50 to-pink-50 dark:from-purple-950/30 dark:via-fuchsia-950/20 dark:to-pink-950/30 relative overflow-hidden">
+   555→   555→   555→   555→            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-200/20 to-transparent rounded-full blur-3xl pointer-events-none" />
+   556→   556→   556→   556→            
+   557→   557→   557→   557→            <div className="container mx-auto px-4 py-10 md:py-14 relative z-10">
+   558→   558→   558→   558→              <div className="max-w-3xl mx-auto">
+   559→   559→   559→   559→                <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl p-6 md:p-10 shadow-xl shadow-purple-500/10 border border-purple-200/50 dark:border-purple-700/30 relative overflow-hidden">
+   560→   560→   560→   560→                  {/* Decorative corner gradient */}
+   561→   561→   561→   561→                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-purple-500/10 to-transparent rounded-bl-full" />
+   562→   562→   562→   562→                  
+   563→   563→   563→   563→                  <div className="relative z-10">
+   564→   564→   564→   564→                    <div className="flex items-center gap-3 mb-5">
+   565→   565→   565→   565→                      <div className="p-2.5 rounded-xl bg-gradient-to-br from-purple-500 via-fuchsia-500 to-pink-500 text-white shadow-lg shadow-purple-500/25">
+   566→   566→   566→   566→                        <Sparkles className="w-5 h-5" />
+   567→   567→   567→   567→                      </div>
+   568→   568→   568→   568→                      <div>
+   569→   569→   569→   569→                        <h2 className="text-lg md:text-xl font-bold text-purple-800 dark:text-purple-300">
+   570→   570→   570→   570→                          Introdução
+   571→   571→   571→   571→                        </h2>
+   572→   572→   572→   572→                        <p className="text-xs text-purple-500 dark:text-purple-400 font-medium">
+   573→   573→   573→   573→                          Sobre esta história
+   574→   574→   574→   574→                        </p>
+   575→   575→   575→   575→                      </div>
+   576→   576→   576→   576→                    </div>
+   577→   577→   577→   577→                    
+   578→   578→   578→   578→                    <div className="prose prose-purple dark:prose-invert max-w-none">
+   579→   579→   579→   579→                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-base md:text-lg whitespace-pre-wrap">
+   580→   580→   580→   580→                        {introduction}
+   581→   581→   581→   581→                      </p>
+   582→   582→   582→   582→                    </div>
+   583→   583→   583→   583→                  </div>
+   584→   584→   584→   584→                </div>
+   585→   585→   585→   585→              </div>
+   586→   586→   586→   586→            </div>
+   587→   587→   587→   587→          </section>
+   588→   588→   588→   588→        )}
+   589→   589→   589→   589→
+   590→   590→   590→   590→        {/* Main Content - Enhanced Typography */}
+   591→   591→   591→   591→        <article 
+   592→   592→   592→   592→          id="story-content"
+   593→   593→   593→   593→          className="container mx-auto px-4 py-10 md:py-14 transition-all duration-300 text-lg leading-8"
+   594→   594→   594→   594→        >
+   595→   595→   595→   595→          <div className="max-w-3xl mx-auto">
+   596→   596→   596→   596→            {/* Chapter/Section indicator */}
+   597→   597→   597→   597→            <div className="flex items-center gap-3 mb-8 pb-4 border-b border-dashed border-purple-200/40 dark:border-purple-700/30">
+   598→   598→   598→   598→              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center text-white text-sm font-bold shadow-md shadow-purple-500/20">
+   599→   599→   599→   599→                <Layers className="w-4 h-4" />
+   600→   600→   600→   600→              </div>
+   601→   601→   601→   601→              <div>
+   602→   602→   602→   602→                <h2 className="font-semibold text-purple-800 dark:text-purple-300">Capítulo 1</h2>
+   603→   603→   603→   603→                <p className="text-xs text-muted-foreground">O começo da história</p>
+   604→   604→   604→   604→              </div>
+   605→   605→   605→   605→            </div>
+   606→   606→   606→   606→
+   607→   607→   607→   607→            {/* Content paragraphs with enhanced styling */}
+   608→   608→   608→   608→            <div className="space-y-7">
+   609→   609→   609→   609→              {paragraphs.map((paragraph, index) => {
+   610→   610→   610→   610→                // Check if paragraph looks like dialogue or special formatting
+   611→   611→   611→   611→                const isDialogue = paragraph.startsWith('"') || paragraph.startsWith('"');
+   612→   612→   612→   612→                const isFirstParagraph = index === 0;
+   613→   613→   613→   613→                
+   614→   614→   614→   614→                return (
+   615→   615→   615→   615→                  <p 
+   616→   616→   616→   616→                    key={index} 
+   617→   617→   617→   617→                    className={`text-gray-700 dark:text-gray-300 leading-relaxed md:leading-loose animate-fade-in-up first-letter:first-letter:text-3xl first-letter:md:first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:text-purple-700 dark:first-letter:text-purple-400 ${
+   618→   618→   618→   618→                      isDialogue ? 'pl-4 md:pl-6 border-l-2 border-purple-200 dark:border-purple-800 italic bg-purple-50/30 dark:bg-purple-950/20 py-2 rounded-r-lg' : ''
+   619→   619→   619→   619→                    } ${
+   620→   620→   620→   620→                      isFirstParagraph ? '' : ''
+   621→   621→   621→   621→                    }`}
+   622→   622→   622→   622→                    style={{ animationDelay: `${index * 50}ms` }}
+   623→   623→   623→   623→                  >
+   624→   624→   624→   624→                    {paragraph}
+   625→   625→   625→   625→                  </p>
+   626→   626→   626→   626→                );
+   627→   627→   627→   627→              })}
+   628→   628→   628→   628→            </div>
+   629→   629→   629→   629→            
+   630→   630→   630→   630→            {/* Story End Indicator */}
+   631→   631→   631→   631→            <div className="mt-12 pt-8 border-t-2 border-dashed border-purple-200 dark:border-purple-800">
+   632→   632→   632→   632→              <div className="text-center space-y-4">
+   633→   633→   633→   633→                <div className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-purple-100 via-fuchsia-100 to-pink-100 dark:from-purple-900/30 dark:via-fuchsia-900/20 dark:to-pink-900/30 border border-purple-200/50 dark:border-purple-700/30">
+   634→   634→   634→   634→                  <Sparkles className="w-5 h-5 text-purple-500 animate-pulse" />
+   635→   635→   635→   635→                  <span className="font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+   636→   636→   636→   636→                    ✨ Fim da História ✨
+   637→   637→   637→   637→                  </span>
+   638→   638→   638→   638→                  <Sparkles className="w-5 h-5 text-pink-500 animate-pulse" />
+   639→   639→   639→   639→                </div>
+   640→   640→   640→   640→                
+   641→   641→   641→   641→                {isLongStory && (
+   642→   642→   642→   642→                  <p className="text-sm text-muted-foreground max-w-md mx-auto">
+   643→   643→   643→   643→                    Obrigado por ler até o final! Esta é uma história extensa com aproximadamente{' '}
+   644→   644→   644→   644→                    <span className="font-medium text-purple-600 dark:text-purple-400">{readingTime.words.toLocaleString()}</span> palavras.
+   645→   645→   645→   645→                  </p>
+   646→   646→   646→   646→                )}
+   647→   647→   647→   647→              </div>
+   648→   648→   648→   648→            </div>
+   649→   649→   649→   649→          </div>
+   650→   650→   650→   650→        </article>
+   651→   651→   651→   651→
+   652→   652→   652→   652→        {/* Story Navigation - Previous / Next */}
+   653→   653→   653→   653→        <StoryNavigation 
+   654→   654→   654→   654→          previousStory={previousStory}
+   655→   655→   655→   655→          nextStory={nextStory}
+   656→   656→   656→   656→        />
+   657→   657→   657→   657→
+   658→   658→   658→   658→        {/* Author Info Section - Enhanced */}
+   659→   659→   659→   659→        <section className="border-t bg-gradient-to-b from-muted/30 to-background py-12">
+   660→   660→   660→   660→          <div className="container mx-auto px-4">
+   661→   661→   661→   661→            <div className="max-w-2xl mx-auto">
+   662→   662→   662→   662→              <Card className="overflow-hidden border-0 shadow-xl shadow-purple-500/10 hover:shadow-2xl hover:shadow-purple-500/15 transition-all duration-500">
+   663→   663→   663→   663→                {/* Gradient header */}
+   664→   664→   664→   664→                <CardHeader className="bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-600 text-white p-6 relative overflow-hidden">
+   665→   665→   665→   665→                  {/* Background pattern */}
+   666→   666→   666→   666→                  <div className="absolute inset-0 opacity-10">
+   667→   667→   667→   667→                    <div className="absolute top-0 left-0 w-full h-full" 
+   668→   668→   668→   668→                         style={{
+   669→   669→   669→   669→                           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`
+   670→   670→   670→   670→                         }}
+   671→   671→   671→   671→                    />
+   672→   672→   672→   672→                  </div>
+   673→   673→   673→   673→                  <CardTitle className="flex items-center gap-3 relative z-10">
+   674→   674→   674→   674→                    <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+   675→   675→   675→   675→                      <User className="w-5 h-5" />
+   676→   676→   676→   676→                    </div>
+   677→   677→   677→   677→                    <span className="text-lg">Sobre o Autor</span>
+   678→   678→   678→   678→                  </CardTitle>
+   679→   679→   679→   679→                </CardHeader>
+   680→   680→   680→   680→                
+   681→   681→   681→   681→                <CardContent className="p-6 md:p-8">
+   682→   682→   682→   682→                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+   683→   683→   683→   683→                    {/* Avatar */}
+   684→   684→   684→   684→                    <div className="relative">
+   685→   685→   685→   685→                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-400 via-fuchsia-400 to-pink-400 p-0.5">
+   686→   686→   686→   686→                        <div className="w-full h-full rounded-full bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center">
+   687→   687→   687→   687→                          <span className="text-2xl font-bold bg-gradient-to-br from-purple-600 to-pink-600 bg-clip-text text-transparent">
+   688→   688→   688→   688→                            {story.author.name.charAt(0)}
+   689→   689→   689→   689→                          </span>
+   690→   690→   690→   690→                        </div>
+   691→   691→   691→   691→                      </div>
+   692→   692→   692→   692→                      <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
+   693→   693→   693→   693→                        <div className="w-2 h-2 bg-white rounded-full" />
+   694→   694→   694→   694→                      </div>
+   695→   695→   695→   695→                    </div>
+   696→   696→   696→   696→                    
+   697→   697→   697→   697→                    <div className="flex-1">
+   698→   698→   698→   698→                      <h3 className="font-bold text-xl text-gray-900 dark:text-gray-100">
+   699→   699→   699→   699→                        {story.author.name}
+   700→   700→   700→   700→                      </h3>
+   701→   701→   701→   701→                      {story.author.bio && (
+   702→   702→   702→   702→                        <p className="text-sm text-muted-foreground mt-2 line-clamp-3 leading-relaxed">
+   703→   703→   703→   703→                          {story.author.bio}
+   704→   704→   704→   704→                        </p>
+   705→   705→   705→   705→                      )}
+   706→   706→   706→   706→                      {story.author.memberSince && (
+   707→   707→   707→   707→                        <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1.5">
+   708→   708→   708→   708→                          <Calendar className="w-3.5 h-3.5" />
+   709→   709→   709→   709→                          Membro desde {formatDate(story.author.memberSince)}
+   710→   710→   710→   710→                        </p>
+   711→   711→   711→   711→                      )}
+   712→   712→   712→   712→                    </div>
+   713→   713→   713→   713→                  </div>
+   714→   714→   714→   714→                  
+   715→   715→   715→   715→                  <div className="mt-6 pt-5 border-t border-gray-100 dark:border-gray-800">
+   716→   716→   716→   716→                    <Button 
+   717→   717→   717→   717→                      variant="outline"
+   718→   718→   718→   718→                      size="lg"
+   719→   719→   719→   719→                      className="w-full sm:w-auto border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-300 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-950/50 font-medium transition-all duration-300"
+   720→   720→   720→   720→                      asChild
+   721→   721→   721→   721→                    >
+   722→   722→   722→   722→                      <Link href={`/authors/${story.author.slug}`}>
+   723→   723→   723→   723→                        <BookOpen className="w-4 h-4 mr-2" />
+   724→   724→   724→   724→                        Ver todas as histórias do autor
+   725→   725→   725→   725→                        <ArrowRight className="w-4 h-4 ml-2" />
+   726→   726→   726→   726→                      </Link>
+   727→   727→   727→   727→                    </Button>
+   728→   728→   728→   728→                  </div>
+   729→   729→   729→   729→                </CardContent>
+   730→   730→   730→   730→              </Card>
+   731→   731→   731→   731→            </div>
+   732→   732→   732→   732→          </div>
+   733→   733→   733→   733→        </section>
+   734→   734→   734→   734→
+   735→   735→   735→   735→        {/* Related Stories Section - Enhanced */}
+   736→   736→   736→   736→        {relatedStories.length > 0 && (
+   737→   737→   737→   737→          <section className="border-t bg-gradient-to-b from-background to-muted/20 py-12 md:py-16">
+   738→   738→   738→   738→            <div className="container mx-auto px-4">
+   739→   739→   739→   739→              {/* Section header */}
+   740→   740→   740→   740→              <div className="max-w-6xl mx-auto">
+   741→   741→   741→   741→                <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
+   742→   742→   742→   742→                  <div className="flex items-center gap-3">
+   743→   743→   743→   743→                    <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25">
+   744→   744→   744→   744→                      <BookOpen className="w-6 h-6" />
+   745→   745→   745→   745→                    </div>
+   746→   746→   746→   746→                    <div>
+   747→   747→   747→   747→                      <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
+   748→   748→   748→   748→                        Histórias Relacionadas
+   749→   749→   749→   749→                      </h2>
+   750→   750→   750→   750→                      <p className="text-sm text-muted-foreground mt-0.5">
+   751→   751→   751→   751→                        Mais histórias de {story.genre.name.toLowerCase()}
+   752→   752→   752→   752→                      </p>
+   753→   753→   753→   753→                    </div>
+   754→   754→   754→   754→                  </div>
+   755→   755→   755→   755→                  
+   756→   756→   756→   756→                  <Link 
+   757→   757→   757→   757→                    href={`/genres/${story.genre.slug}`}
+   758→   758→   758→   758→                    className="group inline-flex items-center gap-2 text-sm font-semibold text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 transition-colors px-4 py-2 rounded-full bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/30 dark:hover:bg-purple-950/50"
+   759→   759→   759→   759→                  >
+   760→   760→   760→   760→                    Ver todos em {story.genre.name.toLowerCase()}
+   761→   761→   761→   761→                    <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+   762→   762→   762→   762→                  </Link>
+   763→   763→   763→   763→                </div>
+   764→   764→   764→   764→                
+   765→   765→   765→   765→                {/* Stories grid */}
+   766→   766→   766→   766→                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+   767→   767→   767→   767→                  {relatedStories.slice(0, 6).map((relatedStory, index) => (
+   768→   768→   768→   768→                    <div
+   769→   769→   769→   769→                      key={relatedStory.id}
+   770→   770→   770→   770→                      className="animate-fade-in-up"
+   771→   771→   771→   771→                      style={{ animationDelay: `${index * 80}ms` }}
+   772→   772→   772→   772→                    >
+   773→   773→   773→   773→                      <StoryCard story={relatedStory} variant="compact" />
+   774→   774→   774→   774→                    </div>
+   775→   775→   775→   775→                  ))}
+   776→   776→   776→   776→                </div>
+   777→   777→   777→   777→
+   778→   778→   778→   778→                {/* Show more link for mobile */}
+   779→   779→   779→   779→                <div className="mt-8 text-center sm:hidden">
+   780→   780→   780→   780→                  <Link 
+   781→   781→   781→   781→                    href={`/genres/${story.genre.slug}`}
+   782→   782→   782→   782→                    className="inline-flex items-center gap-2 text-sm font-medium text-purple-600 dark:text-purple-400"
+   783→   783→   783→   783→                  >
+   784→   784→   784→   784→                    Ver mais histórias
+   785→   785→   785→   785→                    <ChevronRight className="w-4 h-4" />
+   786→   786→   786→   786→                  </Link>
+   787→   787→   787→   787→                </div>
+   788→   788→   788→   788→              </div>
+   789→   789→   789→   789→            </div>
+   790→   790→   790→   790→          </section>
+   791→   791→   791→   791→        )}
+   792→   792→   792→   792→        
+   793→   793→   793→   793→        {/* Call to Action Section */}
+   794→   794→   794→   794→        <section className="border-t py-12 bg-gradient-to-r from-purple-50 via-fuchsia-50 to-pink-50 dark:from-purple-950/20 dark:via-fuchsia-950/10 dark:to-pink-950/20">
+   795→   795→   795→   795→          <div className="container mx-auto px-4">
+   796→   796→   796→   796→            <div className="max-w-2xl mx-auto text-center space-y-4">
+   797→   797→   797→   797→              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-purple-200/50 dark:border-purple-700/30 shadow-sm">
+   798→   798→   798→   798→                <Heart className="w-4 h-4 text-pink-500 fill-pink-500" />
+   799→   799→   799→   799→                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+   800→   800→   800→   800→                  Gostou desta história?
+   801→   801→   801→   801→                </span>
+   802→   802→   802→   802→              </div>
+   803→   803→   803→   803→              
+   804→   804→   804→   804→              <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
+   805→   805→   805→   805→                Explore mais histórias incríveis no FaceLove
+   806→   806→   806→   806→              </h3>
+   807→   807→   807→   807→              
+   808→   808→   808→   808→              <p className="text-muted-foreground max-w-md mx-auto">
+   809→   809→   809→   809→                Descubra milhares de romances e histórias de autores talentosos de todo o mundo.
+   810→   810→   810→   810→              </p>
+   811→   811→   811→   811→              
+   812→   812→   812→   812→              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+   813→   813→   813→   813→                <Button 
+   814→   814→   814→   814→                  size="lg"
+   815→   815→   815→   815→                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg shadow-purple-500/25 font-semibold px-8"
+   816→   816→   816→   816→                  asChild
+   817→   817→   817→   817→                >
+   818→   818→   818→   818→                  <Link href="/genres">
+   819→   819→   819→   819→                    <BookOpen className="w-5 h-5 mr-2" />
+   820→   820→   820→   820→                    Explorar Gêneros
+   821→   821→   821→   821→                  </Link>
+   822→   822→   822→   822→                </Button>
+   823→   823→   823→   823→                
+   824→   824→   824→   824→                <Button 
+   825→   825→   825→   825→                  variant="outline"
+   826→   826→   826→   826→                  size="lg"
+   827→   827→   827→   827→                  className="border-purple-200 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-950/50 font-semibold px-8"
+   828→   828→   828→   828→                  asChild
+   829→   829→   829→   829→                >
+   830→   830→   830→   830→                  <Link href="/">
+   831→   831→   831→   831→                    <ArrowLeft className="w-5 h-5 mr-2" />
+   832→   832→   832→   832→                    Voltar ao Início
+   833→   833→   833→   833→                  </Link>
+   834→   834→   834→   834→                </Button>
+   835→   835→   835→   835→              </div>
+   836→   836→   836→   836→            </div>
+   837→   837→   837→   837→          </div>
+   838→   838→   838→   838→        </section>
+   839→   839→   839→   839→      </main>
+   840→   840→   840→   840→
+   841→   841→   841→   841→      <Footer />
+   842→   842→   842→   842→    </div>
+   843→   843→   843→   843→    </StoryClientWrapper>
+   844→   844→   844→   844→  );
+   845→   845→   845→   845→}
+   846→   846→   846→   846→

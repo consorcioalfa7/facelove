@@ -441,3 +441,123 @@ Next Steps Recommendations:
 3. Implement export/import of user preferences
 4. Add animation when scrolling to bookmarked position
 5. Consider adding a reading timer feature
+
+---
+Task ID: 7
+Agent: Main Developer (Z.ai)
+Task: Enhanced Reading Experience - Timer, Comments, Theme Toggle & Sidebar
+
+Work Log:
+
+### New Components Created
+
+- **`/src/components/reading-timer.tsx`** - Comprehensive reading timer:
+  - Tracks reading time per session with start/pause/reset
+  - Shows daily reading statistics (total time today)
+  - Daily reading goal (15 min default) with progress bar
+  - Auto-pause when tab loses focus (optional)
+  - Session history saved to localStorage (max 100 sessions)
+  - Compact and full card variants
+  - `useReadingTimer()` hook for accessing data in other components
+  - Goal reached celebration badge with animation
+
+- **`/src/components/theme-toggle.tsx`** - Advanced theme switching:
+  - Three modes: Light, Dark, System (follows OS preference)
+  - Dropdown menu with visual icons for each mode
+  - Active indicator dot when custom theme is selected
+  - Smooth transitions between themes
+  - Listens to `prefers-color-scheme` media query changes
+  - Persists choice to localStorage
+  - Show label variant for settings pages
+  - Proper lazy initializers to avoid hydration mismatch
+
+- **`/src/components/story-comments.tsx`** - Full commenting system:
+  - Comment form with optional star rating (1-5)
+  - Character limit (1000) with counter
+  - Reply functionality with nested display
+  - Vote system (thumbs up/down) per comment
+  - Edit own comments functionality
+  - Delete with confirmation dialog
+  - "Show more" pagination for long comment lists
+  - Empty state when no comments exist
+  - Time-relative timestamps ("há 2h", "Agora")
+  - Custom events for real-time updates (`commentsChanged`)
+  - Average rating calculation from rated comments
+  - `useStoryComments()` hook for external data access
+  - User avatars with gradient initials
+
+- **`/src/components/story-navigation-enhanced.tsx`** - Enhanced navigation:
+  - Horizontal variant (compact prev/next buttons)
+  - Vertical variant (full cards with metadata)
+  - Grid variant (related stories list)
+  - Keyboard navigation support (← → arrow keys)
+  - Progress indicator dots showing current position
+  - View mode toggle (list/grid)
+  - Story metadata preview (author, time, rating)
+
+### Updated Components/Pages
+
+- **Story Page (`/src/app/story/[id]/page.tsx`) - Major Enhancement**:
+  - Added two-column layout with sidebar on large screens
+  - Integrated `ReadingTimer` in sticky sidebar
+  - Integrated `BookmarkButton` in sidebar tools section
+  - Added `StoryComments` section after content
+  - Added quick stats card (genre, time, words, rating) in sidebar
+  - Added keyboard shortcuts hint panel
+  - Better responsive behavior (sidebar hidden on mobile)
+
+- **Header (`/src/components/header.tsx`) - Updated**:
+  - Replaced basic toggle with enhanced `ThemeToggle` component
+  - Added ThemeToggle to mobile menu with label variant
+  - System preference support now available globally
+
+### Code Quality Fixes
+- Fixed JSX structure error (missing closing div in article)
+- Fixed `loadTodaysTotal` called before declaration (moved to module-level function)
+- Fixed multiple `setState in effect` warnings by using lazy initializers
+- Removed redundant auto-start useEffect (now using lazy initializer)
+- All ESLint checks passing (0 errors, 0 warnings)
+
+Stage Summary:
+- **Reading Timer**: ✅ Complete
+  - Session tracking with pause/resume
+  - Daily goals and statistics
+  - localStorage persistence
+- **Theme Toggle**: ✅ Complete
+  - Light/Dark/System modes
+  - OS preference detection
+  - Persistent storage
+- **Comment System**: ✅ Complete
+  - Full CRUD operations
+  - Rating and voting
+  - Nested replies
+- **Story Navigation**: ✅ Complete
+  - Multiple layout variants
+  - Keyboard navigation
+  - Related stories view
+- **Sidebar Integration**: ✅ Complete
+  - Sticky reading sidebar
+  - Tools and stats cards
+  - Responsive design
+
+New Features Summary:
+| Feature | Description | Location |
+|---------|-------------|----------|
+| Reading Timer | Session & daily tracking | Story sidebar |
+| Theme Toggle | Light/Dark/System modes | Header + Mobile menu |
+| Comments | Full discussion system | Story page |
+| Navigation | Prev/Next stories | Story page |
+| Stats Card | Quick story info | Story sidebar |
+
+Unresolved Issues/Risks:
+- Comments are stored in localStorage only (no server persistence)
+- Timer data lost if localStorage is cleared
+- No moderation system for comments yet
+- Server may need restart to see all changes visually
+
+Next Steps Recommendations:
+1. Add server-side API for comments persistence
+2. Implement comment moderation/review system
+3. Add email notifications for new replies
+4. Create admin dashboard for managing comments
+5. Add rich text formatting for comments (markdown)

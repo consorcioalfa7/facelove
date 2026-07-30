@@ -42,6 +42,9 @@ import { Footer } from "@/components/footer";
 import { ReadingControls } from "@/components/story-reading-controls";
 import { StoryNavigation } from "@/components/story-navigation";
 import { StoryClientWrapper } from "@/components/story-client-wrapper";
+import { ReadingTimer } from "@/components/reading-timer";
+import { StoryComments } from "@/components/story-comments";
+import { BookmarkButton } from "@/components/bookmark-button";
 
 // Types
 interface StoryPageParams {
@@ -587,14 +590,17 @@ export default async function StoryDetailPage({
           </section>
         )}
 
-        {/* Main Content - Enhanced Typography */}
-        <article 
-          id="story-content"
-          className="container mx-auto px-4 py-10 md:py-14 transition-all duration-300 text-lg leading-8"
-        >
-          <div className="max-w-3xl mx-auto">
-            {/* Chapter/Section indicator */}
-            <div className="flex items-center gap-3 mb-8 pb-4 border-b border-dashed border-purple-200/40 dark:border-purple-700/30">
+        {/* Main Content - Enhanced Typography with Sidebar */}
+        <div className="container mx-auto px-4 py-10 md:py-14 transition-all duration-300">
+          <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8">
+            
+            {/* Main Article Content */}
+            <article 
+              id="story-content"
+              className="flex-1 min-w-0 text-lg leading-8"
+            >
+              {/* Chapter/Section indicator */}
+              <div className="flex items-center gap-3 mb-8 pb-4 border-b border-dashed border-purple-200/40 dark:border-purple-700/30">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center text-white text-sm font-bold shadow-md shadow-purple-500/20">
                 <Layers className="w-4 h-4" />
               </div>
@@ -646,14 +652,98 @@ export default async function StoryDetailPage({
                 )}
               </div>
             </div>
-          </div>
         </article>
+
+        {/* Reading Sidebar - Timer & Tools */}
+        <aside className="hidden lg:block w-72 shrink-0">
+          <div className="sticky top-[120px] space-y-6">
+            {/* Reading Timer */}
+            <ReadingTimer 
+              storyId={story.id}
+              storyTitle={story.title}
+              autoStart={true}
+            />
+
+            {/* Quick Bookmark */}
+            <Card className="border-purple-100 dark:border-purple-800/50 overflow-hidden">
+              <CardContent className="pt-5 pb-4">
+                <h4 className="font-semibold text-sm mb-3 flex items-center gap-2">
+                  <Bookmark className="w-4 h-4 text-purple-500" />
+                  Ferramentas de Leitura
+                </h4>
+                <div className="space-y-2">
+                  <BookmarkButton 
+                    storyId={story.id}
+                    storyTitle={story.title}
+                    currentPosition={0}
+                    compact={false}
+                  />
+                </div>
+                
+                {/* Keyboard shortcuts hint */}
+                <div className="mt-4 p-3 rounded-lg bg-muted/50 text-xs text-muted-foreground space-y-1">
+                  <p className="font-medium">Atalhos do teclado:</p>
+                  <p><kbd className="px-1.5 py-0.5 rounded bg-background border font-mono">←</kbd> / <kbd className="px-1.5 py-0.5 rounded bg-background border font-mono">→</kbd> História anterior/próxima</p>
+                  <p><kbd className="px-1.5 py-0.5 rounded bg-background border font-mono">?</kbd> Ver todos os atalhos</p>
+                  <p><kbd className="px-1.5 py-0.5 rounded bg-background border font-mono">/</kbd> Focar na busca</p>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Story Quick Stats */}
+            <Card className="bg-gradient-to-br from-purple-50/80 to-pink-50/40 dark:from-purple-950/20 dark:to-pink-950/10 border-purple-100/50">
+              <CardContent className="pt-5 pb-4">
+                <h4 className="font-semibold text-sm mb-3 flex items-center gap-2">
+                  <Eye className="w-4 h-4 text-pink-500" />
+                  Sobre esta história
+                </h4>
+                <dl className="space-y-3 text-sm">
+                  <div className="flex justify-between">
+                    <dt className="text-muted-foreground">Gênero</dt>
+                    <dd className="font-medium">{story.genre.name}</dd>
+                  </div>
+                  <div className="flex justify-between">
+                    <dt className="text-muted-foreground">Tempo</dt>
+                    <dd className="font-medium">{readingTime.minutes} min</dd>
+                  </div>
+                  <div className="flex justify-between">
+                    <dt className="text-muted-foreground">Palavras</dt>
+                    <dd className="font-medium">{readingTime.words.toLocaleString()}</dd>
+                  </div>
+                  <div className="flex justify-between">
+                    <dt className="text-muted-foreground">Avaliação</dt>
+                    <dd className="font-medium flex items-center gap-1">
+                      <Star className="w-3.5 h-3.5 text-yellow-400 fill-current" />
+                      {story.rating.toFixed(1)}
+                    </dd>
+                  </div>
+                </dl>
+              </CardContent>
+            </Card>
+          </div>
+        </aside>
+      </div>
+        </div>
 
         {/* Story Navigation - Previous / Next */}
         <StoryNavigation 
           previousStory={previousStory}
           nextStory={nextStory}
         />
+
+        {/* Comments Section */}
+        <section className="border-t py-12 bg-gradient-to-b from-background to-muted/20">
+          <div className="container mx-auto px-4">
+            <div className="max-w-3xl mx-auto">
+              <StoryComments 
+                storyId={story.id}
+                storyTitle={story.title}
+                allowRating={true}
+                maxVisible={5}
+              />
+            </div>
+          </div>
+        </section>
 
         {/* Author Info Section - Enhanced */}
         <section className="border-t bg-gradient-to-b from-muted/30 to-background py-12">

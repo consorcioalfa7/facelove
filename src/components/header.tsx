@@ -26,6 +26,7 @@ import {
 import { cn } from "@/lib/utils";
 import { FaceLoveLogo } from "@/components/facelove-logo";
 import { LanguageSelector } from "@/components/language-selector";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { useI18n } from "@/lib/i18n/I18nProvider";
 
 const navigation = [
@@ -136,17 +137,8 @@ export function Header() {
             {/* Language Selector */}
             <LanguageSelector />
 
-            {/* Theme toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="relative overflow-hidden"
-              aria-label="Toggle theme"
-            >
-              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-            </Button>
+            {/* Enhanced Theme toggle with system preference */}
+            <ThemeToggle />
 
             {/* Mobile menu */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -195,6 +187,11 @@ export function Header() {
                   
                   <div className="mt-2 px-4">
                     <LanguageSelector className="w-full justify-start" />
+                  </div>
+                  
+                  {/* Theme toggle in mobile menu */}
+                  <div className="mt-2 px-4">
+                    <ThemeToggle showLabel={true} size="default" className="w-full justify-center" />
                   </div>
                 </nav>
               </SheetContent>
