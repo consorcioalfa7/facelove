@@ -45,6 +45,8 @@ import { StoryClientWrapper } from "@/components/story-client-wrapper";
 import { ReadingTimer } from "@/components/reading-timer";
 import { StoryComments } from "@/components/story-comments";
 import { BookmarkButton } from "@/components/bookmark-button";
+import { AddToListButton } from "@/components/bookshelf";
+import { AutoSaveProgress } from "@/components/auto-save-progress";
 
 // Types
 interface StoryPageParams {
@@ -373,6 +375,15 @@ export default async function StoryDetailPage({
       {/* Reading Controls - Progress Bar & Font Size Toggle */}
       <ReadingControls contentId="story-content" />
 
+      {/* Auto-save reading progress on scroll */}
+      <AutoSaveProgress
+        storyId={story.id}
+        storyTitle={story.title}
+        contentId="story-content"
+        enableAutoComplete={true}
+        saveInterval={5000}
+      />
+
       <main className="flex-1">
         {/* Enhanced Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-br from-purple-500/15 via-fuchsia-500/10 to-pink-500/10 py-10 md:py-14 lg:py-18 border-b border-purple-200/30 dark:border-purple-800/30">
@@ -677,6 +688,17 @@ export default async function StoryDetailPage({
                     storyTitle={story.title}
                     currentPosition={0}
                     compact={false}
+                  />
+                  
+                  {/* Add to Reading List */}
+                  <AddToListButton
+                    storyId={story.id}
+                    title={story.title}
+                    author={story.author.name}
+                    genre={story.genre.name}
+                    slug={story.slug}
+                    compact={false}
+                    className="w-full"
                   />
                 </div>
                 

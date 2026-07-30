@@ -561,3 +561,128 @@ Next Steps Recommendations:
 3. Add email notifications for new replies
 4. Create admin dashboard for managing comments
 5. Add rich text formatting for comments (markdown)
+
+---
+Task ID: 8
+Agent: Main Developer (Z.ai)
+Task: Data Persistence & Organization - Comments API, Search History, Bookshelf & Auto-Save
+
+Work Log:
+
+### New API Endpoint Created
+
+- **`/src/app/api/comments/route.ts`** - Server-side comments API:
+  - `GET /api/comments` - Get all comments with pagination, filter by storyId
+  - `POST /api/comments` - Create new comment with validation (content max 1000 chars, rating 1-5)
+  - `DELETE /api/comments?id=xxx` - Delete a comment by ID
+  - In-memory storage (replaceable with database in production)
+  - Proper error handling and HTTP status codes
+
+### New Components Created
+
+- **`/src/components/search-history.tsx`** - Search history tracking:
+  - Records all searches to localStorage (max 20 entries)
+  - Shows relative timestamps ("há 2h", "Agora")
+  - Filter/search through history
+  - Popular searches section (8 predefined terms)
+  - Clear individual items or entire history
+  - Dialog variant (compact) and inline full version
+  - Custom event (`searchHistoryChanged`) for real-time updates
+  - `useSearchHistory()` hook for external access
+  - `addToSearchHistory()` export function for manual usage
+
+- **`/src/components/bookshelf.tsx`** - Reading lists / Bookshelf feature:
+  - 3 default lists: "Quero Ler", "Lendo Agora", "Concluídas"
+  - Create custom reading lists with colors
+  - Move stories between lists
+  - Track progress per item (0-100%)
+  - Status badges: want-to-read, reading, completed, on-hold
+  - Grid and list view modes
+  - Tab navigation between lists
+  - Empty state with call-to-action
+  - `AddToListButton` component (compact + full)
+  - Full `Bookshelf` display component
+  - `useReadingLists()` hook for complete CRUD operations
+  - Color-coded lists with visual indicators
+
+- **`/src/components/auto-save-progress.tsx`** - Automatic progress saving:
+  - Tracks scroll position within content element
+  - Debounced saves every 5 seconds (configurable)
+  - Saves progress only when changed >1% or at milestones
+  - Auto-marks story as completed at 95%+ progress
+  - Dispatches custom events:
+    - `readingProgressChanged` - Progress updated
+    - `storyCompleted` - Story finished
+    - `readingProgressRealtime` - Real-time scroll position
+  - Restores previous position on return visit
+  - Saves on page unload (beforeunload event)
+  - `useAutoSaveProgress()` hook version available
+
+### Updated Pages/Components
+
+- **Favorites Page (`/src/app/favorites/page.tsx`) - Enhanced:
+  - Added Bookshelf section showing all reading lists
+  - Added Search History section with popular terms
+  - New sections appear before the favorites grid
+  - Better organization of personal features
+
+- **Story Page (`/src/app/story/[id]/page.tsx`) - Enhanced:
+  - Added AutoSaveProgress component for automatic progress saving
+  - Integrated AddToListButton in sidebar tools area
+  - Both components work seamlessly with existing features
+
+### Code Quality Fixes
+- Fixed function declaration order issues (loadLists, loadHistory, updateData)
+- Used lazy initializers for useState to avoid setState in effect warnings
+- Fixed syntax error in BookshelfProps destructuring
+- All ESLint checks passing (0 errors, 0 warnings)
+
+Stage Summary:
+- **Comments API**: ✅ Complete
+  - RESTful endpoints (GET, POST, DELETE)
+  - Pagination support
+  - Input validation
+- **Search History**: ✅ Complete
+  - localStorage persistence (20 items)
+  - Popular searches display
+  - Filter/clear functionality
+- **Bookshelf**: ✅ Complete
+  - Default + custom reading lists
+  - Status tracking (4 states)
+  - Progress indicators
+  - Grid/list views
+- **Auto-Save**: ✅ Complete
+  - Scroll-based tracking
+  - Debounced saves
+  - Auto-completion detection
+  - Event system for integration
+
+New Features Summary:
+| Feature | Description | Location |
+|---------|-------------|----------|
+| Comments API | Server-side CRUD | `/api/comments/route.ts` |
+| Search History | Track & replay searches | Favorites page, Dialog |
+| Bookshelf | Organize reading lists | Favorites page |
+| Add to List | Quick-add button | Story page sidebar |
+| Auto-Save Progress | Automatic save | Story page (invisible) |
+
+Files Created/Modified:
+- Created: `/src/app/api/comments/route.ts`
+- Created: `/src/components/search-history.tsx`
+- Created: `/src/components/bookshelf.tsx`
+- Created: `/src/components/auto-save-progress.tsx`
+- Modified: `/src/app/favorites/page.tsx`
+- Modified: `/src/app/story/[id]/page.tsx`
+
+Unresolved Issues/Risks:
+- Comments API uses in-memory storage (lost on server restart)
+- No authentication - all data is local only
+- Search history limited to 20 entries
+- Reading lists not synced across devices
+
+Next Steps Recommendations:
+1. Connect comments API to Prisma database model
+2. Implement user accounts for cloud sync of reading data
+3. Add import/export functionality for reading lists
+4. Create analytics dashboard for reading habits
+5. Add social features (share reading lists)

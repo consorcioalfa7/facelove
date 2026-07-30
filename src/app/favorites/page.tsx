@@ -2,7 +2,9 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { FavoritesContent } from "./favorites-client";
 import { ReadingStatistics } from "@/components/reading-statistics";
-import { Heart, BookOpen, BarChart3, BookMarked } from "lucide-react";
+import { Bookshelf } from "@/components/bookshelf";
+import { SearchHistory } from "@/components/search-history";
+import { Heart, BookOpen, BarChart3, BookMarked, Clock, Layers } from "lucide-react";
 
 export const metadata = {
   title: "Favoritos | FaceLove",
@@ -64,6 +66,27 @@ export default function FavoritesPage() {
 
         {/* Dashboard Grid - Favorites + Stats */}
         <div className="container mx-auto px-4 py-8 md:py-12">
+          {/* Reading Lists / Bookshelf Section */}
+          <section className="mb-12">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <BookMarked className="w-6 h-6 text-purple-500" />
+                Minha Estante de Leitura
+              </h2>
+            </div>
+            <Bookshelf viewMode="grid" />
+          </section>
+
+          {/* Search History Section */}
+          <section className="mb-12">
+            <h2 className="text-xl font-bold flex items-center gap-2 mb-6">
+              <Clock className="w-6 h-6 text-pink-500" />
+              Histórico de Busca
+            </h2>
+            <SearchHistory showPopular={true} maxItems={8} />
+          </section>
+
+          {/* Favorites Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Main Content - Favorites (2/3 width) */}
