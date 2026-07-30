@@ -1,0 +1,1231 @@
+     1→     1→@import "tailwindcss";
+     2→     2→@import "tw-animate-css";
+     3→     3→
+     4→     4→@custom-variant dark (&:is(.dark *));
+     5→     5→
+     6→     6→/* ============================================
+     7→     7→   FACELOVE PREMIUM DESIGN SYSTEM
+     8→     8→   Dark Premium Theme - Purple Velvet Aesthetic
+     9→     9→   ============================================ */
+    10→    10→
+    11→    11→@theme inline {
+    12→    12→  /* Core Theme Colors */
+    13→    13→  --color-background: var(--background);
+    14→    14→  --color-foreground: var(--foreground);
+    15→    15→  --font-sans: var(--font-geist-sans);
+    16→    16→  --font-mono: var(--font-geist-mono);
+    17→    17→  
+    18→    18→  /* Sidebar Colors */
+    19→    19→  --color-sidebar-ring: var(--sidebar-ring);
+    20→    20→  --color-sidebar-border: var(--sidebar-border);
+    21→    21→  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    22→    22→  --color-sidebar-accent: var(--sidebar-accent);
+    23→    23→  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    24→    24→  --color-sidebar-primary: var(--sidebar-primary);
+    25→    25→  --color-sidebar-foreground: var(--sidebar-foreground);
+    26→    26→  --color-sidebar: var(--sidebar);
+    27→    27→  
+    28→    28→  /* Chart Colors */
+    29→    29→  --color-chart-5: var(--chart-5);
+    30→    30→  --color-chart-4: var(--chart-4);
+    31→    31→  --color-chart-3: var(--chart-3);
+    32→    32→  --color-chart-2: var(--chart-2);
+    33→    33→  --color-chart-1: var(--chart-1);
+    34→    34→  
+    35→    35→  /* UI Component Colors */
+    36→    36→  --color-ring: var(--ring);
+    37→    37→  --color-input: var(--input);
+    38→    38→  --color-border: var(--border);
+    39→    39→  --color-destructive: var(--destructive);
+    40→    40→  --color-accent-foreground: var(--accent-foreground);
+    41→    41→  --color-accent: var(--accent);
+    42→    42→  --color-muted-foreground: var(--muted-foreground);
+    43→    43→  --color-muted: var(--muted);
+    44→    44→  --color-secondary-foreground: var(--secondary-foreground);
+    45→    45→  --color-secondary: var(--secondary);
+    46→    46→  --color-primary-foreground: var(--primary-foreground);
+    47→    47→  --color-primary: var(--primary);
+    48→    48→  --color-popover-foreground: var(--popover-foreground);
+    49→    49→  --color-popover: var(--popover);
+    50→    50→  --color-card-foreground: var(--card-foreground);
+    51→    51→  --color-card: var(--card);
+    52→    52→  
+    53→    53→  /* Border Radius */
+    54→    54→  --radius-sm: calc(var(--radius) - 4px);
+    55→    55→  --radius-md: calc(var(--radius) - 2px);
+    56→    56→  --radius-lg: var(--radius);
+    57→    57→  --radius-xl: calc(var(--radius) + 4px);
+    58→    58→  
+    59→    59→  /* ==========================================
+    60→    60→     FACELOVE BRAND COLOR PALETTE
+    61→    61→     Purple Velvet with Pink Glow
+    62→    62→     ========================================== */
+    63→    63→  
+    64→    64→  /* Violet Spectrum */
+    65→    65→  --color-violet-50: #f5f3ff;
+    66→    66→  --color-violet-100: #ede9fe;
+    67→    67→  --color-violet-200: #ddd6fe;
+    68→    68→  --color-violet-300: #c4b5fd;
+    69→    69→  --color-violet-400: #a78bfa;
+    70→    70→  --color-violet-500: #8b5cf6;
+    71→    71→  --color-violet-600: #7c3aed;
+    72→    72→  --color-violet-700: #6d28d9;
+    73→    73→  --color-violet-800: #5b21b6;
+    74→    74→  --color-violet-900: #4c1d95;
+    75→    75→  
+    76→    76→  /* Purple Spectrum - Primary Brand */
+    77→    77→  --color-purple-50: #faf5ff;
+    78→    78→  --color-purple-100: #f3e8ff;
+    79→    79→  --color-purple-200: #e9d5ff;
+    80→    80→  --color-purple-300: #d8b4fe;
+    81→    81→  --color-purple-400: #c084fc;
+    82→    82→  --color-purple-500: #a855f7;
+    83→    83→  --color-purple-600: #9333ea;
+    84→    84→  --color-purple-700: #7e22ce;
+    85→    85→  --color-purple-800: #6b21a8;
+    86→    86→  --color-purple-900: #581c87;
+    87→    87→  
+    88→    88→  /* Fuchsia Spectrum - Accent */
+    89→    89→  --color-fuchsia-50: #fdf4ff;
+    90→    90→  --color-fuchsia-100: #fae8ff;
+    91→    91→  --color-fuchsia-200: #f5d0fe;
+    92→    92→  --color-fuchsia-300: #f0abfc;
+    93→    93→  --color-fuchsia-400: #e879f9;
+    94→    94→  --color-fuchsia-500: #d946ef;
+    95→    95→  --color-fuchsia-600: #c026d3;
+    96→    96→  --color-fuchsia-700: #a21caf;
+    97→    97→  --color-fuchsia-800: #86198f;
+    98→    98→  --color-fuchsia-900: #701a75;
+    99→    99→  
+   100→   100→  /* Pink Spectrum - Primary Action */
+   101→   101→  --color-pink-50: #fdf2f8;
+   102→   102→  --color-pink-100: #fce7f3;
+   103→   103→  --color-pink-200: #fce7f3;
+   104→   104→  --color-pink-300: #fda4af;
+   105→   105→  --color-pink-400: #fb7185;
+   106→   106→  --color-pink-500: #ec4899;
+   107→   107→  --color-pink-600: #db2777;
+   108→   108→  --color-pink-700: #be185d;
+   109→   109→  --color-pink-800: #9d174d;
+   110→   110→  --color-pink-900: #831843;
+   111→   111→  
+   112→   112→  /* Rose Spectrum */
+   113→   113→  --color-rose-50: #fff1f2;
+   114→   114→  --color-rose-100: #ffe4e6;
+   115→   115→  --color-rose-200: #fecdd3;
+   116→   116→  --color-rose-300: #fda4af;
+   117→   117→  --color-rose-400: #fb7185;
+   118→   118→  --color-rose-500: #f43f5e;
+   119→   119→  --color-rose-600: #e11d48;
+   120→   120→  --color-rose-700: #be123c;
+   121→   121→  --color-rose-800: #9f1239;
+   122→   122→  --color-rose-900: #881337;
+   123→   123→}
+   124→   124→
+   125→   125→/* ============================================
+   126→   126→   FACELOVE DESIGN TOKENS (CSS Custom Properties)
+   127→   127→   Premium Dark Theme as Default
+   128→   128→   ============================================ */
+   129→   129→
+   130→   130→:root {
+   131→   131→  /* Base Radius */
+   132→   132→  --radius: 0.625rem;
+   133→   133→  
+   134→   134→  /* ========================================
+   135→   135→     FACELOVE BRAND TOKENS (--fl- prefix)
+   136→   136→     Purple Velvet + Pink Glow Aesthetic
+   137→   137→     ======================================== */
+   138→   138→  
+   139→   139→  /* Background Tokens - Almost Black with Purple Undertone */
+   140→   140→  --fl-background: #0a0a0f;
+   141→   141→  --fl-background-secondary: #0f0a14;
+   142→   142→  --fl-background-tertiary: #120a18;
+   143→   143→  
+   144→   144→  /* Surface Tokens - Translucent Dark Purple */
+   145→   145→  --fl-surface: rgba(15, 10, 20, 0.8);
+   146→   146→  --fl-surface-elevated: rgba(20, 12, 28, 0.9);
+   147→   147→  --fl-surface-overlay: rgba(25, 15, 35, 0.95);
+   148→   148→  
+   149→   149→  /* Primary Color - Pink/Magenta */
+   150→   150→  --fl-primary: #ec4899;
+   151→   151→  --fl-primary-hover: #f472b6;
+   152→   152→  --fl-primary-active: #db2777;
+   153→   153→  --fl-primary-glow: rgba(236, 72, 153, 0.4);
+   154→   154→  
+   155→   155→  /* Secondary Color - Vibrant Purple */
+   156→   156→  --fl-secondary: #9333ea;
+   157→   157→  --fl-secondary-hover: #a855f7;
+   158→   158→  --fl-secondary-active: #7e22ce;
+   159→   159→  --fl-secondary-glow: rgba(147, 51, 234, 0.4);
+   160→   160→  
+   161→   161→  /* Accent Color - Pink Glow */
+   162→   162→  --fl-accent: #f472b6;
+   163→   163→  --fl-accent-hover: #fb7185;
+   164→   164→  --fl-accent-glow: rgba(244, 114, 182, 0.5);
+   165→   165→  
+   166→   166→  /* Text Colors */
+   167→   167→  --fl-text-primary: #ffffff;
+   168→   168→  --fl-text-secondary: #a78bfa;
+   169→   169→  --fl-text-muted: #6b7280;
+   170→   170→  --fl-text-disabled: #4b5563;
+   171→   171→  
+   172→   172→  /* Border Colors - Purple Translucent */
+   173→   173→  --fl-border: rgba(147, 51, 234, 0.3);
+   174→   174→  --fl-border-hover: rgba(147, 51, 234, 0.5);
+   175→   175→  --fl-border-subtle: rgba(147, 51, 234, 0.15);
+   176→   176→  
+   177→   177→  /* Glow Effects - Pink/Purple */
+   178→   178→  --fl-glow: rgba(236, 72, 153, 0.35);
+   179→   179→  --fl-glow-strong: rgba(236, 72, 153, 0.6);
+   180→   180→  --fl-glow-purple: rgba(147, 51, 234, 0.4);
+   181→   181→  --fl-glow-combined: linear-gradient(135deg, rgba(236, 72, 153, 0.4), rgba(147, 51, 234, 0.4));
+   182→   182→  
+   183→   183→  /* Border Radius Tokens */
+   184→   184→  --fl-radius-sm: 0.375rem;
+   185→   185→  --fl-radius-md: 0.625rem;
+   186→   186→  --fl-radius-lg: 0.875rem;
+   187→   187→  --fl-radius-xl: 1.125rem;
+   188→   188→  --fl-radius-2xl: 1.5rem;
+   189→   189→  --fl-radius-full: 9999px;
+   190→   190→  
+   191→   191→  /* Shadow Tokens */
+   192→   192→  --fl-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 0 10px rgba(147, 51, 234, 0.05);
+   193→   193→  --fl-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3), 0 0 20px rgba(147, 51, 234, 0.08);
+   194→   194→  --fl-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4), 0 0 40px rgba(147, 51, 234, 0.12);
+   195→   195→  --fl-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.4), 0 0 60px rgba(147, 51, 234, 0.15);
+   196→   196→  --fl-shadow-glow: 0 0 20px var(--fl-glow), 0 0 60px var(--fl-glow-purple), 0 0 100px rgba(236, 72, 153, 0.1);
+   197→   197→  --fl-shadow-glow-strong: 0 0 30px var(--fl-glow-strong), 0 0 80px var(--fl-glow-purple), 0 0 120px rgba(236, 72, 153, 0.15);
+   198→   198→  --fl-shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(147, 51, 234, 0.05);
+   199→   199→  
+   200→   200→  /* ========================================
+   201→   201→     LEGACY THEME VARIABLES (Dark by Default)
+   202→   202→     Mapped to FaceLove Design Tokens
+   203→   203→     ======================================== */
+   204→   204→  
+   205→   205→  /* Background - Deep Black-Purple */
+   206→   206→  --background: #0a0a0f;
+   207→   207→  --foreground: #ffffff;
+   208→   208→  
+   209→   209→  /* Card - Translucent Dark Purple */
+   210→   210→  --card: rgba(15, 10, 20, 0.85);
+   211→   211→  --card-foreground: #ffffff;
+   212→   212→  
+   213→   213→  /* Popover */
+   214→   214→  --popover: rgba(20, 12, 28, 0.95);
+   215→   215→  --popover-foreground: #ffffff;
+   216→   216→  
+   217→   217→  /* Primary - Pink/Magenta */
+   218→   218→  --primary: #ec4899;
+   219→   219→  --primary-foreground: #ffffff;
+   220→   220→  
+   221→   221→  /* Secondary - Vibrant Purple */
+   222→   222→  --secondary: rgba(147, 51, 234, 0.2);
+   223→   223→  --secondary-foreground: #ffffff;
+   224→   224→  
+   225→   225→  /* Muted */
+   226→   226→  --muted: rgba(147, 51, 234, 0.1);
+   227→   227→  --muted-foreground: #a78bfa;
+   228→   228→  
+   229→   229→  /* Accent - Pink Glow */
+   230→   230→  --accent: rgba(244, 114, 182, 0.15);
+   231→   231→  --accent-foreground: #ffffff;
+   232→   232→  
+   233→   233→  /* Destructive */
+   234→   234→  --destructive: #ef4444;
+   235→   235→  
+   236→   236→  /* Borders - Purple Translucent */
+   237→   237→  --border: rgba(147, 51, 234, 0.25);
+   238→   238→  --input: rgba(147, 51, 234, 0.25);
+   239→   239→  --ring: #a855f7;
+   240→   240→  
+   241→   241→  /* Chart Colors - FaceLove Palette */
+   242→   242→  --chart-1: #a855f7;
+   243→   243→  --chart-2: #ec4899;
+   244→   244→  --chart-3: #c084fc;
+   245→   245→  --chart-4: #f472b6;
+   246→   246→  --chart-5: #e879f9;
+   247→   247→  
+   248→   248→  /* Sidebar - Dark Premium */
+   249→   249→  --sidebar: rgba(10, 6, 16, 0.98);
+   250→   250→  --sidebar-foreground: #ffffff;
+   251→   251→  --sidebar-primary: #ec4899;
+   252→   252→  --sidebar-primary-foreground: #ffffff;
+   253→   253→  --sidebar-accent: rgba(147, 51, 234, 0.2);
+   254→   254→  --sidebar-accent-foreground: #ffffff;
+   255→   255→  --sidebar-border: rgba(147, 51, 234, 0.2);
+   256→   256→  --sidebar-ring: #a855f7;
+   257→   257→}
+   258→   258→
+   259→   259→/* Light Theme (Opt-in) */
+   260→   260→.light {
+   261→   261→  --fl-background: #faf5ff;
+   262→   262→  --fl-background-secondary: #f3e8ff;
+   263→   263→  --fl-background-tertiary: #ede9fe;
+   264→   264→  --fl-surface: rgba(255, 255, 255, 0.9);
+   265→   265→  --fl-surface-elevated: rgba(255, 255, 255, 0.98);
+   266→   266→  --fl-surface-overlay: rgba(255, 255, 255, 1);
+   267→   267→  --fl-primary: #db2777;
+   268→   268→  --fl-primary-hover: #ec4899;
+   269→   269→  --fl-primary-active: #be185d;
+   270→   270→  --fl-primary-glow: rgba(219, 39, 119, 0.3);
+   271→   271→  --fl-secondary: #7c3aed;
+   272→   272→  --fl-secondary-hover: #8b5cf6;
+   273→   273→  --fl-secondary-active: #6d28d9;
+   274→   274→  --fl-secondary-glow: rgba(124, 58, 237, 0.3);
+   275→   275→  --fl-accent: #ec4899;
+   276→   276→  --fl-accent-hover: #f43f5e;
+   277→   277→  --fl-accent-glow: rgba(236, 72, 153, 0.3);
+   278→   278→  --fl-text-primary: #1f2937;
+   279→   279→  --fl-text-secondary: #6b21a8;
+   280→   280→  --fl-text-muted: #9ca3af;
+   281→   281→  --fl-text-disabled: #d1d5db;
+   282→   282→  --fl-border: rgba(124, 58, 237, 0.2);
+   283→   283→  --fl-border-hover: rgba(124, 58, 237, 0.4);
+   284→   284→  --fl-border-subtle: rgba(124, 58, 237, 0.1);
+   285→   285→  --fl-glow: rgba(219, 39, 119, 0.25);
+   286→   286→  --fl-glow-strong: rgba(219, 39, 119, 0.45);
+   287→   287→  --fl-glow-purple: rgba(124, 58, 237, 0.3);
+   288→   288→  --fl-shadow-sm: 0 1px 2px rgba(124, 58, 237, 0.1);
+   289→   289→  --fl-shadow-md: 0 4px 6px -1px rgba(124, 58, 237, 0.12);
+   290→   290→  --fl-shadow-lg: 0 10px 15px -3px rgba(124, 58, 237, 0.15);
+   291→   291→  --fl-shadow-xl: 0 20px 25px -5px rgba(124, 58, 237, 0.18);
+   292→   292→  --fl-shadow-glow: 0 0 20px rgba(219, 39, 119, 0.2), 0 0 40px rgba(124, 58, 237, 0.15);
+   293→   293→  --fl-shadow-glow-strong: 0 0 30px rgba(219, 39, 119, 0.35), 0 0 60px rgba(124, 58, 237, 0.25);
+   294→   294→  --fl-shadow-inner: inset 0 1px 3px rgba(124, 58, 237, 0.08);
+   295→   295→  
+   296→   296→  /* Legacy Light Variables */
+   297→   297→  --background: #faf5ff;
+   298→   298→  --foreground: #1f2937;
+   299→   299→  --card: rgba(255, 255, 255, 0.9);
+   300→   300→  --card-foreground: #1f2937;
+   301→   301→  --popover: rgba(255, 255, 255, 0.98);
+   302→   302→  --popover-foreground: #1f2937;
+   303→   303→  --primary: #db2777;
+   304→   304→  --primary-foreground: #ffffff;
+   305→   305→  --secondary: #f3e8ff;
+   306→   306→  --secondary-foreground: #1f2937;
+   307→   307→  --muted: #ede9fe;
+   308→   308→  --muted-foreground: #6b7280;
+   309→   309→  --accent: #fce7f3;
+   310→   310→  --accent-foreground: #1f2937;
+   311→   311→  --destructive: #dc2626;
+   312→   312→  --border: rgba(124, 58, 237, 0.2);
+   313→   313→  --input: rgba(124, 58, 237, 0.2);
+   314→   314→  --ring: #8b5cf6;
+   315→   315→  --chart-1: #8b5cf6;
+   316→   316→  --chart-2: #db2777;
+   317→   317→  --chart-3: #a78bfa;
+   318→   318→  --chart-4: #ec4899;
+   319→   319→  --chart-5: #d946ef;
+   320→   320→  --sidebar: #f3e8ff;
+   321→   321→  --sidebar-foreground: #1f2937;
+   322→   322→  --sidebar-primary: #db2777;
+   323→   323→  --sidebar-primary-foreground: #ffffff;
+   324→   324→  --sidebar-accent: #ede9fe;
+   325→   325→  --sidebar-accent-foreground: #1f2937;
+   326→   326→  --sidebar-border: rgba(124, 58, 237, 0.2);
+   327→   327→  --sidebar-ring: #8b5cf6;
+   328→   328→}
+   329→   329→
+   330→   330→/* Dark Theme Class Support (for manual toggling) */
+   331→   331→.dark {
+   332→   332→  /* Inherits from :root which is already dark premium */
+   333→   333→}
+   334→   334→
+   335→   335→/* ============================================
+   336→   336→   BASE LAYER STYLES
+   337→   337→   ============================================ */
+   338→   338→
+   339→   339→@layer base {
+   340→   340→  * {
+   341→   341→    @apply border-border outline-ring/50;
+   342→   342→  }
+   343→   343→  
+   344→   344→  body {
+   345→   345→    @apply bg-background text-foreground;
+   346→   346→    background-color: var(--fl-background);
+   347→   347→    color: var(--fl-text-primary);
+   348→   348→    font-feature-settings: "rlig" 1, "calt" 1;
+   349→   349→    antialiased;
+   350→   350→    -webkit-font-smoothing: antialiased;
+   351→   351→    -moz-osx-font-smoothing: grayscale;
+   352→   352→  }
+   353→   353→  
+   354→   354→  /* Smooth Scrolling */
+   355→   355→  html {
+   356→   356→    scroll-behavior: smooth;
+   357→   357→  }
+   358→   358→  
+   359→   359→  /* Selection Styling - Premium Purple/Pink */
+   360→   360→  ::selection {
+   361→   361→    background-color: var(--fl-primary-glow);
+   362→   362→    color: var(--fl-text-primary);
+   363→   363→  }
+   364→   364→  
+   365→   365→  /* Focus Visible - Accessibility */
+   366→   366→  :focus-visible {
+   367→   367→    outline: 2px solid var(--fl-secondary);
+   368→   368→    outline-offset: 2px;
+   369→   369→  }
+   370→   370→  
+   371→   371→  /* ========================================
+   372→   372→     PREMIUM SCROLLBAR STYLING
+   373→   373→     Thin, Purple-Tinted, Elegant
+   374→   374→     ======================================== */
+   375→   375→  
+   376→   376→  /* Webkit Browsers (Chrome, Safari, Edge) */
+   377→   377→  ::-webkit-scrollbar {
+   378→   378→    width: 6px;
+   379→   379→    height: 6px;
+   380→   380→  }
+   381→   381→  
+   382→   382→  ::-webkit-scrollbar-track {
+   383→   383→    background: transparent;
+   384→   384→    border-radius: var(--fl-radius-full);
+   385→   385→  }
+   386→   386→  
+   387→   387→  ::-webkit-scrollbar-thumb {
+   388→   388→    background: linear-gradient(
+   389→   389→      180deg,
+   390→   390→      var(--fl-secondary) 0%,
+   391→   391→      var(--fl-primary) 100%
+   392→   392→    );
+   393→   393→    border-radius: var(--fl-radius-full);
+   394→   394→    opacity: 0.6;
+   395→   395→    transition: opacity 0.2s ease;
+   396→   396→  }
+   397→   397→  
+   398→   398→  ::-webkit-scrollbar-thumb:hover {
+   399→   399→    opacity: 1;
+   400→   400→    box-shadow: 0 0 10px var(--fl-glow);
+   401→   401→  }
+   402→   402→  
+   403→   403→  /* Firefox Scrollbar */
+   404→   404→  * {
+   405→   405→    scrollbar-width: thin;
+   406→   406→    scrollbar-color: var(--fl-secondary) transparent;
+   407→   407→  }
+   408→   408→}
+   409→   409→
+   410→   410→/* ============================================
+   411→   411→   UTILITY CLASSES LAYER
+   412→   412→   ============================================ */
+   413→   413→
+   414→   414→@layer utilities {
+   415→   415→  /* ========================================
+   416→   416→     GLASS MORPHISM UTILITIES
+   417→   417→     Frosted Glass Effect with Purple Tint
+   418→   418→     ======================================== */
+   419→   419→  
+   420→   420→  /* Base Glass Effect */
+   421→   421→  .glass {
+   422→   422→    backdrop-filter: blur(16px) saturate(180%);
+   423→   423→    -webkit-backdrop-filter: blur(16px) saturate(180%);
+   424→   424→    background: var(--fl-surface);
+   425→   425→    border: 1px solid var(--fl-border);
+   426→   426→    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   427→   427→  }
+   428→   428→  
+   429→   429→  .glass:hover {
+   430→   430→    border-color: var(--fl-border-hover);
+   431→   431→  }
+   432→   432→  
+   433→   433→  /* Glass Card - Elevated Surface */
+   434→   434→  .glass-card {
+   435→   435→    backdrop-filter: blur(20px) saturate(200%);
+   436→   436→    -webkit-backdrop-filter: blur(20px) saturate(200%);
+   437→   437→    background: var(--fl-surface-elevated);
+   438→   438→    border: 1px solid var(--fl-border);
+   439→   439→    border-radius: var(--fl-radius-lg);
+   440→   440→    box-shadow: var(--fl-shadow-md);
+   441→   441→    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   442→   442→  }
+   443→   443→  
+   444→   444→  .glass-card:hover {
+   445→   445→    border-color: var(--fl-border-hover);
+   446→   446→    box-shadow: var(--fl-shadow-lg), var(--fl-glow);
+   447→   447→    transform: translateY(-2px);
+   448→   448→  }
+   449→   449→  
+   450→   450→  /* Glass Header - Navigation/Headers */
+   451→   451→  .glass-header {
+   452→   452→    backdrop-filter: blur(24px) saturate(180%);
+   453→   453→    -webkit-backdrop-filter: blur(24px) saturate(180%);
+   454→   454→    background: var(--fl-surface-overlay);
+   455→   455→    border-bottom: 1px solid var(--fl-border-subtle);
+   456→   456→    position: sticky;
+   457→   457→    top: 0;
+   458→   458→    z-index: 50;
+   459→   459→  }
+   460→   460→  
+   461→   461→  /* Glass Subtle - Minimal Glass Effect */
+   462→   462→  .glass-subtle {
+   463→   463→    backdrop-filter: blur(8px);
+   464→   464→    -webkit-backdrop-filter: blur(8px);
+   465→   465→    background: rgba(15, 10, 20, 0.6);
+   466→   466→    border: 1px solid var(--fl-border-subtle);
+   467→   467→  }
+   468→   468→  
+   469→   469→  /* ========================================
+   470→   470→     GLOW EFFECTS UTILITIES
+   471→   471→     Pink/Purple Radiant Effects
+   472→   472→     ======================================== */
+   473→   473→  
+   474→   474→  /* Primary Glow - Pink/Magenta */
+   475→   475→  .glow-primary {
+   476→   476→    box-shadow: 
+   477→   477→      0 0 20px var(--fl-primary-glow),
+   478→   478→      0 0 40px var(--fl-primary-glow),
+   479→   479→      0 0 80px rgba(236, 72, 153, 0.15);
+   480→   480→  }
+   481→   481→  
+   482→   482→  .glow-primary:hover {
+   483→   483→    box-shadow: 
+   484→   484→      0 0 30px var(--fl-glow-strong),
+   485→   485→      0 0 60px var(--fl-primary-glow),
+   486→   486→      0 0 100px rgba(236, 72, 153, 0.2);
+   487→   487→  }
+   488→   488→  
+   489→   489→  /* Secondary Glow - Vibrant Purple */
+   490→   490→  .glow-secondary {
+   491→   491→    box-shadow: 
+   492→   492→      0 0 20px var(--fl-secondary-glow),
+   493→   493→      0 0 40px var(--fl-secondary-glow),
+   494→   494→      0 0 80px rgba(147, 51, 234, 0.15);
+   495→   495→  }
+   496→   496→  
+   497→   497→  .glow-secondary:hover {
+   498→   498→    box-shadow: 
+   499→   499→      0 0 30px var(--fl-glow-purple),
+   500→   500→      0 0 60px var(--fl-secondary-glow),
+   501→   501→      0 0 100px rgba(147, 51, 234, 0.2);
+   502→   502→  }
+   503→   503→  
+   504→   504→  /* Combined Glow - Pink + Purple */
+   505→   505→  .glow-combined {
+   506→   506→    box-shadow: 
+   507→   507→      0 0 30px var(--fl-glow),
+   508→   508→      0 0 60px var(--fl-glow-purple),
+   509→   509→      0 0 90px rgba(168, 85, 247, 0.1);
+   510→   510→  }
+   511→   511→  
+   512→   512→  /* Text Glow - Glowing Text Effect */
+   513→   513→  .glow-text {
+   514→   514→    text-shadow: 
+   515→   515→      0 0 10px var(--fl-primary-glow),
+   516→   516→      0 0 20px var(--fl-primary-glow),
+   517→   517→      0 0 40px rgba(236, 72, 153, 0.3);
+   518→   518→  }
+   519→   519→  
+   520→   520→  .glow-text-purple {
+   521→   521→    text-shadow: 
+   522→   522→      0 0 10px var(--fl-secondary-glow),
+   523→   523→      0 0 20px var(--fl-secondary-glow),
+   524→   524→      0 0 40px rgba(147, 51, 234, 0.3);
+   525→   525→  }
+   526→   526→  
+   527→   527→  /* Border Glow - Glowing Border Effect */
+   528→   528→  .glow-border {
+   529→   529→    border: 1px solid transparent;
+   530→   530→    background-image: linear-gradient(var(--fl-background), var(--fl-background)), 
+   531→   531→                      linear-gradient(135deg, var(--fl-primary), var(--fl-secondary));
+   532→   532→    background-origin: border-box;
+   533→   533→    background-clip: padding-box, border-box;
+   534→   534→  }
+   535→   535→  
+   536→   536→  /* ========================================
+   537→   537→     GRADIENT UTILITIES
+   538→   538→     Premium Multi-Color Gradients
+   539→   539→     ======================================== */
+   540→   540→  
+   541→   541→  /* Premium Gradient - Main Brand Gradient */
+   542→   542→  .gradient-premium {
+   543→   543→    background: linear-gradient(
+   544→   544→      135deg,
+   545→   545→      #7c3aed 0%,
+   546→   546→      #9333ea 25%,
+   547→   547→      #a855f7 50%,
+   548→   548→      #c084fc 75%,
+   549→   549→      #ec4899 100%
+   550→   550→    );
+   551→   551→  }
+   552→   552→  
+   553→   553→  /* Hero Gradient - Dramatic Hero Sections */
+   554→   554→  .gradient-hero {
+   555→   555→    background: radial-gradient(
+   556→   556→        ellipse at top left,
+   557→   557→        rgba(124, 58, 237, 0.4) 0%,
+   558→   558→        transparent 50%
+   559→   559→      ),
+   560→   560→      radial-gradient(
+   561→   561→        ellipse at bottom right,
+   562→   562→        rgba(236, 72, 153, 0.3) 0%,
+   563→   563→        transparent 50%
+   564→   564→      ),
+   565→   565→      radial-gradient(
+   566→   566→        ellipse at center,
+   567→   567→        rgba(168, 85, 247, 0.2) 0%,
+   568→   568→        transparent 70%
+   569→   569→      ),
+   570→   570→      var(--fl-background);
+   571→   571→  }
+   572→   572→  
+   573→   573→  /* Card Gradient - Subtle Card Backgrounds */
+   574→   574→  .gradient-card {
+   575→   575→    background: linear-gradient(
+   576→   576→      145deg,
+   577→   577→      rgba(147, 51, 234, 0.15) 0%,
+   578→   578→      rgba(15, 10, 20, 0.9) 50%,
+   579→   579→      rgba(236, 72, 153, 0.1) 100%
+   580→   580→    );
+   581→   581→    border: 1px solid var(--fl-border-subtle);
+   582→   582→  }
+   583→   583→  
+   584→   584→  /* Gradient Text - Text with Gradient Fill */
+   585→   585→  .gradient-text {
+   586→   586→    background: linear-gradient(
+   587→   587→      135deg,
+   588→   588→      var(--fl-secondary) 0%,
+   589→   589→      var(--fl-primary) 50%,
+   590→   590→      var(--fl-accent) 100%
+   591→   591→    );
+   592→   592→    -webkit-background-clip: text;
+   593→   593→    -webkit-text-fill-color: transparent;
+   594→   594→    background-clip: text;
+   595→   595→  }
+   596→   596→  
+   597→   597→  /* Animated Gradient Text */
+   598→   598→  .gradient-text-animated {
+   599→   599→    background: linear-gradient(
+   600→   600→      90deg,
+   601→   601→      var(--fl-secondary) 0%,
+   602→   602→      var(--fl-primary) 25%,
+   603→   603→      var(--fl-accent) 50%,
+   604→   604→      var(--fl-primary) 75%,
+   605→   605→      var(--fl-secondary) 100%
+   606→   606→    );
+   607→   607→    background-size: 200% auto;
+   608→   608→    -webkit-background-clip: text;
+   609→   609→    -webkit-text-fill-color: transparent;
+   610→   610→    background-clip: text;
+   611→   611→    animation: gradient-shift 3s linear infinite;
+   612→   612→  }
+   613→   613→  
+   614→   614→  /* Subtle Gradient - Background Accents */
+   615→   615→  .gradient-subtle {
+   616→   616→    background: linear-gradient(
+   617→   617→      180deg,
+   618→   618→      rgba(147, 51, 234, 0.05) 0%,
+   619→   619→      transparent 100%
+   620→   620→    );
+   621→   621→  }
+   622→   622→  
+   623→   623→  /* Mesh Gradient - Modern Mesh Effect */
+   624→   624→  .gradient-mesh {
+   625→   625→    background: 
+   626→   626→      radial-gradient(at 40% 20%, rgba(147, 51, 234, 0.3) 0px, transparent 50%),
+   627→   627→      radial-gradient(at 80% 0%, rgba(236, 72, 153, 0.2) 0px, transparent 50%),
+   628→   628→      radial-gradient(at 0% 50%, rgba(168, 85, 247, 0.25) 0px, transparent 50%),
+   629→   629→      radial-gradient(at 80% 50%, rgba(192, 132, 252, 0.15) 0px, transparent 50%),
+   630→   630→      radial-gradient(at 0% 100%, rgba(124, 58, 237, 0.2) 0px, transparent 50%),
+   631→   631→      var(--fl-background);
+   632→   632→  }
+   633→   633→  
+   634→   634→  /* ========================================
+   635→   635→     ANIMATION UTILITIES
+   636→   636→     Premium Motion & Transitions
+   637→   637→     ======================================== */
+   638→   638→  
+   639→   639→  /* Fade In Up - Entry Animation */
+   640→   640→  .animate-fade-in-up {
+   641→   641→    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+   642→   642→    opacity: 0;
+   643→   643→  }
+   644→   644→  
+   645→   645→  /* Fade In - Simple Opacity */
+   646→   646→  .animate-fade-in {
+   647→   647→    animation: fadeIn 0.5s ease-out forwards;
+   648→   648→    opacity: 0;
+   649→   649→  }
+   650→   650→  
+   651→   651→  /* Float Animation - Gentle Floating */
+   652→   652→  .animate-float {
+   653→   653→    animation: float 6s ease-in-out infinite;
+   654→   654→  }
+   655→   655→  
+   656→   656→  .animate-float-slow {
+   657→   657→    animation: float 8s ease-in-out infinite;
+   658→   658→  }
+   659→   659→  
+   660→   660→  /* Pulse Glow - Pulsing Glow Effect */
+   661→   661→  .animate-pulse-glow {
+   662→   662→    animation: pulseGlow 3s ease-in-out infinite;
+   663→   663→  }
+   664→   664→  
+   665→   665→  .animate-pulse-glow-fast {
+   666→   666→    animation: pulseGlow 1.5s ease-in-out infinite;
+   667→   667→  }
+   668→   668→  
+   669→   669→  /* Shimmer Effect - Loading/Highlight State */
+   670→   670→  .animate-shimmer {
+   671→   671→    position: relative;
+   672→   672→    overflow: hidden;
+   673→   673→  }
+   674→   674→  
+   675→   675→  .animate-shimmer::after {
+   676→   676→    content: '';
+   677→   677→    position: absolute;
+   678→   678→    inset: 0;
+   679→   679→    background: linear-gradient(
+   680→   680→      90deg,
+   681→   681→      transparent 0%,
+   682→   682→      rgba(255, 255, 255, 0.08) 50%,
+   683→   683→      transparent 100%
+   684→   684→    );
+   685→   685→    animation: shimmer 2.5s ease-in-out infinite;
+   686→   686→  }
+   687→   687→  
+   688→   688→  /* Scale In - Pop In Effect */
+   689→   689→  .animate-scale-in {
+   690→   690→    animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+   691→   691→    opacity: 0;
+   692→   692→  }
+   693→   693→  
+   694→   694→  /* Slide In Left */
+   695→   695→  .animate-slide-in-left {
+   696→   696→    animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+   697→   697→    opacity: 0;
+   698→   698→  }
+   699→   699→  
+   700→   700→  /* Slide In Right */
+   701→   701→  .animate-slide-in-right {
+   702→   702→    animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+   703→   703→    opacity: 0;
+   704→   704→  }
+   705→   705→  
+   706→   706→  /* Bounce In */
+   707→   707→  .animate-bounce-in {
+   708→   708→    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+   709→   709→    opacity: 0;
+   710→   710→  }
+   711→   711→  
+   712→   712→  /* Rotate Slow - For Icons/Decorations */
+   713→   713→  .animate-rotate-slow {
+   714→   714→    animation: rotateSlow 20s linear infinite;
+   715→   715→  }
+   716→   716→  
+   717→   717→  /* Heart Pop - Favorite/Like Animation */
+   718→   718→  .animate-heart-pop {
+   719→   719→    animation: heartPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+   720→   720→  }
+   721→   721→  
+   722→   722→  /* Animation Delays */
+   723→   723→  .animation-delay-100 { animation-delay: 100ms; }
+   724→   724→  .animation-delay-200 { animation-delay: 200ms; }
+   725→   725→  .animation-delay-300 { animation-delay: 300ms; }
+   726→   726→  .animation-delay-400 { animation-delay: 400ms; }
+   727→   727→  .animation-delay-500 { animation-delay: 500ms; }
+   728→   728→  .animation-delay-700 { animation-delay: 700ms; }
+   729→   729→  .animation-delay-1000 { animation-delay: 1000ms; }
+   730→   730→  
+   731→   731→  /* ========================================
+   732→   732→     CARD HOVER EFFECTS
+   733→   733→     Premium Interactive Cards
+   734→   734→     ======================================== */
+   735→   735→  
+   736→   736→  /* Card Hover Base */
+   737→   737→  .card-hover {
+   738→   738→    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+   739→   739→  }
+   740→   740→  
+   741→   741→  .card-hover:hover {
+   742→   742→    transform: translateY(-8px) scale(1.02);
+   743→   743→    box-shadow: 
+   744→   744→      var(--fl-shadow-xl),
+   745→   745→      0 0 30px var(--fl-glow),
+   746→   746→      0 0 60px rgba(147, 51, 234, 0.15);
+   747→   747→  }
+   748→   748→  
+   749→   749→  /* Card Hover Subtle - Less Dramatic */
+   750→   750→  .card-hover-subtle {
+   751→   751→    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+   752→   752→  }
+   753→   753→  
+   754→   754→  .card-hover-subtle:hover {
+   755→   755→    transform: translateY(-4px);
+   756→   756→    box-shadow: var(--fl-shadow-lg), 0 0 20px var(--fl-glow);
+   757→   757→  }
+   758→   758→  
+   759→   759→  /* Interactive Card - Full Experience */
+   760→   760→  .interactive-card {
+   761→   761→    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+   762→   762→    cursor: pointer;
+   763→   763→  }
+   764→   764→  
+   765→   765→  .interactive-card:hover {
+   766→   766→    transform: translateY(-6px) scale(1.01);
+   767→   767→    box-shadow: 
+   768→   768→      var(--fl-shadow-xl),
+   769→   769→      0 0 40px var(--fl-glow),
+   770→   770→      0 0 80px var(--fl-glow-purple);
+   771→   771→    border-color: var(--fl-border-hover);
+   772→   772→  }
+   773→   773→  
+   774→   774→  /* ========================================
+   775→   775→     ADDITIONAL PREMIUM UTILITIES
+   776→   776→     ======================================== */
+   777→   777→  
+   778→   778→  /* FaceLove Brand Glow */
+   779→   779→  .facelove-glow {
+   780→   780→    box-shadow: 
+   781→   781→      0 0 30px var(--fl-glow),
+   782→   782→      0 0 60px var(--fl-glow-purple);
+   783→   783→  }
+   784→   784→  
+   785→   785→  /* FaceLove Brand Gradient */
+   786→   786→  .facelove-gradient {
+   787→   787→    background: linear-gradient(
+   788→   788→      135deg,
+   789→   789→      #7c3aed 0%,
+   790→   790→      #a855f7 50%,
+   791→   791→      #ec4899 100%
+   792→   792→    );
+   793→   793→  }
+   794→   794→  
+   795→   795→  /* FaceLove Subtle Gradient */
+   796→   796→  .facelove-gradient-subtle {
+   797→   797→    background: linear-gradient(
+   798→   798→      135deg,
+   799→   799→      rgba(124, 58, 237, 0.1) 0%,
+   800→   800→      rgba(168, 85, 247, 0.15) 50%,
+   801→   801→      rgba(236, 72, 153, 0.1) 100%
+   802→   802→    );
+   803→   803→  }
+   804→   804→  
+   805→   805→  /* Shimmer Border - Animated Border */
+   806→   806→  .shimmer-border {
+   807→   807→    position: relative;
+   808→   808→    overflow: hidden;
+   809→   809→  }
+   810→   810→  
+   811→   811→  .shimmer-border::before {
+   812→   812→    content: "";
+   813→   813→    position: absolute;
+   814→   814→    inset: 0;
+   815→   815→    padding: 1.5px;
+   816→   816→    background: linear-gradient(
+   817→   817→      90deg,
+   818→   818→      transparent,
+   819→   819→      var(--fl-secondary),
+   820→   820→      var(--fl-primary),
+   821→   821→      var(--fl-accent),
+   822→   822→      transparent
+   823→   823→    );
+   824→   824→    background-size: 200% 100%;
+   825→   825→    animation: shimmerBorder 3s linear infinite;
+   826→   826→    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+   827→   827→    mask-composite: exclude;
+   828→   828→    pointer-events: none;
+   829→   829→    border-radius: inherit;
+   830→   830→  }
+   831→   831→  
+   832→   832→  /* Focus Ring - Accessible Focus States */
+   833→   833→  .focus-ring:focus-visible {
+   834→   834→    outline: none;
+   835→   835→    box-shadow: 
+   836→   836→      0 0 0 2px var(--fl-background),
+   837→   837→      0 0 0 4px var(--fl-secondary);
+   838→   838→  }
+   839→   839→  
+   840→   840→  /* Smooth Transitions */
+   841→   841→  .transition-smooth {
+   842→   842→    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter;
+   843→   843→    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+   844→   844→    transition-duration: 250ms;
+   845→   845→  }
+   846→   846→  
+   847→   847→  .transition-premium {
+   848→   848→    transition-property: all;
+   849→   849→    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+   850→   850→    transition-duration: 300ms;
+   851→   851→  }
+   852→   852→  
+   853→   853→  /* Noise Texture Overlay - Premium Feel */
+   854→   854→  .noise-overlay::after {
+   855→   855→    content: '';
+   856→   856→    position: absolute;
+   857→   857→    inset: 0;
+   858→   858→    opacity: 0.03;
+   859→   859→    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+   860→   860→    pointer-events: none;
+   861→   861→    z-index: 1;
+   862→   862→  }
+   863→   863→}
+   864→   864→
+   865→   865→/* ============================================
+   866→   866→   KEYFRAME ANIMATIONS
+   867→   867→   Premium Motion Definitions
+   868→   868→   ============================================ */
+   869→   869→
+   870→   870→/* Fade In Up - Entry from Below */
+   871→   871→@keyframes fadeInUp {
+   872→   872→  from {
+   873→   873→    opacity: 0;
+   874→   874→    transform: translateY(24px);
+   875→   875→  }
+   876→   876→  to {
+   877→   877→    opacity: 1;
+   878→   878→    transform: translateY(0);
+   879→   879→  }
+   880→   880→}
+   881→   881→
+   882→   882→/* Simple Fade In */
+   883→   883→@keyframes fadeIn {
+   884→   884→  from { opacity: 0; }
+   885→   885→  to { opacity: 1; }
+   886→   886→}
+   887→   887→
+   888→   888→/* Float - Gentle Vertical Movement */
+   889→   889→@keyframes float {
+   890→   890→  0%, 100% {
+   891→   891→    transform: translateY(0);
+   892→   892→  }
+   893→   893→  50% {
+   894→   894→    transform: translateY(-12px);
+   895→   895→  }
+   896→   896→}
+   897→   897→
+   898→   898→/* Pulse Glow - Breathing Glow Effect */
+   899→   899→@keyframes pulseGlow {
+   900→   900→  0%, 100% {
+   901→   901→    box-shadow: 
+   902→   902→      0 0 20px var(--fl-glow),
+   903→   903→      0 0 40px var(--fl-glow-purple);
+   904→   904→  }
+   905→   905→  50% {
+   906→   906→    box-shadow: 
+   907→   907→      0 0 40px var(--fl-glow-strong),
+   908→   908→      0 0 80px var(--fl-glow-purple),
+   909→   909→      0 0 120px rgba(168, 85, 247, 0.15);
+   910→   910→  }
+   911→   911→}
+   912→   912→
+   913→   913→/* Shimmer - Sweep Highlight */
+   914→   914→@keyframes shimmer {
+   915→   915→  0% {
+   916→   916→    transform: translateX(-100%);
+   917→   917→  }
+   918→   918→  100% {
+   919→   919→    transform: translateX(100%);
+   920→   920→  }
+   921→   921→}
+   922→   922→
+   923→   923→/* Scale In - Grow from Small */
+   924→   924→@keyframes scaleIn {
+   925→   925→  from {
+   926→   926→    opacity: 0;
+   927→   927→    transform: scale(0.92);
+   928→   928→  }
+   929→   929→  to {
+   930→   930→    opacity: 1;
+   931→   931→    transform: scale(1);
+   932→   932→  }
+   933→   933→}
+   934→   934→
+   935→   935→/* Slide In Left */
+   936→   936→@keyframes slideInLeft {
+   937→   937→  from {
+   938→   938→    opacity: 0;
+   939→   939→    transform: translateX(-24px);
+   940→   940→  }
+   941→   941→  to {
+   942→   942→    opacity: 1;
+   943→   943→    transform: translateX(0);
+   944→   944→  }
+   945→   945→}
+   946→   946→
+   947→   947→/* Slide In Right */
+   948→   948→@keyframes slideInRight {
+   949→   949→  from {
+   950→   950→    opacity: 0;
+   951→   951→    transform: translateX(24px);
+   952→   952→  }
+   953→   953→  to {
+   954→   954→    opacity: 1;
+   955→   955→    transform: translateX(0);
+   956→   956→  }
+   957→   957→}
+   958→   958→
+   959→   959→/* Bounce In - Playful Entry */
+   960→   960→@keyframes bounceIn {
+   961→   961→  0% {
+   962→   962→    opacity: 0;
+   963→   963→    transform: scale(0.3);
+   964→   964→  }
+   965→   965→  50% {
+   966→   966→    transform: scale(1.08);
+   967→   967→  }
+   968→   968→  70% {
+   969→   969→    transform: scale(0.95);
+   970→   970→  }
+   971→   971→  100% {
+   972→   972→    opacity: 1;
+   973→   973→    transform: scale(1);
+   974→   974→  }
+   975→   975→}
+   976→   976→
+   977→   977→/* Rotate Slow - Continuous Rotation */
+   978→   978→@keyframes rotateSlow {
+   979→   979→  from { transform: rotate(0deg); }
+   980→   980→  to { transform: rotate(360deg); }
+   981→   981→}
+   982→   982→
+   983→   983→/* Heart Pop - Like/Favorite Animation */
+   984→   984→@keyframes heartPop {
+   985→   985→  0% { transform: scale(1); }
+   986→   986→  25% { transform: scale(1.35); }
+   987→   987→  50% { transform: scale(0.95); }
+   988→   988→  75% { transform: scale(1.15); }
+   989→   989→  100% { transform: scale(1); }
+   990→   990→}
+   991→   991→
+   992→   992→/* Gradient Shift - Animated Gradient Position */
+   993→   993→@keyframes gradientShift {
+   994→   994→  0% { background-position: 0% center; }
+   995→   995→  50% { background-position: 100% center; }
+   996→   996→  100% { background-position: 0% center; }
+   997→   997→}
+   998→   998→
+   999→   999→/* Shimmer Border - Animated Border Sweep */
+  1000→  1000→@keyframes shimmerBorder {
+  1001→  1001→  0% { background-position: -200% 0; }
+  1002→  1002→  100% { background-position: 200% 0; }
+  1003→  1003→}
+  1004→  1004→
+  1005→  1005→/* Slide Up Fade - Quick Entry */
+  1006→  1006→@keyframes slideUpFade {
+  1007→  1007→  from {
+  1008→  1008→    opacity: 0;
+  1009→  1009→    transform: translateY(12px);
+  1010→  1010→  }
+  1011→  1011→  to {
+  1012→  1012→    opacity: 1;
+  1013→  1013→    transform: translateY(0);
+  1014→  1014→  }
+  1015→  1015→}
+  1016→  1016→
+  1017→  1017→/* Scale In Bounce - Bouncy Scale */
+  1018→  1018→@keyframes scaleInBounce {
+  1019→  1019→  0% {
+  1020→  1020→    opacity: 0;
+  1021→  1021→    transform: scale(0.75);
+  1022→  1022→  }
+  1023→  1023→  50% {
+  1024→  1024→    transform: scale(1.04);
+  1025→  1025→  }
+  1026→  1026→  100% {
+  1027→  1027→    opacity: 1;
+  1028→  1028→    transform: scale(1);
+  1029→  1029→  }
+  1030→  1030→}
+  1031→  1031→
+  1032→  1032→/* Ripple - Click Ripple Effect */
+  1033→  1033→@keyframes ripple {
+  1034→  1034→  0% {
+  1035→  1035→    transform: scale(0);
+  1036→  1036→    opacity: 0.5;
+  1037→  1037→  }
+  1038→  1038→  100% {
+  1039→  1039→    transform: scale(4);
+  1040→  1040→    opacity: 0;
+  1041→  1041→  }
+  1042→  1042→}
+  1043→  1043→
+  1044→  1044→/* ============================================
+  1045→  1045→   ADDITIONAL UTILITY CLASSES
+  1046→  1046→   Standalone Premium Components
+  1047→  1047→   ============================================ */
+  1048→  1048→
+  1049→  1049→/* Animated Gradient Background */
+  1050→  1050→.gradient-bg-animated {
+  1051→  1051→  background: linear-gradient(
+  1052→  1052→    -45deg,
+  1053→  1053→    var(--fl-background),
+  1054→  1054→    rgba(124, 58, 237, 0.2),
+  1055→  1055→    var(--fl-background-secondary),
+  1056→  1056→    rgba(236, 72, 153, 0.15)
+  1057→  1057→  );
+  1058→  1058→  background-size: 400% 400%;
+  1059→  1059→  animation: gradientShift 15s ease infinite;
+  1060→  1060→}
+  1061→  1061→
+  1062→  1062→/* Premium Divider */
+  1063→  1063→.divider-premium {
+  1064→  1064→  height: 1px;
+  1065→  1065→  background: linear-gradient(
+  1066→  1066→    90deg,
+  1067→  1067→    transparent 0%,
+  1068→  1068→    var(--fl-border) 20%,
+  1069→  1069→    var(--fl-secondary) 50%,
+  1070→  1070→    var(--fl-border) 80%,
+  1071→  1071→    transparent 100%
+  1072→  1072→  );
+  1073→  1073→}
+  1074→  1074→
+  1075→  1075→/* Text Gradient Underline */
+  1076→  1076→.text-gradient-underline {
+  1077→  1077→  position: relative;
+  1078→  1078→  display: inline-block;
+  1079→  1079→}
+  1080→  1080→
+  1081→  1081→.text-gradient-underline::after {
+  1082→  1082→  content: '';
+  1083→  1083→  position: absolute;
+  1084→  1084→  left: 0;
+  1085→  1085→  bottom: -4px;
+  1086→  1086→  width: 100%;
+  1087→  1087→  height: 2px;
+  1088→  1088→  background: linear-gradient(90deg, var(--fl-secondary), var(--fl-primary));
+  1089→  1089→  border-radius: var(--fl-radius-full);
+  1090→  1090→}
+  1091→  1091→
+  1092→  1092→/* Premium Button Base */
+  1093→  1093→.btn-premium {
+  1094→  1094→  position: relative;
+  1095→  1095→  display: inline-flex;
+  1096→  1096→  align-items: center;
+  1097→  1097→  justify-content: center;
+  1098→  1098→  padding: 0.75rem 1.5rem;
+  1099→  1099→  font-weight: 600;
+  1100→  1100→  border-radius: var(--fl-radius-lg);
+  1101→  1101→  background: var(--fl-primary);
+  1102→  1102→  color: var(--fl-text-primary);
+  1103→  1103→  border: none;
+  1104→  1104→  cursor: pointer;
+  1105→  1105→  overflow: hidden;
+  1106→  1106→  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  1107→  1107→}
+  1108→  1108→
+  1109→  1109→.btn-premium::before {
+  1110→  1110→  content: '';
+  1111→  1111→  position: absolute;
+  1112→  1112→  inset: 0;
+  1113→  1113→  background: linear-gradient(
+  1114→  1114→    135deg,
+  1115→  1115→    transparent 0%,
+  1116→  1116→    rgba(255, 255, 255, 0.15) 50%,
+  1117→  1117→    transparent 100%
+  1118→  1118→  );
+  1119→  1119→  opacity: 0;
+  1120→  1120→  transition: opacity 0.3s ease;
+  1121→  1121→}
+  1122→  1122→
+  1123→  1123→.btn-premium:hover {
+  1124→  1124→  transform: translateY(-2px);
+  1125→  1125→  box-shadow: var(--fl-shadow-glow);
+  1126→  1126→}
+  1127→  1127→
+  1128→  1128→.btn-premium:hover::before {
+  1129→  1129→  opacity: 1;
+  1130→  1130→}
+  1131→  1131→
+  1132→  1132→.btn-premium:active {
+  1133→  1133→  transform: translateY(0);
+  1134→  1134→}
+  1135→  1135→
+  1136→  1136→/* Premium Input Style */
+  1137→  1137→.input-premium {
+  1138→  1138→  width: 100%;
+  1139→  1139→  padding: 0.875rem 1.125rem;
+  1140→  1140→  background: var(--fl-surface);
+  1141→  1141→  border: 1px solid var(--fl-border);
+  1142→  1142→  border-radius: var(--fl-radius-lg);
+  1143→  1143→  color: var(--fl-text-primary);
+  1144→  1144→  font-size: 1rem;
+  1145→  1145→  transition: all 0.3s ease;
+  1146→  1146→}
+  1147→  1147→
+  1148→  1148→.input-premium::placeholder {
+  1149→  1149→  color: var(--fl-text-muted);
+  1150→  1150→}
+  1151→  1151→
+  1152→  1152→.input-premium:focus {
+  1153→  1153→  outline: none;
+  1154→  1154→  border-color: var(--fl-secondary);
+  1155→  1155→  box-shadow: 0 0 0 3px var(--fl-secondary-glow);
+  1156→  1156→}
+  1157→  1157→
+  1158→  1158→/* Badge Styles */
+  1159→  1159→.badge-premium {
+  1160→  1160→  display: inline-flex;
+  1161→  1161→  align-items: center;
+  1162→  1162→  padding: 0.25rem 0.75rem;
+  1163→  1163→  font-size: 0.75rem;
+  1164→  1164→  font-weight: 600;
+  1165→  1165→  border-radius: var(--fl-radius-full);
+  1166→  1166→  background: linear-gradient(135deg, var(--fl-secondary), var(--fl-primary));
+  1167→  1167→  color: var(--fl-text-primary);
+  1168→  1168→  text-transform: uppercase;
+  1169→  1169→  letter-spacing: 0.05em;
+  1170→  1170→}
+  1171→  1171→
+  1172→  1172→/* Avatar Ring - User Avatars with Glow */
+  1173→  1173→.avatar-ring {
+  1174→  1174→  position: relative;
+  1175→  1175→}
+  1176→  1176→
+  1177→  1177→.avatar-ring::before {
+  1178→  1178→  content: '';
+  1179→  1179→  position: absolute;
+  1180→  1180→  inset: -3px;
+  1181→  1181→  border-radius: inherit;
+  1182→  1182→  background: linear-gradient(135deg, var(--fl-primary), var(--fl-secondary));
+  1183→  1183→  z-index: -1;
+  1184→  1184→  opacity: 0.8;
+  1185→  1185→}
+  1186→  1186→
+  1187→  1187→/* Skeleton Loading State */
+  1188→  1188→.skeleton-premium {
+  1189→  1189→  position: relative;
+  1190→  1190→  overflow: hidden;
+  1191→  1191→  background: linear-gradient(
+  1192→  1192→    90deg,
+  1193→  1193→    var(--fl-surface) 0%,
+  1194→  1194→    rgba(147, 51, 234, 0.1) 50%,
+  1195→  1195→    var(--fl-surface) 100%
+  1196→  1196→  );
+  1197→  1197→  background-size: 200% 100%;
+  1198→  1198→  animation: shimmer 1.5s ease-in-out infinite;
+  1199→  1199→  border-radius: var(--fl-radius-md);
+  1200→  1200→}
+  1201→  1201→
+  1202→  1202→/* Tooltip Style */
+  1203→  1203→.tooltip-premier {
+  1204→  1204→  position: relative;
+  1205→  1205→}
+  1206→  1206→
+  1207→  1207→.tooltip-premier::after {
+  1208→  1208→  content: attr(data-tooltip);
+  1209→  1209→  position: absolute;
+  1210→  1210→  bottom: calc(100% + 8px);
+  1211→  1211→  left: 50%;
+  1212→  1212→  transform: translateX(-50%) translateY(4px);
+  1213→  1213→  padding: 0.5rem 0.875rem;
+  1214→  1214→  background: var(--fl-surface-elevated);
+  1215→  1215→  border: 1px solid var(--fl-border);
+  1216→  1216→  border-radius: var(--fl-radius-md);
+  1217→  1217→  font-size: 0.75rem;
+  1218→  1218→  white-space: nowrap;
+  1219→  1219→  opacity: 0;
+  1220→  1220→  visibility: hidden;
+  1221→  1221→  transition: all 0.2s ease;
+  1222→  1222→  pointer-events: none;
+  1223→  1223→  box-shadow: var(--fl-shadow-lg);
+  1224→  1224→}
+  1225→  1225→
+  1226→  1226→.tooltip-premier:hover::after {
+  1227→  1227→  opacity: 1;
+  1228→  1228→  visibility: visible;
+  1229→  1229→  transform: translateX(-50%) translateY(0);
+  1230→  1230→}
+  1231→  1231→

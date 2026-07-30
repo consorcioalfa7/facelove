@@ -3,11 +3,19 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================
+   FACELOVE PREMIUM DESIGN SYSTEM
+   Dark Premium Theme - Purple Velvet Aesthetic
+   ============================================ */
+
 @theme inline {
+  /* Core Theme Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  
+  /* Sidebar Colors */
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -16,11 +24,15 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+  
+  /* Chart Colors */
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
+  
+  /* UI Component Colors */
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -37,12 +49,19 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  
+  /* Border Radius */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   
-  /* FaceLove Brand Colors - Purple & Pink */
+  /* ==========================================
+     FACELOVE BRAND COLOR PALETTE
+     Purple Velvet with Pink Glow
+     ========================================== */
+  
+  /* Violet Spectrum */
   --color-violet-50: #f5f3ff;
   --color-violet-100: #ede9fe;
   --color-violet-200: #ddd6fe;
@@ -54,6 +73,7 @@
   --color-violet-800: #5b21b6;
   --color-violet-900: #4c1d95;
   
+  /* Purple Spectrum - Primary Brand */
   --color-purple-50: #faf5ff;
   --color-purple-100: #f3e8ff;
   --color-purple-200: #e9d5ff;
@@ -65,6 +85,7 @@
   --color-purple-800: #6b21a8;
   --color-purple-900: #581c87;
   
+  /* Fuchsia Spectrum - Accent */
   --color-fuchsia-50: #fdf4ff;
   --color-fuchsia-100: #fae8ff;
   --color-fuchsia-200: #f5d0fe;
@@ -76,17 +97,19 @@
   --color-fuchsia-800: #86198f;
   --color-fuchsia-900: #701a75;
   
+  /* Pink Spectrum - Primary Action */
   --color-pink-50: #fdf2f8;
   --color-pink-100: #fce7f3;
-  --color-pink-200: #fecdd3;
+  --color-pink-200: #fce7f3;
   --color-pink-300: #fda4af;
   --color-pink-400: #fb7185;
-  --color-pink-500: #f43f5e;
-  --color-pink-600: #e11d48;
-  --color-pink-700: #be123c;
-  --color-pink-800: #9f1239;
-  --color-pink-900: #881337;
+  --color-pink-500: #ec4899;
+  --color-pink-600: #db2777;
+  --color-pink-700: #be185d;
+  --color-pink-800: #9d174d;
+  --color-pink-900: #831843;
   
+  /* Rose Spectrum */
   --color-rose-50: #fff1f2;
   --color-rose-100: #ffe4e6;
   --color-rose-200: #fecdd3;
@@ -99,174 +122,755 @@
   --color-rose-900: #881337;
 }
 
+/* ============================================
+   FACELOVE DESIGN TOKENS (CSS Custom Properties)
+   Premium Dark Theme as Default
+   ============================================ */
+
 :root {
+  /* Base Radius */
   --radius: 0.625rem;
-  /* Light theme - clean white background */
-  --background: oklch(0.985 0.005 300);
-  --foreground: oklch(0.2 0.02 300);
-  --card: oklch(0.995 0.003 300);
-  --card-foreground: oklch(0.2 0.02 300);
-  --popover: oklch(0.995 0.003 300);
-  --popover-foreground: oklch(0.2 0.02 300);
-  /* Primary - FaceLove Purple */
-  --primary: oklch(0.55 0.25 300);
-  --primary-foreground: oklch(0.985 0.005 300);
-  --secondary: oklch(0.95 0.01 300);
-  --secondary-foreground: oklch(0.25 0.02 300);
-  --muted: oklch(0.95 0.01 300);
-  --muted-foreground: oklch(0.5 0.03 300);
-  --accent: oklch(0.95 0.02 330);
-  --accent-foreground: oklch(0.25 0.02 300);
-  /* Destructive - rose red */
-  --destructive: oklch(0.6 0.22 25);
-  --border: oklch(0.91 0.02 300);
-  --input: oklch(0.91 0.02 300);
-  --ring: oklch(0.55 0.25 300);
-  /* Chart colors - FaceLove palette (purple, pink, fuchsia) */
-  --chart-1: oklch(0.55 0.25 300);   /* Purple */
-  --chart-2: oklch(0.6 0.22 350);    /* Pink/Rose */
-  --chart-3: oklch(0.6 0.2 330);     /* Fuchsia */
-  --chart-4: oklch(0.65 0.2 280);    /* Violet */
-  --chart-5: oklch(0.65 0.22 30);    /* Rose */
-  /* Sidebar */
-  --sidebar: oklch(0.97 0.01 300);
-  --sidebar-foreground: oklch(0.2 0.02 300);
-  --sidebar-primary: oklch(0.55 0.25 300);
-  --sidebar-primary-foreground: oklch(0.985 0.005 300);
-  --sidebar-accent: oklch(0.94 0.02 330);
-  --sidebar-accent-foreground: oklch(0.25 0.02 300);
-  --sidebar-border: oklch(0.91 0.02 300);
-  --sidebar-ring: oklch(0.55 0.25 300);
+  
+  /* ========================================
+     FACELOVE BRAND TOKENS (--fl- prefix)
+     Purple Velvet + Pink Glow Aesthetic
+     ======================================== */
+  
+  /* Background Tokens - Almost Black with Purple Undertone */
+  --fl-background: #0a0a0f;
+  --fl-background-secondary: #0f0a14;
+  --fl-background-tertiary: #120a18;
+  
+  /* Surface Tokens - Translucent Dark Purple */
+  --fl-surface: rgba(15, 10, 20, 0.8);
+  --fl-surface-elevated: rgba(20, 12, 28, 0.9);
+  --fl-surface-overlay: rgba(25, 15, 35, 0.95);
+  
+  /* Primary Color - Pink/Magenta */
+  --fl-primary: #ec4899;
+  --fl-primary-hover: #f472b6;
+  --fl-primary-active: #db2777;
+  --fl-primary-glow: rgba(236, 72, 153, 0.4);
+  
+  /* Secondary Color - Vibrant Purple */
+  --fl-secondary: #9333ea;
+  --fl-secondary-hover: #a855f7;
+  --fl-secondary-active: #7e22ce;
+  --fl-secondary-glow: rgba(147, 51, 234, 0.4);
+  
+  /* Accent Color - Pink Glow */
+  --fl-accent: #f472b6;
+  --fl-accent-hover: #fb7185;
+  --fl-accent-glow: rgba(244, 114, 182, 0.5);
+  
+  /* Text Colors */
+  --fl-text-primary: #ffffff;
+  --fl-text-secondary: #a78bfa;
+  --fl-text-muted: #6b7280;
+  --fl-text-disabled: #4b5563;
+  
+  /* Border Colors - Purple Translucent */
+  --fl-border: rgba(147, 51, 234, 0.3);
+  --fl-border-hover: rgba(147, 51, 234, 0.5);
+  --fl-border-subtle: rgba(147, 51, 234, 0.15);
+  
+  /* Glow Effects - Pink/Purple */
+  --fl-glow: rgba(236, 72, 153, 0.35);
+  --fl-glow-strong: rgba(236, 72, 153, 0.6);
+  --fl-glow-purple: rgba(147, 51, 234, 0.4);
+  --fl-glow-combined: linear-gradient(135deg, rgba(236, 72, 153, 0.4), rgba(147, 51, 234, 0.4));
+  
+  /* Border Radius Tokens */
+  --fl-radius-sm: 0.375rem;
+  --fl-radius-md: 0.625rem;
+  --fl-radius-lg: 0.875rem;
+  --fl-radius-xl: 1.125rem;
+  --fl-radius-2xl: 1.5rem;
+  --fl-radius-full: 9999px;
+  
+  /* Shadow Tokens */
+  --fl-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 0 10px rgba(147, 51, 234, 0.05);
+  --fl-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3), 0 0 20px rgba(147, 51, 234, 0.08);
+  --fl-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4), 0 0 40px rgba(147, 51, 234, 0.12);
+  --fl-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.4), 0 0 60px rgba(147, 51, 234, 0.15);
+  --fl-shadow-glow: 0 0 20px var(--fl-glow), 0 0 60px var(--fl-glow-purple), 0 0 100px rgba(236, 72, 153, 0.1);
+  --fl-shadow-glow-strong: 0 0 30px var(--fl-glow-strong), 0 0 80px var(--fl-glow-purple), 0 0 120px rgba(236, 72, 153, 0.15);
+  --fl-shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(147, 51, 234, 0.05);
+  
+  /* ========================================
+     LEGACY THEME VARIABLES (Dark by Default)
+     Mapped to FaceLove Design Tokens
+     ======================================== */
+  
+  /* Background - Deep Black-Purple */
+  --background: #0a0a0f;
+  --foreground: #ffffff;
+  
+  /* Card - Translucent Dark Purple */
+  --card: rgba(15, 10, 20, 0.85);
+  --card-foreground: #ffffff;
+  
+  /* Popover */
+  --popover: rgba(20, 12, 28, 0.95);
+  --popover-foreground: #ffffff;
+  
+  /* Primary - Pink/Magenta */
+  --primary: #ec4899;
+  --primary-foreground: #ffffff;
+  
+  /* Secondary - Vibrant Purple */
+  --secondary: rgba(147, 51, 234, 0.2);
+  --secondary-foreground: #ffffff;
+  
+  /* Muted */
+  --muted: rgba(147, 51, 234, 0.1);
+  --muted-foreground: #a78bfa;
+  
+  /* Accent - Pink Glow */
+  --accent: rgba(244, 114, 182, 0.15);
+  --accent-foreground: #ffffff;
+  
+  /* Destructive */
+  --destructive: #ef4444;
+  
+  /* Borders - Purple Translucent */
+  --border: rgba(147, 51, 234, 0.25);
+  --input: rgba(147, 51, 234, 0.25);
+  --ring: #a855f7;
+  
+  /* Chart Colors - FaceLove Palette */
+  --chart-1: #a855f7;
+  --chart-2: #ec4899;
+  --chart-3: #c084fc;
+  --chart-4: #f472b6;
+  --chart-5: #e879f9;
+  
+  /* Sidebar - Dark Premium */
+  --sidebar: rgba(10, 6, 16, 0.98);
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ec4899;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgba(147, 51, 234, 0.2);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(147, 51, 234, 0.2);
+  --sidebar-ring: #a855f7;
 }
 
-.dark {
-  /* Dark theme - deep purple-tinted charcoal */
-  --background: oklch(0.14 0.02 300);
-  --foreground: oklch(0.93 0.01 300);
-  --card: oklch(0.18 0.025 300);
-  --card-foreground: oklch(0.93 0.01 300);
-  --popover: oklch(0.18 0.025 300);
-  --popover-foreground: oklch(0.93 0.01 300);
-  /* Primary - lighter purple for dark mode */
-  --primary: oklch(0.65 0.25 300);
-  --primary-foreground: oklch(0.14 0.02 300);
-  --secondary: oklch(0.23 0.03 300);
-  --secondary-foreground: oklch(0.93 0.01 300);
-  --muted: oklch(0.23 0.03 300);
-  --muted-foreground: oklch(0.65 0.04 300);
-  --accent: oklch(0.26 0.04 330);
-  --accent-foreground: oklch(0.93 0.01 300);
-  /* Destructive - brighter rose for dark mode */
-  --destructive: oklch(0.65 0.24 25);
-  --border: oklch(0.3 0.03 300);
-  --input: oklch(0.3 0.03 300);
-  --ring: oklch(0.65 0.25 300);
-  /* Chart colors for dark theme */
-  --chart-1: oklch(0.65 0.25 300);
-  --chart-2: oklch(0.68 0.22 350);
-  --chart-3: oklch(0.68 0.2 330);
-  --chart-4: oklch(0.7 0.2 280);
-  --chart-5: oklch(0.7 0.22 30);
-  /* Sidebar dark */
-  --sidebar: oklch(0.18 0.025 300);
-  --sidebar-foreground: oklch(0.93 0.01 300);
-  --sidebar-primary: oklch(0.65 0.25 300);
-  --sidebar-primary-foreground: oklch(0.14 0.02 300);
-  --sidebar-accent: oklch(0.26 0.04 330);
-  --sidebar-accent-foreground: oklch(0.93 0.01 300);
-  --sidebar-border: oklch(0.3 0.03 300);
-  --sidebar-ring: oklch(0.65 0.25 300);
+/* Light Theme (Opt-in) */
+.light {
+  --fl-background: #faf5ff;
+  --fl-background-secondary: #f3e8ff;
+  --fl-background-tertiary: #ede9fe;
+  --fl-surface: rgba(255, 255, 255, 0.9);
+  --fl-surface-elevated: rgba(255, 255, 255, 0.98);
+  --fl-surface-overlay: rgba(255, 255, 255, 1);
+  --fl-primary: #db2777;
+  --fl-primary-hover: #ec4899;
+  --fl-primary-active: #be185d;
+  --fl-primary-glow: rgba(219, 39, 119, 0.3);
+  --fl-secondary: #7c3aed;
+  --fl-secondary-hover: #8b5cf6;
+  --fl-secondary-active: #6d28d9;
+  --fl-secondary-glow: rgba(124, 58, 237, 0.3);
+  --fl-accent: #ec4899;
+  --fl-accent-hover: #f43f5e;
+  --fl-accent-glow: rgba(236, 72, 153, 0.3);
+  --fl-text-primary: #1f2937;
+  --fl-text-secondary: #6b21a8;
+  --fl-text-muted: #9ca3af;
+  --fl-text-disabled: #d1d5db;
+  --fl-border: rgba(124, 58, 237, 0.2);
+  --fl-border-hover: rgba(124, 58, 237, 0.4);
+  --fl-border-subtle: rgba(124, 58, 237, 0.1);
+  --fl-glow: rgba(219, 39, 119, 0.25);
+  --fl-glow-strong: rgba(219, 39, 119, 0.45);
+  --fl-glow-purple: rgba(124, 58, 237, 0.3);
+  --fl-shadow-sm: 0 1px 2px rgba(124, 58, 237, 0.1);
+  --fl-shadow-md: 0 4px 6px -1px rgba(124, 58, 237, 0.12);
+  --fl-shadow-lg: 0 10px 15px -3px rgba(124, 58, 237, 0.15);
+  --fl-shadow-xl: 0 20px 25px -5px rgba(124, 58, 237, 0.18);
+  --fl-shadow-glow: 0 0 20px rgba(219, 39, 119, 0.2), 0 0 40px rgba(124, 58, 237, 0.15);
+  --fl-shadow-glow-strong: 0 0 30px rgba(219, 39, 119, 0.35), 0 0 60px rgba(124, 58, 237, 0.25);
+  --fl-shadow-inner: inset 0 1px 3px rgba(124, 58, 237, 0.08);
+  
+  /* Legacy Light Variables */
+  --background: #faf5ff;
+  --foreground: #1f2937;
+  --card: rgba(255, 255, 255, 0.9);
+  --card-foreground: #1f2937;
+  --popover: rgba(255, 255, 255, 0.98);
+  --popover-foreground: #1f2937;
+  --primary: #db2777;
+  --primary-foreground: #ffffff;
+  --secondary: #f3e8ff;
+  --secondary-foreground: #1f2937;
+  --muted: #ede9fe;
+  --muted-foreground: #6b7280;
+  --accent: #fce7f3;
+  --accent-foreground: #1f2937;
+  --destructive: #dc2626;
+  --border: rgba(124, 58, 237, 0.2);
+  --input: rgba(124, 58, 237, 0.2);
+  --ring: #8b5cf6;
+  --chart-1: #8b5cf6;
+  --chart-2: #db2777;
+  --chart-3: #a78bfa;
+  --chart-4: #ec4899;
+  --chart-5: #d946ef;
+  --sidebar: #f3e8ff;
+  --sidebar-foreground: #1f2937;
+  --sidebar-primary: #db2777;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ede9fe;
+  --sidebar-accent-foreground: #1f2937;
+  --sidebar-border: rgba(124, 58, 237, 0.2);
+  --sidebar-ring: #8b5cf6;
 }
+
+/* Dark Theme Class Support (for manual toggling) */
+.dark {
+  /* Inherits from :root which is already dark premium */
+}
+
+/* ============================================
+   BASE LAYER STYLES
+   ============================================ */
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+  
   body {
     @apply bg-background text-foreground;
+    background-color: var(--fl-background);
+    color: var(--fl-text-primary);
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   
-  /* Smooth scrolling */
+  /* Smooth Scrolling */
   html {
     scroll-behavior: smooth;
   }
   
-  /* Custom scrollbar styling */
+  /* Selection Styling - Premium Purple/Pink */
+  ::selection {
+    background-color: var(--fl-primary-glow);
+    color: var(--fl-text-primary);
+  }
+  
+  /* Focus Visible - Accessibility */
+  :focus-visible {
+    outline: 2px solid var(--fl-secondary);
+    outline-offset: 2px;
+  }
+  
+  /* ========================================
+     PREMIUM SCROLLBAR STYLING
+     Thin, Purple-Tinted, Elegant
+     ======================================== */
+  
+  /* Webkit Browsers (Chrome, Safari, Edge) */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
   
   ::-webkit-scrollbar-track {
     background: transparent;
+    border-radius: var(--fl-radius-full);
   }
   
   ::-webkit-scrollbar-thumb {
-    background: oklch(0.55 0.15 300 / 40%);
-    border-radius: 100px;
-    
-    .dark & {
-      background: oklch(0.55 0.15 300 / 30%);
-    }
+    background: linear-gradient(
+      180deg,
+      var(--fl-secondary) 0%,
+      var(--fl-primary) 100%
+    );
+    border-radius: var(--fl-radius-full);
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    background: oklch(0.55 0.2 300 / 60%);
-    
-    .dark & {
-      background: oklch(0.6 0.2 300 / 50%);
-    }
+    opacity: 1;
+    box-shadow: 0 0 10px var(--fl-glow);
+  }
+  
+  /* Firefox Scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--fl-secondary) transparent;
   }
 }
 
-/* Animation utilities */
+/* ============================================
+   UTILITY CLASSES LAYER
+   ============================================ */
+
 @layer utilities {
-  .animate-fade-in {
-    animation: fadeIn 0.5s ease-out forwards;
+  /* ========================================
+     GLASS MORPHISM UTILITIES
+     Frosted Glass Effect with Purple Tint
+     ======================================== */
+  
+  /* Base Glass Effect */
+  .glass {
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    background: var(--fl-surface);
+    border: 1px solid var(--fl-border);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
+  .glass:hover {
+    border-color: var(--fl-border-hover);
+  }
+  
+  /* Glass Card - Elevated Surface */
+  .glass-card {
+    backdrop-filter: blur(20px) saturate(200%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    background: var(--fl-surface-elevated);
+    border: 1px solid var(--fl-border);
+    border-radius: var(--fl-radius-lg);
+    box-shadow: var(--fl-shadow-md);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .glass-card:hover {
+    border-color: var(--fl-border-hover);
+    box-shadow: var(--fl-shadow-lg), var(--fl-glow);
+    transform: translateY(-2px);
+  }
+  
+  /* Glass Header - Navigation/Headers */
+  .glass-header {
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    background: var(--fl-surface-overlay);
+    border-bottom: 1px solid var(--fl-border-subtle);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+  
+  /* Glass Subtle - Minimal Glass Effect */
+  .glass-subtle {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    background: rgba(15, 10, 20, 0.6);
+    border: 1px solid var(--fl-border-subtle);
+  }
+  
+  /* ========================================
+     GLOW EFFECTS UTILITIES
+     Pink/Purple Radiant Effects
+     ======================================== */
+  
+  /* Primary Glow - Pink/Magenta */
+  .glow-primary {
+    box-shadow: 
+      0 0 20px var(--fl-primary-glow),
+      0 0 40px var(--fl-primary-glow),
+      0 0 80px rgba(236, 72, 153, 0.15);
+  }
+  
+  .glow-primary:hover {
+    box-shadow: 
+      0 0 30px var(--fl-glow-strong),
+      0 0 60px var(--fl-primary-glow),
+      0 0 100px rgba(236, 72, 153, 0.2);
+  }
+  
+  /* Secondary Glow - Vibrant Purple */
+  .glow-secondary {
+    box-shadow: 
+      0 0 20px var(--fl-secondary-glow),
+      0 0 40px var(--fl-secondary-glow),
+      0 0 80px rgba(147, 51, 234, 0.15);
+  }
+  
+  .glow-secondary:hover {
+    box-shadow: 
+      0 0 30px var(--fl-glow-purple),
+      0 0 60px var(--fl-secondary-glow),
+      0 0 100px rgba(147, 51, 234, 0.2);
+  }
+  
+  /* Combined Glow - Pink + Purple */
+  .glow-combined {
+    box-shadow: 
+      0 0 30px var(--fl-glow),
+      0 0 60px var(--fl-glow-purple),
+      0 0 90px rgba(168, 85, 247, 0.1);
+  }
+  
+  /* Text Glow - Glowing Text Effect */
+  .glow-text {
+    text-shadow: 
+      0 0 10px var(--fl-primary-glow),
+      0 0 20px var(--fl-primary-glow),
+      0 0 40px rgba(236, 72, 153, 0.3);
+  }
+  
+  .glow-text-purple {
+    text-shadow: 
+      0 0 10px var(--fl-secondary-glow),
+      0 0 20px var(--fl-secondary-glow),
+      0 0 40px rgba(147, 51, 234, 0.3);
+  }
+  
+  /* Border Glow - Glowing Border Effect */
+  .glow-border {
+    border: 1px solid transparent;
+    background-image: linear-gradient(var(--fl-background), var(--fl-background)), 
+                      linear-gradient(135deg, var(--fl-primary), var(--fl-secondary));
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+  }
+  
+  /* ========================================
+     GRADIENT UTILITIES
+     Premium Multi-Color Gradients
+     ======================================== */
+  
+  /* Premium Gradient - Main Brand Gradient */
+  .gradient-premium {
+    background: linear-gradient(
+      135deg,
+      #7c3aed 0%,
+      #9333ea 25%,
+      #a855f7 50%,
+      #c084fc 75%,
+      #ec4899 100%
+    );
+  }
+  
+  /* Hero Gradient - Dramatic Hero Sections */
+  .gradient-hero {
+    background: radial-gradient(
+        ellipse at top left,
+        rgba(124, 58, 237, 0.4) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse at bottom right,
+        rgba(236, 72, 153, 0.3) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse at center,
+        rgba(168, 85, 247, 0.2) 0%,
+        transparent 70%
+      ),
+      var(--fl-background);
+  }
+  
+  /* Card Gradient - Subtle Card Backgrounds */
+  .gradient-card {
+    background: linear-gradient(
+      145deg,
+      rgba(147, 51, 234, 0.15) 0%,
+      rgba(15, 10, 20, 0.9) 50%,
+      rgba(236, 72, 153, 0.1) 100%
+    );
+    border: 1px solid var(--fl-border-subtle);
+  }
+  
+  /* Gradient Text - Text with Gradient Fill */
+  .gradient-text {
+    background: linear-gradient(
+      135deg,
+      var(--fl-secondary) 0%,
+      var(--fl-primary) 50%,
+      var(--fl-accent) 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  /* Animated Gradient Text */
+  .gradient-text-animated {
+    background: linear-gradient(
+      90deg,
+      var(--fl-secondary) 0%,
+      var(--fl-primary) 25%,
+      var(--fl-accent) 50%,
+      var(--fl-primary) 75%,
+      var(--fl-secondary) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-shift 3s linear infinite;
+  }
+  
+  /* Subtle Gradient - Background Accents */
+  .gradient-subtle {
+    background: linear-gradient(
+      180deg,
+      rgba(147, 51, 234, 0.05) 0%,
+      transparent 100%
+    );
+  }
+  
+  /* Mesh Gradient - Modern Mesh Effect */
+  .gradient-mesh {
+    background: 
+      radial-gradient(at 40% 20%, rgba(147, 51, 234, 0.3) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, rgba(236, 72, 153, 0.2) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, rgba(168, 85, 247, 0.25) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, rgba(192, 132, 252, 0.15) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(124, 58, 237, 0.2) 0px, transparent 50%),
+      var(--fl-background);
+  }
+  
+  /* ========================================
+     ANIMATION UTILITIES
+     Premium Motion & Transitions
+     ======================================== */
+  
+  /* Fade In Up - Entry Animation */
   .animate-fade-in-up {
-    animation: fadeInUp 0.5s ease-out forwards;
-  }
-  
-  .animate-slide-in-left {
-    animation: slideInLeft 0.4s ease-out forwards;
-  }
-  
-  .animate-scale-in {
-    animation: scaleIn 0.3s ease-out forwards;
-  }
-  
-  .animation-delay-100 {
-    animation-delay: 100ms;
-  }
-  
-  .animation-delay-200 {
-    animation-delay: 200ms;
-  }
-  
-  .animation-delay-300 {
-    animation-delay: 300ms;
-  }
-  
-  .animation-delay-400 {
-    animation-delay: 400ms;
-  }
-}
-
-@keyframes fadeIn {
-  from {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     opacity: 0;
   }
-  to {
-    opacity: 1;
+  
+  /* Fade In - Simple Opacity */
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+    opacity: 0;
+  }
+  
+  /* Float Animation - Gentle Floating */
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-float-slow {
+    animation: float 8s ease-in-out infinite;
+  }
+  
+  /* Pulse Glow - Pulsing Glow Effect */
+  .animate-pulse-glow {
+    animation: pulseGlow 3s ease-in-out infinite;
+  }
+  
+  .animate-pulse-glow-fast {
+    animation: pulseGlow 1.5s ease-in-out infinite;
+  }
+  
+  /* Shimmer Effect - Loading/Highlight State */
+  .animate-shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .animate-shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      transparent 100%
+    );
+    animation: shimmer 2.5s ease-in-out infinite;
+  }
+  
+  /* Scale In - Pop In Effect */
+  .animate-scale-in {
+    animation: scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+  
+  /* Slide In Left */
+  .animate-slide-in-left {
+    animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+  
+  /* Slide In Right */
+  .animate-slide-in-right {
+    animation: slideInRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+  
+  /* Bounce In */
+  .animate-bounce-in {
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    opacity: 0;
+  }
+  
+  /* Rotate Slow - For Icons/Decorations */
+  .animate-rotate-slow {
+    animation: rotateSlow 20s linear infinite;
+  }
+  
+  /* Heart Pop - Favorite/Like Animation */
+  .animate-heart-pop {
+    animation: heartPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  
+  /* Animation Delays */
+  .animation-delay-100 { animation-delay: 100ms; }
+  .animation-delay-200 { animation-delay: 200ms; }
+  .animation-delay-300 { animation-delay: 300ms; }
+  .animation-delay-400 { animation-delay: 400ms; }
+  .animation-delay-500 { animation-delay: 500ms; }
+  .animation-delay-700 { animation-delay: 700ms; }
+  .animation-delay-1000 { animation-delay: 1000ms; }
+  
+  /* ========================================
+     CARD HOVER EFFECTS
+     Premium Interactive Cards
+     ======================================== */
+  
+  /* Card Hover Base */
+  .card-hover {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .card-hover:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+      var(--fl-shadow-xl),
+      0 0 30px var(--fl-glow),
+      0 0 60px rgba(147, 51, 234, 0.15);
+  }
+  
+  /* Card Hover Subtle - Less Dramatic */
+  .card-hover-subtle {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .card-hover-subtle:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--fl-shadow-lg), 0 0 20px var(--fl-glow);
+  }
+  
+  /* Interactive Card - Full Experience */
+  .interactive-card {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+  }
+  
+  .interactive-card:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 
+      var(--fl-shadow-xl),
+      0 0 40px var(--fl-glow),
+      0 0 80px var(--fl-glow-purple);
+    border-color: var(--fl-border-hover);
+  }
+  
+  /* ========================================
+     ADDITIONAL PREMIUM UTILITIES
+     ======================================== */
+  
+  /* FaceLove Brand Glow */
+  .facelove-glow {
+    box-shadow: 
+      0 0 30px var(--fl-glow),
+      0 0 60px var(--fl-glow-purple);
+  }
+  
+  /* FaceLove Brand Gradient */
+  .facelove-gradient {
+    background: linear-gradient(
+      135deg,
+      #7c3aed 0%,
+      #a855f7 50%,
+      #ec4899 100%
+    );
+  }
+  
+  /* FaceLove Subtle Gradient */
+  .facelove-gradient-subtle {
+    background: linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.1) 0%,
+      rgba(168, 85, 247, 0.15) 50%,
+      rgba(236, 72, 153, 0.1) 100%
+    );
+  }
+  
+  /* Shimmer Border - Animated Border */
+  .shimmer-border {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .shimmer-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1.5px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--fl-secondary),
+      var(--fl-primary),
+      var(--fl-accent),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: shimmerBorder 3s linear infinite;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+    border-radius: inherit;
+  }
+  
+  /* Focus Ring - Accessible Focus States */
+  .focus-ring:focus-visible {
+    outline: none;
+    box-shadow: 
+      0 0 0 2px var(--fl-background),
+      0 0 0 4px var(--fl-secondary);
+  }
+  
+  /* Smooth Transitions */
+  .transition-smooth {
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 250ms;
+  }
+  
+  .transition-premium {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    transition-duration: 300ms;
+  }
+  
+  /* Noise Texture Overlay - Premium Feel */
+  .noise-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
   }
 }
 
+/* ============================================
+   KEYFRAME ANIMATIONS
+   Premium Motion Definitions
+   ============================================ */
+
+/* Fade In Up - Entry from Below */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
@@ -274,103 +878,38 @@
   }
 }
 
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+/* Simple Fade In */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
+/* Float - Gentle Vertical Movement */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
   }
-  to {
-    opacity: 1;
-    transform: scale(1);
+  50% {
+    transform: translateY(-12px);
   }
 }
 
-/* Gradient text utility - FaceLove purple to pink */
-.gradient-text {
-  background: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* Pulse Glow - Breathing Glow Effect */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px var(--fl-glow),
+      0 0 40px var(--fl-glow-purple);
+  }
+  50% {
+    box-shadow: 
+      0 0 40px var(--fl-glow-strong),
+      0 0 80px var(--fl-glow-purple),
+      0 0 120px rgba(168, 85, 247, 0.15);
+  }
 }
 
-.dark .gradient-text {
-  background: linear-gradient(135deg, #a855f7 0%, #f472b6 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Glass morphism effect */
-.glass {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background: oklch(0.995 0.003 300 / 80%);
-  border: 1px solid oklch(0.91 0.02 300 / 50%);
-}
-
-.dark .glass {
-  background: oklch(0.18 0.025 300 / 80%);
-  border: 1px solid oklch(0.3 0.03 300 / 50%);
-}
-
-/* Card hover effect - FaceLove purple glow */
-.card-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 
-    0 10px 25px -5px oklch(0.55 0.25 300 / 20%),
-    0 8px 10px -6px oklch(0.6 0.22 350 / 15%);
-}
-
-.dark .card-hover:hover {
-  box-shadow: 
-    0 10px 25px -5px oklch(0 0 0 / 35%),
-    0 8px 10px -6px oklch(0 0 0 / 25%),
-    0 0 40px -10px oklch(0.55 0.25 300 / 15%);
-}
-
-/* Shimmer loading effect */
-.shimmer {
-  position: relative;
-  overflow: hidden;
-}
-
-.shimmer::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    oklch(0.995 0.003 300 / 50%) 50%,
-    transparent 100%
-  );
-  animation: shimmer 2s infinite;
-}
-
-.dark .shimmer::after {
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    oklch(0.3 0.025 300 / 50%) 50%,
-    transparent 100%
-  );
-}
-
+/* Shimmer - Sweep Highlight */
 @keyframes shimmer {
   0% {
     transform: translateX(-100%);
@@ -380,63 +919,93 @@
   }
 }
 
-/* FaceLove specific utilities */
-.facelove-glow {
-  box-shadow: 
-    0 0 20px oklch(0.55 0.25 300 / 20%),
-    0 0 60px oklch(0.55 0.25 300 / 10%);
-}
-
-.facelove-gradient {
-  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #ec4899 100%);
-}
-
-.facelove-gradient-subtle {
-  background: linear-gradient(135deg, oklch(0.97 0.02 300), oklch(0.98 0.01 330));
-}
-
-/* Favorite button heart pop animation */
-@keyframes heartPop {
-  0% {
-    transform: scale(1);
-  }
-  25% {
-    transform: scale(1.3);
-  }
-  50% {
-    transform: scale(0.95);
-  }
-  75% {
-    transform: scale(1.15);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* Additional FaceLove animations */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 20px oklch(0.55 0.25 300 / 20%);
-  }
-  50% {
-    box-shadow: 0 0 40px oklch(0.55 0.25 300 / 40%), 0 0 60px oklch(0.6 0.22 350 / 20%);
-  }
-}
-
-@keyframes slide-up-fade {
+/* Scale In - Grow from Small */
+@keyframes scaleIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Slide In Left */
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Slide In Right */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Bounce In - Playful Entry */
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+  70% {
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Rotate Slow - Continuous Rotation */
+@keyframes rotateSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Heart Pop - Like/Favorite Animation */
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.35); }
+  50% { transform: scale(0.95); }
+  75% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* Gradient Shift - Animated Gradient Position */
+@keyframes gradientShift {
+  0% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+  100% { background-position: 0% center; }
+}
+
+/* Shimmer Border - Animated Border Sweep */
+@keyframes shimmerBorder {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Slide Up Fade - Quick Entry */
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -444,13 +1013,14 @@
   }
 }
 
-@keyframes scale-in-bounce {
+/* Scale In Bounce - Bouncy Scale */
+@keyframes scaleInBounce {
   0% {
     opacity: 0;
-    transform: scale(0.8);
+    transform: scale(0.75);
   }
   50% {
-    transform: scale(1.05);
+    transform: scale(1.04);
   }
   100% {
     opacity: 1;
@@ -458,115 +1028,202 @@
   }
 }
 
-@keyframes shimmer-border {
+/* Ripple - Click Ripple Effect */
+@keyframes ripple {
   0% {
-    background-position: -200% 0;
+    transform: scale(0);
+    opacity: 0.5;
   }
   100% {
-    background-position: 200% 0;
+    transform: scale(4);
+    opacity: 0;
   }
 }
 
-/* Animation utility classes */
-.animate-float {
-  animation: float 3s ease-in-out infinite;
+/* ============================================
+   ADDITIONAL UTILITY CLASSES
+   Standalone Premium Components
+   ============================================ */
+
+/* Animated Gradient Background */
+.gradient-bg-animated {
+  background: linear-gradient(
+    -45deg,
+    var(--fl-background),
+    rgba(124, 58, 237, 0.2),
+    var(--fl-background-secondary),
+    rgba(236, 72, 153, 0.15)
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
 }
 
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
+/* Premium Divider */
+.divider-premium {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--fl-border) 20%,
+    var(--fl-secondary) 50%,
+    var(--fl-border) 80%,
+    transparent 100%
+  );
 }
 
-.animate-slide-up-fade {
-  animation: slide-up-fade 0.4s ease-out forwards;
-}
-
-.animate-scale-in-bounce {
-  animation: scale-in-bounce 0.4s ease-out forwards;
-}
-
-/* Shimmer border effect for special elements */
-.shimmer-border {
+/* Text Gradient Underline */
+.text-gradient-underline {
   position: relative;
-  overflow: hidden;
+  display: inline-block;
 }
 
-.shimmer-border::before {
-  content: "";
+.text-gradient-underline::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--fl-secondary), var(--fl-primary));
+  border-radius: var(--fl-radius-full);
+}
+
+/* Premium Button Base */
+.btn-premium {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: var(--fl-radius-lg);
+  background: var(--fl-primary);
+  color: var(--fl-text-primary);
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-premium::before {
+  content: '';
   position: absolute;
   inset: 0;
-  padding: 2px;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.btn-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--fl-shadow-glow);
+}
+
+.btn-premium:hover::before {
+  opacity: 1;
+}
+
+.btn-premium:active {
+  transform: translateY(0);
+}
+
+/* Premium Input Style */
+.input-premium {
+  width: 100%;
+  padding: 0.875rem 1.125rem;
+  background: var(--fl-surface);
+  border: 1px solid var(--fl-border);
+  border-radius: var(--fl-radius-lg);
+  color: var(--fl-text-primary);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.input-premium::placeholder {
+  color: var(--fl-text-muted);
+}
+
+.input-premium:focus {
+  outline: none;
+  border-color: var(--fl-secondary);
+  box-shadow: 0 0 0 3px var(--fl-secondary-glow);
+}
+
+/* Badge Styles */
+.badge-premium {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: var(--fl-radius-full);
+  background: linear-gradient(135deg, var(--fl-secondary), var(--fl-primary));
+  color: var(--fl-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Avatar Ring - User Avatars with Glow */
+.avatar-ring {
+  position: relative;
+}
+
+.avatar-ring::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--fl-primary), var(--fl-secondary));
+  z-index: -1;
+  opacity: 0.8;
+}
+
+/* Skeleton Loading State */
+.skeleton-premium {
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(
     90deg,
-    transparent,
-    oklch(0.55 0.25 300),
-    oklch(0.6 0.22 350),
-    transparent
+    var(--fl-surface) 0%,
+    rgba(147, 51, 234, 0.1) 50%,
+    var(--fl-surface) 100%
   );
   background-size: 200% 100%;
-  animation: shimmer-border 3s linear infinite;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--fl-radius-md);
+}
+
+/* Tooltip Style */
+.tooltip-premier {
+  position: relative;
+}
+
+.tooltip-premier::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 0.5rem 0.875rem;
+  background: var(--fl-surface-elevated);
+  border: 1px solid var(--fl-border);
+  border-radius: var(--fl-radius-md);
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
   pointer-events: none;
-  border-radius: inherit;
+  box-shadow: var(--fl-shadow-lg);
 }
 
-/* Interactive hover effects */
-.interactive-card {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.interactive-card:hover {
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: 
-    0 12px 24px -8px oklch(0.55 0.25 300 / 15%),
-    0 8px 16px -6px oklch(0.6 0.22 350 / 10%);
-}
-
-/* Glass morphism card effect */
-.glass-card {
-  background: oklch(0.995 0.003 300 / 70%);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid oklch(0.91 0.02 300 / 50%);
-}
-
-.dark .glass-card {
-  background: oklch(0.18 0.025 300 / 70%);
-  border: 1px solid oklch(0.3 0.03 300 / 50%);
-}
-
-/* Gradient text with animation */
-.gradient-text-animated {
-  background: linear-gradient(
-    90deg,
-    #9333ea 0%,
-    #ec4899 33%,
-    #a855f7 66%,
-    #ec4899 100%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: gradient-shift 3s linear infinite;
-}
-
-@keyframes gradient-shift {
-  0% { background-position: 0% center; }
-  100% { background-position: 200% center; }
-}
-
-/* Focus visible ring for accessibility */
-.focus-ring:focus-visible {
-  outline: none;
-  box-shadow: 
-    0 0 0 2px white,
-    0 0 0 4px oklch(0.55 0.25 300);
-}
-
-/* Smooth transitions for all interactive elements */
-.transition-smooth {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 200ms;
+.tooltip-premier:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
 }

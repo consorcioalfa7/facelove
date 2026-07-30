@@ -184,7 +184,7 @@ export function DataManager() {
       // Count items
       let totalItems = 0;
       for (const key of Object.keys(data.data)) {
-        const val = data.data[key as any;
+        const val = data.data[key as any];
         if (Array.isArray(val)) totalItems += val.length;
         else if (val && typeof val === "object") totalItems += Object.keys(val).length;
         else if (val) totalItems += 1;
@@ -351,7 +351,7 @@ export function DataManager() {
                     e.target.value = ""; // Reset input
                   }}
                   className="hidden"
-                id="import-file-input"
+                />
                 <Button
                   variant="outline"
                   className="w-full h-full py-4 flex-col gap-2 pointer-events-none"

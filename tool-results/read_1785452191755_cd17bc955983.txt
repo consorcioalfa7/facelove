@@ -1,0 +1,689 @@
+     1→# FaceLove Project Worklog
+     2→
+     3→---
+     4→Task ID: 1
+     5→Agent: Main Developer (Z.ai)
+     6→Task: Create FaceLove application with multi-language support and country detection
+     7→
+     8→Work Log:
+     9→- Created Prisma database schema with Author, Genre, Theme, Story, StoryTheme models
+    10→- Seeded database with 12 genres, 108 themes, 5 authors, and 10 sample stories
+    11→- Built complete API routes: /api/genres, /api/themes, /api/stories, /api/authors
+    12→- Created UI components: Header, Footer, StoryCard, GenreCard, ThemeBadge, SearchBar
+    13→- Implemented FaceLove branding with purple/pink color scheme
+    14→- Created multi-language i18n system with 14 languages (PT-BR, EN-US, ES, FR, DE, IT, ZH-CN, JA, KO, AR, RU, HI, PT-PT, EN-GB)
+    15→- Implemented country detection using ipapi.co geolocation API
+    16→- Created LanguageSelector component for manual language switching
+    17→- Designed FaceLove logo component (hexagonal purple with "f" and pink heart)
+    18→- Updated all pages to use FaceLove branding and i18n system
+    19→- Fixed ESLint errors (loading.tsx exports, URL construction, require() issues)
+    20→
+    21→Stage Summary:
+    22→- **Project Status**: ✅ Fully functional
+    23→- **Branding**: Complete - FaceLove with purple (#9333ea) and pink (#ec4899) colors
+    24→- **i18n System**: Working - Auto-detects country, supports 14 languages
+    25→- **Database**: SQLite with Prisma ORM, seeded with sample data
+    26→- **API**: RESTful endpoints for all resources
+    27→- **UI**: Responsive design with shadcn/ui components
+    28→- **Key Files**:
+    29→  - `/src/lib/i18n/` - Internationalization system
+    30→  - `/src/components/facelove-logo.tsx` - Logo component
+    31→  - `/src/components/language-selector.tsx` - Language switcher
+    32→  - `/src/app/globals.css` - FaceLove theme colors
+    33→  - `/scraper/scraper.py` - Python scraper for content import
+    34→
+    35→---
+    36→Task ID: 2
+    37→Agent: Main Developer (Z.ai)
+    38→Task: Review and improve FaceLove project - bug fixes and new features
+    39→
+    40→Work Log:
+    41→- Fixed story page critical bugs:
+    42→  - Added missing imports (Link, Sparkles, MessageSquare icons)
+    43→  - Fixed page structure to use Header/Footer from layout
+    44→  - Changed to direct database queries instead of fetch API calls
+    45→- Updated Genre detail page (/genres/[slug]):
+    46→  - Changed from amber/rose colors to FaceLove purple/pink theme
+    47→  - Updated metadata from "StoryVault" to "FaceLove"
+    48→  - Converted fetch calls to direct Prisma database queries (fixes ERR_INVALID_URL error)
+    49→- Updated Theme detail page (/themes/[slug]):
+    50→  - Applied same FaceLove purple/pink color scheme
+    51→  - Converted to direct database queries
+    52→- Created new listing pages:
+    53→  - `/genres` - Full genre listing page with grid layout
+    54→  - `/themes` - Theme listing with popular themes section and tag cloud
+    55→  - `/authors` - Author listing cards with avatars and story counts
+    56→- Created Search functionality:
+    57→  - `/search` - Full search results page with tabbed interface
+    58→  - `/api/search` - New search API endpoint supporting stories, genres, themes, authors
+    59→- Updated SearchBar component colors from amber to FaceLove purple
+    60→- Fixed StoryCard links to use correct URL format (/story/[id])
+    61→- All pages now use consistent Portuguese text for FaceLove branding
+    62→
+    63→Stage Summary:
+    64→- **Bug Fixes**: ✅ Complete
+    65→  - Story page now renders without errors
+    66→  - Genre/Theme pages load data correctly (no more ERR_INVALID_URL)
+    67→  - All navigation links work properly
+    68→- **New Features**: ✅ Complete
+    69→  - Genres listing page at /genres
+    70→  - Themes listing page at /themes  
+    71→  - Authors listing page at /authors
+    72→  - Full search functionality at /search
+    73→  - Search API endpoint at /api/search
+    74→- **Visual Improvements**: ✅ Complete
+    75→  - Consistent FaceLove purple/pink theme across all pages
+    76→  - Portuguese language throughout UI
+    77→  - Proper dark mode support
+    78→
+    79→Current Goals:
+    80→- Application fully functional with all features working
+    81→- Ready for content population via scraper
+    82→- Multi-language support working with auto-detection
+    83→
+    84→Unresolved Issues/Risks:
+    85→- Sample data only - needs real content from scraping
+    86→- Dev server may need restart after code changes
+    87→- Recommendation: Run scraper to populate real story content
+    88→
+    89→Next Phase Recommendations:
+    90→1. Run Python scraper to import real stories from source
+    91→2. Add more comprehensive translations for all UI strings
+    92→3. Implement user authentication and favorites
+    93→4. Add story reading progress tracking
+    94→5. Create admin panel for content moderation
+    95→
+    96→---
+    97→Task ID: 3
+    98→Agent: Main Developer (Z.ai)
+    99→Task: UI/UX Improvements - New components, loading states, and enhanced features
+   100→
+   101→Work Log:
+   102→- Created **BackToTop component** (`/src/components/back-to-top.tsx`):
+   103→  - Smooth scroll-to-top functionality
+   104→  - Appears after scrolling 300px down
+   105→  - Purple-to-pink gradient button with hover effects
+   106→  - Optional scroll-to-bottom button when near top
+   107→- Created custom **404 Not Found page** (`/src/app/not-found.tsx`):
+   108→  - FaceLove branded error page with purple/pink theme
+   109→  - Helpful navigation links to main sections
+   110→  - Decorative background elements and heart icon
+   111→  - Responsive design with action buttons
+   112→- Created **ReadingProgress component** (`/src/components/reading-progress.tsx`):
+   113→  - Fixed progress bar at top of viewport during scrolling
+   114→  - Gradient color option (purple to pink)
+   115→  - Configurable height (thin/medium/thick)
+   116→  - Optional percentage display
+   117→  - Shimmer animation effect on progress bar
+   118→- Created **Newsletter subscription component** (`/src/components/newsletter.tsx`):
+   119→  - Three variants: default (full card), compact, footer
+   120→  - Email validation and loading states
+   121→  - Success/error feedback animations
+   122→  - FaceLove gradient styling
+   123→  - Privacy notice included
+   124→- Created **StoryClientWrapper** (`/src/components/story-client-wrapper.tsx`):
+   125→  - Client wrapper for story pages
+   126→  - Auto-scrolls to top on mount
+   127→  - Integrates ReadingProgress for story pages
+   128→- Added **loading skeleton states** for:
+   129→  - `/stories/loading.tsx` - Stories listing page
+   130→  - `/search/loading.tsx` - Search results page
+   131→  - `/genres/loading.tsx` - Genres listing page
+   132→  - `/themes/loading.tsx` - Themes listing page
+   133→  - `/authors/loading.tsx` - Authors listing page
+   134→- Updated **layout.tsx** to include BackToTop component globally
+   135→- Updated **Homepage** (`page.tsx`) to include Newsletter section in CTA area
+   136→- Updated **Footer** (`footer.tsx`) to include newsletter signup section
+   137→- Updated **Story page** (`story/[id]/page.tsx`) to use StoryClientWrapper for reading progress
+   138→
+   139→Stage Summary:
+   140→- **New Components**: ✅ Complete
+   141→  - BackToTop - Scroll to top button
+   142→  - ReadingProgress - Story reading progress bar
+   143→  - Newsletter - Email subscription (3 variants)
+   144→  - StoryClientWrapper - Client wrapper for stories
+   145→  - Custom 404 page
+   146→- **Loading States**: ✅ Complete
+   147→  - All main pages now have proper skeleton loading states
+   148→  - Consistent animation patterns using pulse effect
+   149→- **UX Enhancements**: ✅ Complete
+   150→  - Better visual feedback during data loading
+   151→  - Improved navigation with back-to-top button
+   152→  - Newsletter capture for user engagement
+   153→  - Professional 404 error handling
+   154→
+   155→Unresolved Issues/Risks:
+   156→- Newsletter API endpoint not yet implemented (currently simulates success)
+   157→- May need additional testing on mobile devices
+   158→
+   159→Next Steps Recommendations:
+   160→1. Implement actual newsletter API endpoint
+   161→2. Add more interactive micro-animations
+   162→3. Consider adding a "recently viewed" feature with localStorage
+   163→4. Add accessibility improvements (ARIA labels, keyboard nav)
+   164→
+   165→---
+   166→Task ID: 4
+   167→Agent: Main Developer (Z.ai)
+   168→Task: Enhanced Features - Recently Viewed, Share Button, Notifications & Animations
+   169→
+   170→Work Log:
+   171→
+   172→### New Utility Modules Created
+   173→- **`/src/lib/recently-viewed.ts`** - Recently viewed stories tracking:
+   174→  - `getRecentlyViewed()` - Get sorted list of recently viewed items
+   175→  - `addRecentlyViewed(id, title, slug)` - Add/update entry with timestamp
+   176→  - `removeRecentlyViewed(id)` - Remove specific item
+   177→  - `clearRecentlyViewed()` - Clear entire history
+   178→  - `isRecentlyViewed(id)` - Check if story is in history
+   179→  - Max 20 items stored in localStorage
+   180→
+   181→- **`/src/lib/notifications.ts`** - Toast notification system:
+   182→  - `toastSuccess()`, `toastError()`, `toastInfo()` - Base notification types
+   183→  - `toastFavoriteAdded(storyTitle)` - Favorite success toast with action
+   184→  - `toastFavoriteRemoved(storyTitle)` - Remove feedback
+   185→  - `toastStoryShared(storyTitle)` - Share confirmation
+   186→  - `toastNewsletterSubscribed(email)` - Newsletter signup success
+   187→  - `toastPromise()` - Loading/promise-based notifications
+   188→
+   189→### New Components Created
+   190→- **`/src/components/recently-viewed.tsx`** - Two components:
+   191→  - `RecentlyViewedPanel` - Full panel with header, scrollable list, clear all
+   192→  - `RecentlyViewedList` - Compact inline version for sidebars
+   193→  - Time-ago formatting (e.g., "2h", "3d", "Agora")
+   194→  - Remove individual items or clear all
+   195→  - Auto-hides when empty
+   196→
+   197→- **`/src/components/share-button.tsx`** - Social sharing component:
+   198→  - Dropdown menu with copy link, Twitter/X, WhatsApp
+   199→  - Copy to clipboard with fallback for older browsers
+   200→  - Success animation when copied
+   201→  - Multiple size variants (sm/md/lg)
+   202→  - Simple `ShareLink` variant without dropdown
+   203→
+   204→- **`/src/components/story-engagement-bar.tsx`** - Story action bar:
+   205→  - Displays read count, reading time, rating stats
+   206→  - Save button with localStorage persistence
+   207→  - Integration with FavoriteButton and ShareButton
+   208→  - Compact variant for mobile
+   209→  - Auto-tracks recently viewed on mount
+   210→
+   211→### CSS Enhancements (`globals.css`)
+   212→New animations added:
+   213→- `animate-float` - Gentle up/down floating motion
+   214→- `animate-pulse-glow` - Pulsing glow effect
+   215→- `animate-slide-up-fade` - Slide up + fade in
+   216→- `animate-scale-in-bounce` - Scale with bounce effect
+   217→- `shimmer-border` - Animated gradient border effect
+   218→- `interactive-card` - Hover lift with purple shadow
+   219→- `glass-card` - Glass morphism card styling
+   220→- `gradient-text-animated` - Animated gradient text
+   221→- `focus-ring` - Accessibility focus ring
+   222→- `transition-smooth` - Comprehensive transition utility
+   223→
+   224→Stage Summary:
+   225→- **New Features**: ✅ Complete
+   226→  - Recently viewed tracking with localStorage
+   227→  - Social sharing (Twitter/X, WhatsApp, clipboard)
+   228→  - Enhanced notification system with context-specific messages
+   229→  - Story engagement/action bar
+   230→- **Animations**: ✅ Complete
+   231→  - 8+ new animation utility classes
+   232→  - Glass morphism effects
+   233→  - Interactive hover states
+   234→  - Shimmer border animations
+   235→- **Code Quality**: ✅ ESLint passing (0 errors)
+   236→
+   237→Unresolved Issues/Risks:
+   238→- Newsletter API still simulates success (needs backend implementation)
+   239→- Recently viewed data is lost when localStorage is cleared
+   240→- No server-side sync for favorites/recently-viewed across devices
+   241→
+   242→Next Steps Recommendations:
+   243→1. Implement /api/newsletter endpoint for real email capture
+   244→2. Add user authentication for cloud-synced favorites/history
+   245→3. Create reading statistics dashboard
+   246→4. Implement story recommendations based on reading history
+   247→
+   248→---
+   249→Task ID: 5
+   250→Agent: Main Developer (Z.ai)
+   251→Task: API Endpoints, Recommendations & Reading Statistics
+   252→
+   253→Work Log:
+   254→
+   255→### API Endpoint Created
+   256→- **`/src/app/api/newsletter/route.ts`** - Newsletter subscription API:
+   257→  - `POST /api/newsletter` - Subscribe email to newsletter
+   258→  - `GET /api/newsletter?email=x` - Check subscription status
+   259→  - `GET /api/newsletter` - Get public stats (subscriber count)
+   260→  - `DELETE /api/newsletter` - Unsubscribe from newsletter
+   261→  - Email validation, duplicate detection, reactivation support
+   262→  - In-memory storage for demo (replace with database in production)
+   263→  - Proper error handling and status codes
+   264→
+   265→### Components Created
+   266→- **`/src/components/story-recommendations.tsx`** - Story recommendations system:
+   267→  - `StoryRecommendations` - Full featured recommendation widget
+   268→    - Personalized based on reading history
+   269→    - Falls back to trending/popular stories
+   270→    - Auto-refreshes when history changes
+   271→    - Loading skeleton state
+   272→    - "Update recommendations" button
+   273→  - `RecommendedStoriesCompact` - Sidebar version
+   274→    - Shows popular stories with read counts
+   275→    - Compact horizontal layout
+   276→
+   277→- **`/src/components/reading-statistics.tsx`** - User reading dashboard:
+   278→  - Full statistics card with 4 main metrics:
+   279→    - Total stories started
+   280→    - Total reading time (formatted: min/h/days)
+   281→    - Completed stories count
+   282→    - Reading streak (consecutive days)
+   283→  - Monthly reading goal progress bar
+   284→  - In-progress stories list with completion %
+   285→  - Mini progress bars per story
+   286→  - Clear stats functionality
+   287→  - Compact variant for sidebar use
+   288→  - Empty state when no data
+   289→
+   290→### Utility Module Created
+   291→- **`/src/lib/reading-stats.ts`** - Reading statistics tracking:
+   292→  - `getStoryProgress(storyId)` - Get specific story's progress
+   293→  - `updateStoryProgress()` - Update position/time/completion
+   294→  - `markStoryCompleted()` - Mark story as finished
+   295→  - `getUserStats()` - Get aggregated user stats
+   296→  - `getAllReadingProgress()` - Get all tracked stories
+   297→  - `clearReadingStats()` - Reset all tracking data
+   298→  - localStorage persistence with custom events
+   299→  - Automatic streak calculation
+   300→
+   301→### Updates Made
+   302→- **Newsletter component** updated to use real `/api/newsletter` endpoint:
+   303→  - Replaced simulated delay with actual fetch call
+   304→  - Shows server error messages when applicable
+   305→  - Maintains same UI/UX behavior
+   306→
+   307→Stage Summary:
+   308→- **API Endpoints**: ✅ Complete
+   309→  - Newsletter CRUD operations fully implemented
+   310→  - Validation and error handling included
+   311→- **Recommendations**: ✅ Complete
+   312→  - History-based personalization
+   313→  - Trending fallback when no history
+   314→  - Compact sidebar variant available
+   315→- **Statistics**: ✅ Complete
+   316→  - Comprehensive reading metrics
+   317→  - Progress tracking per story
+   318→  - Streaks and goals
+   319→- **Code Quality**: ✅ ESLint passing (0 errors)
+   320→
+   321→Unresolved Issues/Risks:
+   322→- Newsletter uses in-memory storage (data lost on server restart)
+   323→- No user authentication - all data is local only
+   324→- Reading progress requires manual scroll tracking implementation
+   325→- Stats don't persist across different browsers/devices
+   326→
+   327→Next Steps Recommendations:
+   328→1. Integrate reading progress into story page scroll handler
+   329→2. Add StoryRecommendations to homepage or story page sidebar
+   330→3. Add ReadingStatistics to user profile/favorites page
+   331→4. Implement user authentication for cross-device sync
+   332→5. Connect newsletter to real email service (SendGrid/Mailchimp)
+   333→
+   334→---
+   335→Task ID: 6
+   336→Agent: Main Developer (Z.ai)
+   337→Task: Enhanced Features - Keyboard Shortcuts, Bookmarks, Reading Settings & UI Improvements
+   338→
+   339→Work Log:
+   340→
+   341→### New Components Created
+   342→
+   343→- **`/src/components/keyboard-shortcuts.tsx`** - Global keyboard shortcuts system:
+   344→  - `KeyboardShortcuts` component with dialog showing all available shortcuts
+   345→  - `KeyboardShortcutButton` floating button (bottom-left) for quick access
+   346→  - Shortcuts: `?` = help, `h` = home, `s` = search, `g` = genres, `f` = favorites, `/` = focus search
+   347→  - Auto-shows hint toast after 10 seconds on first visit
+   348→  - Respects input fields (doesn't capture when typing)
+   349→  - Escape key closes dialog
+   350→
+   351→- **`/src/components/reading-settings.tsx`** - Reading preferences system:
+   352→  - Font size control (14px-24px) with slider
+   353→  - Line height adjustment (1.4-2.0) with slider
+   354→  - Text alignment options (left, center, justify)
+   355→  - Compact dropdown variant for inline use
+   356→  - Full settings panel variant for sidebar/dedicated section
+   357→  - `useReadingSettings()` hook for consuming in other components
+   358→  - localStorage persistence with custom events
+   359→  - Reset to defaults functionality
+   360→
+   361→- **`/src/components/bookmark-button.tsx`** - Story bookmarks feature:
+   362→  - `BookmarkButton` - Full bookmark dialog with position saving
+   363→  - `BookmarksPanel` - Compact sidebar version
+   364→  - Save current reading position with optional notes
+   365→  - List all bookmarks with scroll-to-position functionality
+   366→  - Delete individual bookmarks or clear all
+   367→  - Max 50 bookmarks to prevent storage bloat
+   368→  - Custom events for bookmark changes (`bookmarksChanged`)
+   369→  - Toast notifications on add/remove actions
+   370→
+   371→- **`/src/lib/bookmarks.ts`** - Bookmarks utility module:
+   372→  - `getBookmarks()` - Get all bookmarks sorted by date
+   373→  - `getStoryBookmarks(storyId)` - Get bookmarks for specific story
+   374→  - `addBookmark()` - Create new bookmark
+   375→  - `removeBookmark()` - Remove by ID
+   376→  - `clearBookmarks()` - Remove all bookmarks
+   377→  - `hasBookmarks()` / `getLatestBookmark()` - Helper functions
+   378→
+   379→### Updated Components/Pages
+   380→
+   381→- **Homepage (`/src/app/page.tsx`) - Enhanced**:
+   382→  - Added "Trending Stories" section before Recent Stories
+   383→  - Integrated `StoryRecommendations` component showing popular stories
+   384→  - Orange/pink gradient background for trending section
+   385→  - Flame icon with pulse animation and "Trending" badge
+   386→  - Links to sorted stories page
+   387→
+   388→- **Favorites Page (`/src/app/favorites/page.tsx`) - Enhanced**:
+   389→  - Converted from single-column to dashboard layout (2/3 + 1/3 split)
+   390→  - Added `ReadingStatistics` panel in sidebar with full details view
+   391→  - Added Quick Links card (Stories, Genres, Themes)
+   392→  - Statistics card is sticky for easy access while scrolling
+   393→  - Better visual hierarchy with sidebar navigation
+   394→
+   395→- **Layout (`/src/app/layout.tsx`) - Updated**:
+   396→  - Added `KeyboardShortcuts` global component
+   397→  - Added `KeyboardShortcutButton` floating trigger button
+   398→  - Both components wrapped inside I18nProvider
+   399→
+   400→### Code Quality Fixes
+   401→- Fixed parsing error in bookmark-button.tsx (`hasBookmarkNearPosition` typo)
+   402→- Fixed JSX closing tag error in keyboard-shortcuts.tsx (`</code>` → `</kbd>`)
+   403→- Refactored ReadingSettings to use lazy initializers (avoid setState in effect warnings)
+   404→
+   405→Stage Summary:
+   406→- **Keyboard Shortcuts**: ✅ Complete
+   407→  - 7 global keyboard shortcuts implemented
+   408→  - Dialog with visual key display
+   409→  - First-time user hint system
+   410→- **Reading Settings**: ✅ Complete
+   411→  - Font size, line height, text alignment controls
+   412→  - Compact dropdown + full panel variants
+   413→  - Persistent storage with live updates
+   414→- **Bookmarks System**: ✅ Complete
+   415→  - Position-based bookmarking with notes
+   416→  - List management with delete/clear
+   417→  - Scroll-to-position integration ready
+   418→- **UI Improvements**: ✅ Complete
+   419→  - Trending stories section on homepage
+   420→  - Dashboard-style favorites page
+   421→  - Quick links sidebar widget
+   422→- **Code Quality**: ✅ ESLint passing (0 errors)
+   423→
+   424→New Features Summary:
+   425→| Feature | Description | Location |
+   426→|---------|-------------|----------|
+   427→| Keyboard Shortcuts | Global navigation shortcuts | All pages |
+   428→| Reading Settings | Font/line-height/alignment | Dropdown or Panel |
+   429→| Bookmarks | Save reading positions | Story pages |
+   430→| Trending Section | Popular stories display | Homepage |
+   431→| Stats Sidebar | Reading statistics | Favorites page |
+   432→
+   433→Unresolved Issues/Risks:
+   434→- Dev server needs restart to test new features visually
+   435→- Bookmark scroll-to-position requires story page integration
+   436→- No server-side sync for bookmarks/settings (localStorage only)
+   437→
+   438→Next Steps Recommendations:
+   439→1. Integrate BookmarkButton into story page action bar
+   440→2. Add more keyboard shortcuts (e.g., arrow keys for prev/next story)
+   441→3. Implement export/import of user preferences
+   442→4. Add animation when scrolling to bookmarked position
+   443→5. Consider adding a reading timer feature
+   444→
+   445→---
+   446→Task ID: 7
+   447→Agent: Main Developer (Z.ai)
+   448→Task: Enhanced Reading Experience - Timer, Comments, Theme Toggle & Sidebar
+   449→
+   450→Work Log:
+   451→
+   452→### New Components Created
+   453→
+   454→- **`/src/components/reading-timer.tsx`** - Comprehensive reading timer:
+   455→  - Tracks reading time per session with start/pause/reset
+   456→  - Shows daily reading statistics (total time today)
+   457→  - Daily reading goal (15 min default) with progress bar
+   458→  - Auto-pause when tab loses focus (optional)
+   459→  - Session history saved to localStorage (max 100 sessions)
+   460→  - Compact and full card variants
+   461→  - `useReadingTimer()` hook for accessing data in other components
+   462→  - Goal reached celebration badge with animation
+   463→
+   464→- **`/src/components/theme-toggle.tsx`** - Advanced theme switching:
+   465→  - Three modes: Light, Dark, System (follows OS preference)
+   466→  - Dropdown menu with visual icons for each mode
+   467→  - Active indicator dot when custom theme is selected
+   468→  - Smooth transitions between themes
+   469→  - Listens to `prefers-color-scheme` media query changes
+   470→  - Persists choice to localStorage
+   471→  - Show label variant for settings pages
+   472→  - Proper lazy initializers to avoid hydration mismatch
+   473→
+   474→- **`/src/components/story-comments.tsx`** - Full commenting system:
+   475→  - Comment form with optional star rating (1-5)
+   476→  - Character limit (1000) with counter
+   477→  - Reply functionality with nested display
+   478→  - Vote system (thumbs up/down) per comment
+   479→  - Edit own comments functionality
+   480→  - Delete with confirmation dialog
+   481→  - "Show more" pagination for long comment lists
+   482→  - Empty state when no comments exist
+   483→  - Time-relative timestamps ("há 2h", "Agora")
+   484→  - Custom events for real-time updates (`commentsChanged`)
+   485→  - Average rating calculation from rated comments
+   486→  - `useStoryComments()` hook for external data access
+   487→  - User avatars with gradient initials
+   488→
+   489→- **`/src/components/story-navigation-enhanced.tsx`** - Enhanced navigation:
+   490→  - Horizontal variant (compact prev/next buttons)
+   491→  - Vertical variant (full cards with metadata)
+   492→  - Grid variant (related stories list)
+   493→  - Keyboard navigation support (← → arrow keys)
+   494→  - Progress indicator dots showing current position
+   495→  - View mode toggle (list/grid)
+   496→  - Story metadata preview (author, time, rating)
+   497→
+   498→### Updated Components/Pages
+   499→
+   500→- **Story Page (`/src/app/story/[id]/page.tsx`) - Major Enhancement**:
+   501→  - Added two-column layout with sidebar on large screens
+   502→  - Integrated `ReadingTimer` in sticky sidebar
+   503→  - Integrated `BookmarkButton` in sidebar tools section
+   504→  - Added `StoryComments` section after content
+   505→  - Added quick stats card (genre, time, words, rating) in sidebar
+   506→  - Added keyboard shortcuts hint panel
+   507→  - Better responsive behavior (sidebar hidden on mobile)
+   508→
+   509→- **Header (`/src/components/header.tsx`) - Updated**:
+   510→  - Replaced basic toggle with enhanced `ThemeToggle` component
+   511→  - Added ThemeToggle to mobile menu with label variant
+   512→  - System preference support now available globally
+   513→
+   514→### Code Quality Fixes
+   515→- Fixed JSX structure error (missing closing div in article)
+   516→- Fixed `loadTodaysTotal` called before declaration (moved to module-level function)
+   517→- Fixed multiple `setState in effect` warnings by using lazy initializers
+   518→- Removed redundant auto-start useEffect (now using lazy initializer)
+   519→- All ESLint checks passing (0 errors, 0 warnings)
+   520→
+   521→Stage Summary:
+   522→- **Reading Timer**: ✅ Complete
+   523→  - Session tracking with pause/resume
+   524→  - Daily goals and statistics
+   525→  - localStorage persistence
+   526→- **Theme Toggle**: ✅ Complete
+   527→  - Light/Dark/System modes
+   528→  - OS preference detection
+   529→  - Persistent storage
+   530→- **Comment System**: ✅ Complete
+   531→  - Full CRUD operations
+   532→  - Rating and voting
+   533→  - Nested replies
+   534→- **Story Navigation**: ✅ Complete
+   535→  - Multiple layout variants
+   536→  - Keyboard navigation
+   537→  - Related stories view
+   538→- **Sidebar Integration**: ✅ Complete
+   539→  - Sticky reading sidebar
+   540→  - Tools and stats cards
+   541→  - Responsive design
+   542→
+   543→New Features Summary:
+   544→| Feature | Description | Location |
+   545→|---------|-------------|----------|
+   546→| Reading Timer | Session & daily tracking | Story sidebar |
+   547→| Theme Toggle | Light/Dark/System modes | Header + Mobile menu |
+   548→| Comments | Full discussion system | Story page |
+   549→| Navigation | Prev/Next stories | Story page |
+   550→| Stats Card | Quick story info | Story sidebar |
+   551→
+   552→Unresolved Issues/Risks:
+   553→- Comments are stored in localStorage only (no server persistence)
+   554→- Timer data lost if localStorage is cleared
+   555→- No moderation system for comments yet
+   556→- Server may need restart to see all changes visually
+   557→
+   558→Next Steps Recommendations:
+   559→1. Add server-side API for comments persistence
+   560→2. Implement comment moderation/review system
+   561→3. Add email notifications for new replies
+   562→4. Create admin dashboard for managing comments
+   563→5. Add rich text formatting for comments (markdown)
+   564→
+   565→---
+   566→Task ID: 8
+   567→Agent: Main Developer (Z.ai)
+   568→Task: Data Persistence & Organization - Comments API, Search History, Bookshelf & Auto-Save
+   569→
+   570→Work Log:
+   571→
+   572→### New API Endpoint Created
+   573→
+   574→- **`/src/app/api/comments/route.ts`** - Server-side comments API:
+   575→  - `GET /api/comments` - Get all comments with pagination, filter by storyId
+   576→  - `POST /api/comments` - Create new comment with validation (content max 1000 chars, rating 1-5)
+   577→  - `DELETE /api/comments?id=xxx` - Delete a comment by ID
+   578→  - In-memory storage (replaceable with database in production)
+   579→  - Proper error handling and HTTP status codes
+   580→
+   581→### New Components Created
+   582→
+   583→- **`/src/components/search-history.tsx`** - Search history tracking:
+   584→  - Records all searches to localStorage (max 20 entries)
+   585→  - Shows relative timestamps ("há 2h", "Agora")
+   586→  - Filter/search through history
+   587→  - Popular searches section (8 predefined terms)
+   588→  - Clear individual items or entire history
+   589→  - Dialog variant (compact) and inline full version
+   590→  - Custom event (`searchHistoryChanged`) for real-time updates
+   591→  - `useSearchHistory()` hook for external access
+   592→  - `addToSearchHistory()` export function for manual usage
+   593→
+   594→- **`/src/components/bookshelf.tsx`** - Reading lists / Bookshelf feature:
+   595→  - 3 default lists: "Quero Ler", "Lendo Agora", "Concluídas"
+   596→  - Create custom reading lists with colors
+   597→  - Move stories between lists
+   598→  - Track progress per item (0-100%)
+   599→  - Status badges: want-to-read, reading, completed, on-hold
+   600→  - Grid and list view modes
+   601→  - Tab navigation between lists
+   602→  - Empty state with call-to-action
+   603→  - `AddToListButton` component (compact + full)
+   604→  - Full `Bookshelf` display component
+   605→  - `useReadingLists()` hook for complete CRUD operations
+   606→  - Color-coded lists with visual indicators
+   607→
+   608→- **`/src/components/auto-save-progress.tsx`** - Automatic progress saving:
+   609→  - Tracks scroll position within content element
+   610→  - Debounced saves every 5 seconds (configurable)
+   611→  - Saves progress only when changed >1% or at milestones
+   612→  - Auto-marks story as completed at 95%+ progress
+   613→  - Dispatches custom events:
+   614→    - `readingProgressChanged` - Progress updated
+   615→    - `storyCompleted` - Story finished
+   616→    - `readingProgressRealtime` - Real-time scroll position
+   617→  - Restores previous position on return visit
+   618→  - Saves on page unload (beforeunload event)
+   619→  - `useAutoSaveProgress()` hook version available
+   620→
+   621→### Updated Pages/Components
+   622→
+   623→- **Favorites Page (`/src/app/favorites/page.tsx`) - Enhanced:
+   624→  - Added Bookshelf section showing all reading lists
+   625→  - Added Search History section with popular terms
+   626→  - New sections appear before the favorites grid
+   627→  - Better organization of personal features
+   628→
+   629→- **Story Page (`/src/app/story/[id]/page.tsx`) - Enhanced:
+   630→  - Added AutoSaveProgress component for automatic progress saving
+   631→  - Integrated AddToListButton in sidebar tools area
+   632→  - Both components work seamlessly with existing features
+   633→
+   634→### Code Quality Fixes
+   635→- Fixed function declaration order issues (loadLists, loadHistory, updateData)
+   636→- Used lazy initializers for useState to avoid setState in effect warnings
+   637→- Fixed syntax error in BookshelfProps destructuring
+   638→- All ESLint checks passing (0 errors, 0 warnings)
+   639→
+   640→Stage Summary:
+   641→- **Comments API**: ✅ Complete
+   642→  - RESTful endpoints (GET, POST, DELETE)
+   643→  - Pagination support
+   644→  - Input validation
+   645→- **Search History**: ✅ Complete
+   646→  - localStorage persistence (20 items)
+   647→  - Popular searches display
+   648→  - Filter/clear functionality
+   649→- **Bookshelf**: ✅ Complete
+   650→  - Default + custom reading lists
+   651→  - Status tracking (4 states)
+   652→  - Progress indicators
+   653→  - Grid/list views
+   654→- **Auto-Save**: ✅ Complete
+   655→  - Scroll-based tracking
+   656→  - Debounced saves
+   657→  - Auto-completion detection
+   658→  - Event system for integration
+   659→
+   660→New Features Summary:
+   661→| Feature | Description | Location |
+   662→|---------|-------------|----------|
+   663→| Comments API | Server-side CRUD | `/api/comments/route.ts` |
+   664→| Search History | Track & replay searches | Favorites page, Dialog |
+   665→| Bookshelf | Organize reading lists | Favorites page |
+   666→| Add to List | Quick-add button | Story page sidebar |
+   667→| Auto-Save Progress | Automatic save | Story page (invisible) |
+   668→
+   669→Files Created/Modified:
+   670→- Created: `/src/app/api/comments/route.ts`
+   671→- Created: `/src/components/search-history.tsx`
+   672→- Created: `/src/components/bookshelf.tsx`
+   673→- Created: `/src/components/auto-save-progress.tsx`
+   674→- Modified: `/src/app/favorites/page.tsx`
+   675→- Modified: `/src/app/story/[id]/page.tsx`
+   676→
+   677→Unresolved Issues/Risks:
+   678→- Comments API uses in-memory storage (lost on server restart)
+   679→- No authentication - all data is local only
+   680→- Search history limited to 20 entries
+   681→- Reading lists not synced across devices
+   682→
+   683→Next Steps Recommendations:
+   684→1. Connect comments API to Prisma database model
+   685→2. Implement user accounts for cloud sync of reading data
+   686→3. Add import/export functionality for reading lists
+   687→4. Create analytics dashboard for reading habits
+   688→5. Add social features (share reading lists)
+   689→

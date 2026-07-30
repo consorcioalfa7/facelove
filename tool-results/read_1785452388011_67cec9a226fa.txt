@@ -1,0 +1,948 @@
+     1→"use client";
+     2→
+     3→import { useState, useEffect, useCallback } from "react";
+     4→import {
+     5→  Trophy,
+     6→  Star,
+     7→  BookOpen,
+     8→  Flame,
+     9→  Target,
+    10→  Clock,
+    11→  Award,
+    12→  Zap,
+    13→  Heart,
+    14→  Bookmark,
+    15→  TrendingUp,
+    16→  CheckCircle2,
+    17→  Lock,
+    18→  Crown,
+    19→  Gem,
+    20→} from "lucide-react";
+    21→import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+    22→import { Badge } from "@/components/ui/badge";
+    23→import { Progress } from "@/components/ui/progress";
+    24→import {
+    25→  Tooltip,
+    26→  TooltipContent,
+    27→  TooltipProvider,
+    28→  TooltipTrigger,
+    29→} from "@/components/ui/tooltip";
+    30→import { cn } from "@/lib/utils";
+    31→
+    32→// Types
+    33→interface Achievement {
+    34→  id: string;
+    35→  title: string;
+    36→  description: string;
+    37→  icon: string;
+    38→  category: "reading" | "social" | "exploration" | "special";
+    39→  rarity: "common" | "rare" | "epic" | "legendary";
+    40→  points: number;
+    41→  maxProgress: number;
+    42→  unlockedAt?: number;
+    43→  progress: number;
+    44→  isSecret: boolean;
+    45→}
+    46→
+    47→// Achievement definitions
+    48→const ACHIEVEMENT_DEFINITIONS: Omit<Achievement, "progress" | "unlockedAt">[] = [
+    49→  // Common achievements (easy to get)
+    50→  {
+    51→    id: "first-read",
+    52→    title: "Primeira Leitura",
+    53→    description: "Leia sua primeira história",
+    54→    icon: "BookOpen",
+    55→    category: "reading",
+    56→    rarity: "common",
+    57→    points: 10,
+    58→    maxProgress: 1,
+    59→    isSecret: false,
+    60→  },
+    61→  {
+    62→    id: "first-favorite",
+    63→    title: "Colecionador",
+    64→    description: "Adicione uma história aos favoritos",
+    65→    icon: "Heart",
+    66→    category: "reading",
+    67→    rarity: "common",
+    68→    points: 10,
+    69→    maxProgress: 1,
+    70→    isSecret: false,
+    71→  },
+    72→  {
+    73→    id: "first-bookmark",
+    74→    title: "Marcador de Página",
+    75→    description: "Salve seu primeiro marcador de página",
+    76→    icon: "Bookmark",
+    77→    category: "reading",
+    78→    rarity: "common",
+    79→    points: 10,
+    80→    maxProgress: 1,
+    81→    isSecret: false,
+    82→  },
+    83→  {
+    84→    id: "explore-genres",
+    85→    title: "Explorador de Gêneros",
+    86→    description: "Visite a página de todos os gêneros",
+    87→    icon: "Layers",
+    88→    category: "exploration",
+    89→    rarity: "common",
+    90→    points: 15,
+    91→    maxProgress: 1,
+    92→    isSecret: false,
+    93→  },
+    94→  
+    95→  // Rare achievements
+    96→  {
+    97→    id: "read-5-stories",
+    98→    title: "Leitor Iniciante",
+    99→    description: "Leia 5 histórias diferentes",
+   100→    icon: "BookOpen",
+   101→    category: "reading",
+   102→    rarity: "rare",
+   103→    points: 25,
+   104→    maxProgress: 5,
+   105→    isSecret: false,
+   106→  },
+   107→  {
+   108→    id: "read-10-stories",
+   109→    title: "Leitor Dedicação",
+   110→    description: "Leia 10 histórias diferentes",
+   111→    icon: "Star",
+   112→    category: "reading",
+   113→    rarity: "rare",
+   114→    points: 50,
+   115→    maxProgress: 10,
+   116→    isSecret: false,
+   117→  },
+   118→  {
+   119→    id: "search-user",
+   120→    title: "Pesquisador",
+   121→    description: "Use a função de busca pela primeira vez",
+   122→    icon: "Search",
+   123→    category: "exploration",
+   124→    rarity: "rare",
+   125→    points: 20,
+   126→    maxProgress: 1,
+   127→    isSecret: false,
+   128→  },
+   129→  {
+   130→    id: "share-story",
+   131→    title: "Compartilhador",
+   132→    description: "Compartilhe uma história com amigos",
+   133→    icon: "Share2",
+   134→    category: "social",
+   135→    rarity: "rare",
+   136→    points: 30,
+   137→    maxProgress: 1,
+   138→    isSecret: false,
+   139→  },
+   140→
+   141→  // Epic achievements
+   142→  {
+   143→    id: "read-25-stories",
+   144→    title: "Bibliófilo",
+   145→    description: "Leia 25 histórias diferentes",
+   146→    icon: "Library",
+   147→    category: "reading",
+   148→    rarity: "epic",
+   149→    points: 100,
+   150→    maxProgress: 25,
+   151→    isSecret: false,
+   152→  },
+   153→  {
+   154→    id: "50-hours-reading",
+   155→    title: "Maratonista de Leitura",
+   156→    description: "Acumule 50 horas de tempo de leitura",
+   157→    icon: "Clock",
+   158→    category: "reading",
+   159→    rarity: "epic",
+   160→    points: 150,
+   161→    maxProgress: 180000, // 50 hours in seconds
+   162→    isSecret: false,
+   163→  },
+   164→  {
+   165→    id: "7-day-streak",
+   166→    title: "Semana Perfeita",
+   167→    description: "Leia durante 7 dias consecutivos",
+   168→    icon: "Flame",
+   169→    category: "reading",
+   170→    rarity: "epic",
+   171→    points: 120,
+   172→    maxProgress: 7,
+   173→    isSecret: false,
+   174→  },
+   175→  {
+   176→    id: "all-genres",
+   177→    title: "Explorador Completo",
+   178→    description: "Leia histórias de todos os gêneros disponíveis",
+   179→    icon: "Grid3X3",
+   180→    category: "exploration",
+   181→    rarity: "epic",
+   182→    points: 200,
+   183→    maxProgress: 12, // Number of genres
+   184→    isSecret: false,
+   185→  },
+   186→
+   187→  // Legendary achievements
+   188→  {
+   189→    id: "read-100-stories",
+   190→    title: "Mestre das Histórias",
+   191→    description: "Leia 100 histórias diferentes",
+   192→    icon: "Crown",
+   193→    category: "reading",
+   194→    rarity: "legendary",
+   195→    points: 500,
+   196→    maxProgress: 100,
+   197→    isSecret: false,
+   198→  },
+   199→  {
+   200→    id: "200-hours-reading",
+   201→    title: "Leitor Devoto",
+   202→    description: "Acumule 200 horas de tempo de leitura",
+   203→    icon: "Gem",
+   204→    category: "reading",
+   205→    rarity: "legendary",
+   206→    points: 500,
+   207→    maxProgress: 720000, // 200 hours in seconds
+   208→    isSecret: false,
+   209→  },
+   210→  {
+   211→    id: "30-day-streak",
+   212→    title: "Mês de Leitura",
+   213→    description: "Leia durante 30 dias consecutivos",
+   214→    icon: "Trophy",
+   215→    category: "reading",
+   216→    rarity: "legendary",
+   217→    points: 750,
+   218→    maxProgress: 30,
+   219→    isSecret: false,
+   220→  },
+   221→];
+   222→
+   223→// Secret achievements
+   224→const SECRET_ACHIEVEMENTS: Omit<Achievement, "progress" | "unlockedAt">[] = [
+   225→  {
+   226→    id: "midnight-reader",
+   227→    title: "Leitor da Meia-Noite",
+   228→    description: " Leia uma história entre meia-noite e 3 da manhã",
+   229→    icon: "Moon",
+   230→    category: "special",
+   231→    rarity: "epic",
+   232→    points: 175,
+   233→    maxProgress: 1,
+   234→    isSecret: true,
+   235→  },
+   236→  {
+   237→    id: "speed-reader",
+   238→    title: "Leitor Veloz",
+   239→    description: "Complete uma história em menos de 2 minutos",
+   240→    icon: "Zap",
+   241→    category: "special",
+   242→    rarity: "rare",
+   243→    points: 40,
+   244→    maxProgress: 1,
+   245→    isSecret: true,
+   246→  },
+   247→];
+   248→
+   249→// LocalStorage key
+   250→const ACHIEVEMENTS_KEY = "facelove-achievements";
+   251→const STATS_KEY = "facelove-achievement-stats";
+   252→
+   253→// Stats tracking
+   254→interface AchievementStats {
+   255→  storiesRead: Set<string>;
+   256→  totalReadTime: number; // in seconds
+   257→  genresVisited: Set<string>;
+   258→  searchesPerformed: number;
+   259→  sharesPerformed: number;
+   260→  favoritesCount: number;
+   261→  bookmarksCreated: number;
+   262→  readDays: Set<string>; // ISO date strings for each day
+   263→  midnightReads: number;
+   264→  speedReads: number;
+   265→}
+   266→
+   267→// Get default stats
+   268→function getDefaultStats(): AchievementStats {
+   269→  return {
+   270→    storiesRead: new Set(),
+   271→    totalReadTime: 0,
+   272→    genresVisited: new Set(),
+   273→    searchesPerformed: 0,
+   274→    sharesPerformed: 0,
+   275→    favoritesCount: 0,
+   276→    bookmarksCreated: 0,
+   277→    readDays: new Set(),
+   278→    midnightReads: 0,
+   279→    speedReads: 0,
+   280→  };
+   281→}
+   282→
+   283→// Load stats
+   284→function loadStats(): AchievementStats {
+   285→  try {
+   286→    const saved = localStorage.getItem(STATS_KEY);
+   287→    if (!saved) return getDefaultStats();
+   288→    
+   289→    const parsed = JSON.parse(saved);
+   290→    return {
+   291→      ...parsed,
+   292→      storiesRead: new Set(parsed.storiesRead || []),
+   293→      genresVisited: new Set(parsed.genresVisited || []),
+   294→      readDays: new Set(parsed.readDays || []),
+   295→    };
+   296→  } catch {
+   297→    return getDefaultStats();
+   298→  }
+   299→}
+   300→
+   301→// Save stats
+   302→function saveStats(stats: AchievementStats): void {
+   303→  try {
+   304→    const toSave = {
+   305→      ...stats,
+   306→      storiesRead: Array.from(stats.storiesRead),
+   307→      genresVisited: Array.from(stats.genresVisited),
+   308→      readDays: Array.from(stats.readDays),
+   309→    };
+   310→    localStorage.setItem(STATS_KEY, JSON.stringify(toSave));
+   311→  } catch {
+   312→    // Ignore errors
+   313→  }
+   314→}
+   315→
+   316→// Track actions
+   317→export function trackStoryRead(storyId: string, genreId?: string, timeSeconds?: number): void {
+   318→  const stats = loadStats();
+   319→  stats.storiesRead.add(storyId);
+   320→  if (timeSeconds) stats.totalReadTime += timeSeconds;
+   321→  if (genreId) stats.genresVisited.add(genreId);
+   322→  stats.readDays.add(new Date().toISOString().split("T")[0]);
+   323→  
+   324→  // Check for secret achievements
+   325→  const hour = new Date().getHours();
+   326→  if (hour >= 0 && hour < 3) {
+   327→    stats.midnightReads++;
+   328→  }
+   329→  if (timeSeconds && timeSeconds < 120) {
+   330→    stats.speedReads++;
+   331→  }
+   332→  
+   333→  saveStats(stats);
+   334→  checkAndUnlockAchievements();
+   335→}
+   336→
+   337→export function trackFavorite(): void {
+   338→  const stats = loadStats();
+   339→  stats.favoritesCount++;
+   340→  saveStats(stats);
+   341→  checkAndUnlockAchievements();
+   342→}
+   343→
+   344→export function trackBookmark(): void {
+   345→  const stats = loadStats();
+   346→  stats.bookmarksCreated++;
+   347→  saveStats(stats);
+   348→  checkAndUnlockAchievements();
+   349→}
+   350→
+   351→export function trackSearch(): void {
+   352→  const stats = loadStats();
+   353→  stats.searchesPerformed++;
+   354→  saveStats(stats);
+   355→  checkAndUnlockAchievements();
+   356→}
+   357→
+   358→export function trackShare(): void {
+   359→  const stats = loadStats();
+   360→  stats.sharesPerformed++;
+   361→  saveStats(stats);
+   362→  checkAndUnlockAchievements();
+   363→}
+   364→
+   365→export function trackGenreVisit(genreId: string): void {
+   366→  const stats = loadStats();
+   367→  stats.genresVisited.add(genreId);
+   368→  saveStats(stats);
+   369→  checkAndUnlockAchievements();
+   370→}
+   371→
+   372→// Load achievements
+   373→function loadAchievements(): Achievement[] {
+   374→  try {
+   375→    const saved = localStorage.getItem(ACHIEVEMENTS_KEY);
+   376→    if (!saved) return [];
+   377→    
+   378→    const parsed: Achievement[] = JSON.parse(saved);
+   379→    return parsed.map((a) => ({
+   380→      ...a,
+   381→      unlockedAt: a.unlockedAt ? new Date(a.unlockedAt) : undefined,
+   382→    }));
+   383→  } catch {
+   384→    return [];
+   385→  }
+   386→}
+   387→
+   388→// Save achievements
+   389→function saveAchievements(achievements: Achievement[]): void {
+   390→  try {
+   391→    localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify(achievements));
+   392→    window.dispatchEvent(new CustomEvent("achievementsChanged"));
+   393→  } catch {
+   394→    // Ignore
+   395→  }
+   396→}
+   397→
+   398→// Check and unlock achievements
+   399→export function checkAndUnlockAchievements(): Achievement[] {
+   400→  const stats = loadStats();
+   401→  let achievements = loadAchievements();
+   402→  let changed = false;
+   403→
+   404→  const allDefs = [...ACHIEVEMENT_DEFINITIONS, ...SECRET_ACHIEVEMENTS];
+   405→
+   406→  for (const def of allDefs) {
+   407→    // Skip if already unlocked
+   408→    const existing = achievements.find((a) => a.id === def.id);
+   409→    if (existing?.unlockedAt) continue;
+   410→
+   411→    // Check if achievement exists, create if not
+   412→    let achievement = existing || {
+   413→      ...def,
+   414→      progress: 0,
+   415→      unlockedAt: undefined,
+   416→    };
+   417→
+   418→    // Calculate progress based on type
+   419→    switch (def.id) {
+   420→      case "first-read":
+   421→        achievement.progress = Math.min(stats.storiesRead.size, def.maxProgress);
+   422→        break;
+   423→      case "first-favorite":
+   424→        achievement.progress = Math.min(stats.favoritesCount, def.maxProgress);
+   425→        break;
+   426→      case "first-bookmark":
+   427→        achievement.progress = Math.min(stats.bookmarksCreated, def.maxProgress);
+   428→        break;
+   429→      case "explore-genres":
+   430→        achievement.progress = Math.min(stats.genresVisited.size > 0 ? 1 : 0, def.maxProgress);
+   431→        break;
+   432→      case "read-5-stories":
+   433→      case "read-10-stories":
+   434→      case "read-25-stories":
+   435→      case "read-100-stories":
+   436→        achievement.progress = Math.min(stats.storiesRead.size, def.maxProgress);
+   437→        break;
+   438→      case "search-user":
+   439→        achievement.progress = Math.min(stats.searchesPerformed, def.maxProgress);
+   440→        break;
+   441→      case "share-story":
+   442→        achievement.progress = Math.min(stats.sharesPerformed, def.maxProgress);
+   443→        break;
+   444→      case "50-hours-reading":
+   445→      case "200-hours-reading":
+   446→        achievement.progress = Math.min(stats.totalReadTime, def.maxProgress);
+   447→        break;
+   448→      case "7-day-streak":
+   449→      case "30-day-streak": {
+   450→        // Calculate streak from readDays
+   451→        const days = Array.from(stats.readDays).sort().reverse();
+   452→        let streak = 0;
+   453→        let currentDate = new Date();
+   454→        
+   455→        for (const dayStr of days) {
+   456→          const dayDate = new Date(dayStr);
+   457→          const diffDays = Math.floor(
+   458→            (currentDate.getTime() - dayDate.getTime()) / (1000 * 60 * 60 * 24)
+   459→          );
+   460→          
+   461→          if (diffDays === streak) {
+   462→            streak++;
+   463→            currentDate = dayDate;
+   464→          } else if (diffDays > streak) {
+   465→            break;
+   466→          }
+   467→        }
+   468→        
+   469→        achievement.progress = Math.min(streak, def.maxProgress);
+   470→        break;
+   471→      }
+   472→      case "all-genres":
+   473→        achievement.progress = Math.min(stats.genresVisited.size, def.maxProgress);
+   474→        break;
+   475→      case "midnight-reader":
+   476→        achievement.progress = Math.min(stats.midnightReads, def.maxProgress);
+   477→        break;
+   478→      case "speed-reader":
+   479→        achievement.progress = Math.min(stats.speedReads, def.maxProgress);
+   480→        break;
+   481→      default:
+   482→        achievement.progress = 0;
+   483→    }
+   484→
+   485→    // Unlock if complete
+   486→    if (
+   487→      achievement.progress >= def.maxProgress &&
+   488→      !achievement.unlockedAt
+   489→    ) {
+   490→      achievement.unlockedAt = new Date();
+   491→      
+   492→      // Dispatch event for toast notification
+   493→      window.dispatchEvent(
+   494→        new CustomEvent("achievementUnlocked", {
+   495→          detail: achievement,
+   496→        })
+   497→      );
+   498→    }
+   499→
+   500→    // Update or add
+   501→    if (!existing) {
+   502→      achievements.push(achievement as Achievement);
+   503→    } else {
+   504→      const index = achievements.findIndex((a) => a.id === def.id);
+   505→      if (index !== -1) {
+   506→        achievements[index] = achievement as Achievement;
+   507→      }
+   508→    }
+   509→
+   510→    changed = true;
+   511→  }
+   512→
+   513→  if (changed) {
+   514→    saveAchievements(achievements);
+   515→  }
+   516→
+   517→  return achievements;
+   518→}
+   519→
+   520→// Get achievement stats summary
+   521→export function getAchievementSummary() {
+   522→  const achievements = loadAchievements();
+   523→  const unlocked = achievements.filter((a) => a.unlockedAt);
+   524→  const totalPoints = unlocked.reduce((sum, a) => sum + a.points, 0);
+   525→  const byRarity = {
+   526→    common: unlocked.filter((a) => a.rarity === "common").length,
+   527→    rare: unlocked.filter((a) => a.rarity === "rare").length,
+   528→    epic: unlocked.filter((a) => a.rarity === "epic").length,
+   529→    legendary: unlocked.filter((a) => a.rarity === "legendary").length,
+   530→  };
+   531→  
+   532→  const totalAvailable = ACHIEVEMENT_DEFINITIONS.length + SECRET_ACHIEVEMENTS.length;
+   533→
+   534→  return {
+   535→    total: unlocked.length,
+   536→    totalAvailable,
+   537→    totalPoints,
+   538→    percentage: Math.round((unlocked.length / totalAvailable) * 100),
+   539→    byRarity,
+   540→    recent: unlocked.sort(
+   541→      (a, b) =>
+   542→        new Date(b.unlockedAt!).getTime() - new Date(a.unlockedAt!).getTime()
+   543→    ).slice(0, 5),
+   544→  };
+   545→}
+   546→
+   547→// Icon component
+   548→function AchievementIcon({ name, className }: { name: string; className?: string }) {
+   549→  const props = { className };
+   550→
+   551→  switch (name) {
+   552→    case "Trophy": return <Trophy {...props} />;
+   553→    case "Star": return <Star {...props} />;
+   554→    case "BookOpen": return <BookOpen {...props} />;
+   555→    case "Flame": return <Flame {...props} />;
+   556→    case "Target": return <Target {...props} />;
+   557→    case "Clock": return <Clock {...props} />;
+   558→    case "Award": return <Award {...props} />;
+   559→    case "Zap": return <Zap {...props} />;
+   560→    case "Heart": return <Heart {...props} />;
+   561→    case "Bookmark": return <Bookmark {...props} />;
+   562→    case "TrendingUp": return <TrendingUp {...props} />;
+   563→    case "CheckCircle2": return <CheckCircle2 {...props} />;
+   564→    case "Lock": return <Lock {...props} />;
+   565→    case "Crown": return <Crown {...props} />;
+   566→    case "Gem": return <Gem {...props} />;
+   567→    case "Moon": return <span {...props}>🌙</span>; // Using emoji for moon
+   568→    default: return <Award {...props} />;
+   569→  }
+   570→}
+   571→
+   572→// Rarity colors
+   573→const RARITY_CONFIG = {
+   574→  common: {
+   575→    color: "text-gray-600 dark:text-gray-400",
+   576→    bg: "bg-gray-100 dark:bg-gray-800/50 border-gray-300 dark:border-gray-700",
+   577→    gradient: "from-gray-400 to-gray-500",
+   578→  },
+   579→  rare: {
+   580→    color: "text-green-600 dark:text-green-400",
+   581→    bg: "bg-green-100 dark:bg-green-900/30 border-green-300 dark:border-green-700",
+   582→    gradient: "from-green-400 to-emerald-500",
+   583→  },
+   584→  epic: {
+   585→    color: "text-purple-600 dark:text-purple-400",
+   586→    bg: "bg-purple-100 dark:bg-purple-900/30 border-purple-300 dark:border-purple-700",
+   587→    gradient: "from-purple-400 to-pink-500",
+   588→  },
+   589→  legendary: {
+   590→    color: "text-orange-500 dark:text-orange-400",
+   591→    bg: "bg-gradient-to-r from-orange-100 via-amber-100 to-yellow-100 dark:from-orange-950/30 via-amber-950/20 dark:to-yellow-950/20 border-orange-300 dark:border-700",
+   592→    gradient: "from-orange-400 via-amber-400 to-yellow-400",
+   593→  },
+   594→};
+   595→
+   596→// Main Achievements Component
+   597→interface AchievementsProps {
+   598→  /** Show compact version */
+   599→  compact?: boolean;
+   600→  /** Filter by category */
+   601→  categoryFilter?: "all" | "reading" | "social" | "exploration" | "special";
+   602→  /** Additional class names */
+   603→  className?: string;
+   604→}
+   605→
+   606→export function Achievements({
+   607→  compact = false,
+   608→  categoryFilter = "all",
+   609→  className,
+   610→}: AchievementsProps) {
+   611→  const [achievements, setAchievements] = useState<Achievement[]>([]);
+   612→  const [activeCategory, setActiveCategory] = useState(categoryFilter);
+   613→
+   614→  useEffect(() => {
+   615→    // Initialize and unlock any pending
+   616→    const updated = checkAndUnlockAchievements();
+   617→    setAchievements(updated);
+   618→
+   619→    const handleChange = () => {
+   620→      setAchievements(loadAchievements());
+   621→    };
+   622→
+   623→    window.addEventListener("achievementsChanged", handleChange);
+   624→    
+   625→    // Listen for unlock events
+   626→    const handleUnlock = (e: CustomEvent) => {
+   627→      setAchievements(loadAchievements());
+   628→    };
+   629→    window.addEventListener("achievementUnlocked", handleUnlock as EventListener);
+   630→
+   631→    return () => {
+   632→      window.removeEventListener("achievementsChanged", handleChange);
+   633→      window.removeEventListener("achievementUnlocked", handleUnlock as EventListener);
+   634→    };
+   635→  }, []);
+   636→
+   637→  const filtered =
+   638→    activeCategory === "all"
+   639→      ? achievements
+   640→      : achievements.filter((a) => a.category === activeCategory);
+   641→
+   642→  const unlockedCount = achievements.filter((a) => a.unlockedAt).length;
+   643→  const totalCount = ACHIEVEMENT_DEFINITIONS.length + SECRET_ACHIEVEMENTS.length;
+   644→  const totalPoints = achievements
+   645→    .filter((a) => a.unlockedAt)
+   646→    .reduce((sum, a) => sum + a.points, 0);
+   647→
+   648→  if (compact) {
+   649→    return (
+   650→      <Card className={className}>
+   651→        <CardContent className="pt-5 pb-4">
+   652→          <div className="flex items-center justify-between">
+   653→            <h3 className="font-semibold text-sm flex items-center gap-2">
+   654→              <Trophy className="w-4 h-4 text-yellow-500" />
+   655→              Conquistas
+   656→              <Badge variant="secondary" className="text-xs">
+   657→                {unlockedCount}/{totalCount}
+   658→              </Badge>
+   659→            </h3>
+   660→            <span className="text-xs font-medium text-muted-foreground">
+   661→              {totalPoints} pts
+   662→            </span>
+   663→          </div>
+   664→
+   665→          {/* Mini progress */}
+   666→          <Progress
+   667→            value={totalCount > 0 ? (unlockedCount / totalCount) * 100 : 0}
+   668→            className="mt-3 h-2 [&>div]:bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-400"
+   669→          />
+   670→
+   671→          {/* Recent unlocks */}
+   672→          <div className="mt-3 space-y-2 max-h-[200px] overflow-y-auto">
+   673→            {achievements
+   674→              .filter((a) => a.unlockedAt)
+   675→              .sort(
+   676→                (a, b) =>
+   677→                  new Date(b.unlockedAt!).getTime() -
+   678→                  new Date(a.unlockedAt!).getTime()
+   679→              )
+   680→              .slice(0, 5)
+   681→              .map((achievement) => {
+   682→                const config = RARITY_CONFIG[achievement.rarity];
+   683→                return (
+   684→                  <TooltipProvider key={achievement.id}>
+   685→                    <Tooltip>
+   686→                      <TooltipTrigger asChild>
+   687→                        <div
+   688→                          className={cn(
+   689→                            "flex items-center gap-2 p-2 rounded-lg hover:bg-muted/80 transition-colors cursor-default",
+   690→                            config.bg,
+   691→                            "border"
+   692→                          )}
+   693→                        >
+   694→                          <AchievementIcon
+   695→                            name={achievement.icon}
+   696→                            className={cn("w-5 h-5 shrink-0", config.color)}
+   697→                          />
+   698→                          <div className="flex-1 min-w-0">
+   699→                            <p className="text-xs font-medium truncate">
+   700→                              {achievement.title}
+   701→                            </p>
+   702→                            <p className="text-[10px] text-muted-foreground">
+   703→                              {achievement.points} pts
+   704→                            </p>
+   705→                          </div>
+   706→                          <CheckCircle2
+   707→                            className={cn(
+   708→                              "w-4 h-4 shrink-0 text-green-500",
+   709→                              config.color
+   710→                            )}
+   711→                          />
+   712→                        </div>
+   713→                      </TooltipTrigger>
+   714→                      <TooltipContent side="top">
+   715→                        <p className="font-medium">{achievement.title}</p>
+   716→                        <p className="text-xs">{achievement.description}</p>
+   717→                      </TooltipContent>
+   718→                    </Tooltip>
+   719→                  </TooltipProvider>
+   720→                );
+   721→              })}
+   722→          </div>
+   723→
+   724→          {unlockedCount === 0 && (
+   725→            <p className="text-xs text-muted-foreground text-center py-4">
+   726→              Complete ações para desbloquear conquistas!
+   727→            </p>
+   728→          )}
+   729→        </CardContent>
+   730→      </Card>
+   731→    );
+   732→  }
+   733→
+   734→  // Full view
+   735→  return (
+   736→    <div className={cn("space-y-6", className)}>
+   737→      {/* Header */}
+   738→      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+   739→        <div>
+   740→          <h2 className="text-xl font-bold flex items-center gap-2">
+   741→            <Trophy className="w-6 h-6 text-yellow-500" />
+   742→            Conquistas
+   743→          </h2>
+   744→          <p className="text-sm text-muted-foreground mt-1">
+   745→            Desbloqueie conquistas lendo e explorando
+   746→          </p>
+   747→        </div>
+   748→
+   749→        <div className="flex items-center gap-4">
+   750→          <div className="text-right">
+   751→            <p className="text-2xl font-bold text-yellow-500">{totalPoints}</p>
+   752→            <p className="text-xs text-muted-foreground">pontos</p>
+   753→          </div>
+   754→          <Badge
+   755→            variant="outline"
+   756→            className="border-yellow-300 dark:border-yellow-700 text-yellow-700 dark:text-yellow-400 px-3 py-1.5"
+   757→          >
+   758→            <Trophy className="w-4 h-4 mr-1" />
+   759→            {unlockedCount}/{totalCount}
+   760→          </Badge>
+   761→        </div>
+   762→      </div>
+   763→
+   764→      {/* Overall progress */}
+   765→      <Card className="overflow-hidden">
+   766→        <CardContent className="pt-5">
+   767→          <div className="flex items-center justify-between mb-3">
+   768→            <span className="text-sm font-medium">Progresso Geral</span>
+   769→            <span className="text-sm text-muted-foreground">
+   770→              {Math.round((unlockedCount / totalCount) * 100)}%
+   771→            </span>
+   772→          </div>
+   773→          <Progress
+   774→            value={totalCount > 0 ? (unlockedCount / totalCount) * 100 : 0}
+   775→            className="h-3 [&>div]:bg-gradient-to-r from-yellow-400 via-amber-400 to-orange-400"
+   776→          />
+   777→        </CardContent>
+   778→      </Card>
+   779→
+   780→      {/* Category filters */}
+   781→      <div className="flex flex-wrap gap-2">
+   782→        {[
+   783→          { key: "all", label: "Todos", count: totalCount },
+   784→          { key: "reading", label: "📖 Leitura", icon: "BookOpen" },
+   785→          { key: "social", label: "💬 Social", icon: "Heart" },
+   786→          { key: "exploration", label: "🧭 Explorar", icon: "Compass" },
+   787→          { key: "special", label: "✨ Especiais", icon: "Star" },
+   788→        ].map((cat) => (
+   789→          <button
+   790→            key={cat.key}
+   791→            onClick={() => setActiveCategory(cat.key)}
+   792→            className={cn(
+   793→              "px-3 py-1.5 rounded-full text-sm font-medium transition-colors",
+   794→              activeCategory === cat.key
+   795→                ? "bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+   796→                : "hover:bg-muted text-muted-foreground"
+   797→            )}
+   798→          >
+   799→            {cat.label}
+   800→          </button>
+   801→        ))}
+   802→      </div>
+   803→
+   804→      {/* Achievements Grid */}
+   805→      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+   806→        {filtered.map((achievement) => {
+   807→          const config = RARITY_CONFIG[achievement.rarity];
+   808→          const isUnlocked = !!achievement.unlockedAt;
+   809→          const progressPercent = Math.round(
+   810→            (achievement.progress / achievement.maxProgress) * 100
+   811→          );
+   812→
+   813→          return (
+   814→            <Card
+   815→              key={achievement.id}
+   816→              className={cn(
+   817→                "transition-all duration-300 overflow-hidden group hover:shadow-lg",
+   818→                !isUnlocked && "opacity-75",
+   819→                isUnlocked &&
+   820→                  "ring-2 ring-offset-2 ring-yellow-300/50 dark:ring-yellow-500/30"
+   821→              )}
+   822→            >
+   823→              <CardHeader
+   824→                className={cn(
+   825→                  "pb-3",
+   826→                  config.bg,
+   827→                  "border-b"
+   828→                )}
+   829→              >
+   830→                <div className="flex items-start justify-between">
+   831→                  <div
+   832→                    className={cn(
+   833→                      "p-2.5 rounded-xl bg-background/50 backdrop-blur-sm",
+   834→                      config.gradient.replace("from-", "to-").replace(" ", "-to-") === config.gradient
+   835→                        ? ""
+   836→                        : `bg-gradient-to-br ${config.gradient}`
+   837→                    )
+   838→                  }
+   839→                  >
+   840→                    <AchievementIcon
+   841→                      name={achievement.icon}
+   842→                      className={cn(
+   843→                        "w-6 h-6",
+   844→                        isUnlocked ? config.color : "text-muted-foreground"
+   845→                      )}
+   846→                    />
+   847→                  </div>
+   848→                  
+   849→                  <div className="text-right ml-2">
+   850→                    <Badge
+   851→                      variant="secondary"
+   852→                      className={cn(
+   853→                        "text-[10px] font-bold uppercase tracking-wider",
+   854→                        isUnlocked
+   855→                          ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
+   856→                          : ""
+   857→                      )}
+   858→                    >
+   859→                      {achievement.rarity}
+   860→                    </Badge>
+   861→                    <p className="text-lg font-bold mt-1">{achievement.points}</p>
+   862→                  </div>
+   863→                </div>
+   864→                
+   865→                {!isUnlocked && achievement.isSecret && (
+   866→                  <Lock className="w-4 h-4 text-muted-foreground ml-auto mt-1" />
+   867→                )}
+   868→              </CardHeader>
+   869→
+   870→              <CardContent className="pt-0 pb-4">
+   871→                <h3 className="font-semibold text-sm mb-1 truncate">
+   872→                  {isUnlocked ? achievement.title : "???"}
+   873→                </h3>
+   874→                <p className="text-xs text-muted-foreground line-clamp-2 mb-3">
+   875→                  {isUnlocked
+   876→                    ? achievement.description
+   877→                    : "Conquista secreta - continue explorando!"}
+   878→                </p>
+   879→
+   880→                {/* Progress bar */}
+   881→                {!isUnlocked && (
+   882→                  <div className="space-y-1.5">
+   883→                    <div className="flex justify-between text-xs">
+   884→                      <span className="text-muted-foreground">Progresso</span>
+   885→                      <span className="font-medium">
+   886→                        {progressPercent}%
+   887→                      </span>
+   888→                    </div>
+   889→                    <Progress
+   890→                      value={progressPercent}
+   891→                      className="h-2 [&>div]:bg-gradient-to-r from-purple-500 to-pink-500"
+   892→                    />
+   893→                  </div>
+   894→                )}
+   895→
+   896→                {isUnlocked && (
+   897→                  <div className="flex items-center justify-center gap-1.5 mt-2 p-2 rounded-lg bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400">
+   898→                    <CheckCircle2 className="w-4 h-4" />
+   899→                    <span className="text-xs font-semibold">
+   900→                      Desbloqueada!
+   901→                    </span>
+   902→                  </div>
+   903→                )}
+   904→              </CardContent>
+   905→            </Card>
+   906→          );
+   907→        })}
+   908→      </div>
+   909→
+   910→      {filtered.length === 0 && (
+   911→        <div className="text-center py-12">
+   912→          <Lock className="w-16 h-16 mx-auto mb-4 text-muted-foreground/30" />
+   913→          <h3 className="font-semibold mb-2">Nenhuma conquista nesta categoria</h3>
+   914→          <p className="text-sm text-muted-foreground">
+   915→            Explore outras categorias para encontrar conquistas
+   916→          </p>
+   917→        </div>
+   918→      )}
+   919→    </div>
+   920→  );
+   921→}
+   922→
+   923→// Hook for using achievements data
+   924→export function useAchievements() {
+   925→  const [summary, setSummary] = useState(() => getAchievementSummary());
+   926→
+   927→  useEffect(() => {
+   928→    const update = () => setSummary(getAchievementSummary());
+   929→    
+   930→    update();
+   931→    window.addEventListener("achievementsChanged", update);
+   932→    return () => window.removeEventListener("achievementsChanged", update);
+   933→  }, []);
+   934→
+   935→  return {
+   936→    ...summary,
+   937→    refresh: () => setSummary(getAchievementSummary()),
+   938→    track: {
+   939→      storyRead: trackStoryRead,
+   940→      favorite: trackFavorite,
+   941→      bookmark: trackBookmark,
+   942→      search: trackSearch,
+   943→      share: trackShare,
+   944→      genreVisit: trackGenreVisit,
+   945→    },
+   946→  };
+   947→}
+   948→
