@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ec4899;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f0f0f0;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10.24" stdDeviation="15.36" flood-color="#ec4899" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  
+  <!-- Background with rounded corners -->
+  <rect width="512" height="512" rx="102.4" ry="102.4" fill="#0a0a0f"/>
+  
+  <!-- Gradient border -->
+  <rect x="7.68" y="7.68" width="496.64" height="496.64" rx="97.28" ry="97.28" fill="none" stroke="url(#bgGrad)" stroke-width="7.68"/>
+  
+  <!-- Heart shape -->
+  <g transform="translate(256, 230.4) scale(1.7919999999999998)" filter="url(#shadow)">
+    <path d="M0,30 C-25,10 -50,-10 -50,-30 C-50,-55 -20,-65 0,-45 C20,-65 50,-55 50,-30 C50,-10 25,10 0,30 Z" 
+          fill="url(#heartGrad)"/>
+  </g>
+  
+  <!-- Small sparkle decorations -->
+  <circle cx="112.64" cy="143.36" r="15.36" fill="#ffffff" opacity="0.7"/>
+  <circle cx="399.36" cy="368.64" r="12.8" fill="#ffffff" opacity="0.5"/>
+</svg>

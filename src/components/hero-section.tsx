@@ -90,8 +90,15 @@ export function HeroSection({ featuredStory }: HeroSectionProps) {
         className="absolute inset-0 gradient-hero"
         aria-hidden="true"
       >
-        {/* Base gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a14] via-[#120a18] to-[#0f0618]" />
+        {/* Background Image - Romantic Cinematic */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/images/hero/main-hero.png')" }}
+        />
+        
+        {/* Dark gradient overlays for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[var(--fl-background)]" />
         
         {/* Decorative gradient orbs - cinematic atmosphere */}
         <div className="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] bg-purple-600/20 rounded-full blur-[120px]" />
