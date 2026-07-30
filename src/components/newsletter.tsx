@@ -28,15 +28,28 @@ export function Newsletter({ variant = "default", className }: NewsletterProps) 
 
     setStatus("loading");
 
-    // Simulate API call (replace with actual API call)
+    // Call actual newsletter API
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      setStatus("success");
-      setEmail("");
-      
-      // Reset after 5 seconds
-      setTimeout(() => setStatus("idle"), 5000);
-    } catch {
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setStatus("success");
+        setEmail("");
+        
+        // Reset after 5 seconds
+        setTimeout(() => setStatus("idle"), 5000);
+      } else {
+        setStatus("error");
+        setErrorMessage(data.error || "Erro ao inscrever. Tente novamente.");
+      }
+    } catch (error) {
+      console.error("[Newsletter] Error:", error);
      setStatus("error");
       setErrorMessage("Algo deu errado. Tente novamente.");
     }

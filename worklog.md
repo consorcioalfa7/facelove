@@ -244,3 +244,89 @@ Next Steps Recommendations:
 2. Add user authentication for cloud-synced favorites/history
 3. Create reading statistics dashboard
 4. Implement story recommendations based on reading history
+
+---
+Task ID: 5
+Agent: Main Developer (Z.ai)
+Task: API Endpoints, Recommendations & Reading Statistics
+
+Work Log:
+
+### API Endpoint Created
+- **`/src/app/api/newsletter/route.ts`** - Newsletter subscription API:
+  - `POST /api/newsletter` - Subscribe email to newsletter
+  - `GET /api/newsletter?email=x` - Check subscription status
+  - `GET /api/newsletter` - Get public stats (subscriber count)
+  - `DELETE /api/newsletter` - Unsubscribe from newsletter
+  - Email validation, duplicate detection, reactivation support
+  - In-memory storage for demo (replace with database in production)
+  - Proper error handling and status codes
+
+### Components Created
+- **`/src/components/story-recommendations.tsx`** - Story recommendations system:
+  - `StoryRecommendations` - Full featured recommendation widget
+    - Personalized based on reading history
+    - Falls back to trending/popular stories
+    - Auto-refreshes when history changes
+    - Loading skeleton state
+    - "Update recommendations" button
+  - `RecommendedStoriesCompact` - Sidebar version
+    - Shows popular stories with read counts
+    - Compact horizontal layout
+
+- **`/src/components/reading-statistics.tsx`** - User reading dashboard:
+  - Full statistics card with 4 main metrics:
+    - Total stories started
+    - Total reading time (formatted: min/h/days)
+    - Completed stories count
+    - Reading streak (consecutive days)
+  - Monthly reading goal progress bar
+  - In-progress stories list with completion %
+  - Mini progress bars per story
+  - Clear stats functionality
+  - Compact variant for sidebar use
+  - Empty state when no data
+
+### Utility Module Created
+- **`/src/lib/reading-stats.ts`** - Reading statistics tracking:
+  - `getStoryProgress(storyId)` - Get specific story's progress
+  - `updateStoryProgress()` - Update position/time/completion
+  - `markStoryCompleted()` - Mark story as finished
+  - `getUserStats()` - Get aggregated user stats
+  - `getAllReadingProgress()` - Get all tracked stories
+  - `clearReadingStats()` - Reset all tracking data
+  - localStorage persistence with custom events
+  - Automatic streak calculation
+
+### Updates Made
+- **Newsletter component** updated to use real `/api/newsletter` endpoint:
+  - Replaced simulated delay with actual fetch call
+  - Shows server error messages when applicable
+  - Maintains same UI/UX behavior
+
+Stage Summary:
+- **API Endpoints**: ✅ Complete
+  - Newsletter CRUD operations fully implemented
+  - Validation and error handling included
+- **Recommendations**: ✅ Complete
+  - History-based personalization
+  - Trending fallback when no history
+  - Compact sidebar variant available
+- **Statistics**: ✅ Complete
+  - Comprehensive reading metrics
+  - Progress tracking per story
+  - Streaks and goals
+- **Code Quality**: ✅ ESLint passing (0 errors)
+
+Unresolved Issues/Risks:
+- Newsletter uses in-memory storage (data lost on server restart)
+- No user authentication - all data is local only
+- Reading progress requires manual scroll tracking implementation
+- Stats don't persist across different browsers/devices
+
+Next Steps Recommendations:
+1. Integrate reading progress into story page scroll handler
+2. Add StoryRecommendations to homepage or story page sidebar
+3. Add ReadingStatistics to user profile/favorites page
+4. Implement user authentication for cross-device sync
+5. Connect newsletter to real email service (SendGrid/Mailchimp)
