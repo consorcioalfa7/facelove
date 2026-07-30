@@ -161,3 +161,86 @@ Next Steps Recommendations:
 2. Add more interactive micro-animations
 3. Consider adding a "recently viewed" feature with localStorage
 4. Add accessibility improvements (ARIA labels, keyboard nav)
+
+---
+Task ID: 4
+Agent: Main Developer (Z.ai)
+Task: Enhanced Features - Recently Viewed, Share Button, Notifications & Animations
+
+Work Log:
+
+### New Utility Modules Created
+- **`/src/lib/recently-viewed.ts`** - Recently viewed stories tracking:
+  - `getRecentlyViewed()` - Get sorted list of recently viewed items
+  - `addRecentlyViewed(id, title, slug)` - Add/update entry with timestamp
+  - `removeRecentlyViewed(id)` - Remove specific item
+  - `clearRecentlyViewed()` - Clear entire history
+  - `isRecentlyViewed(id)` - Check if story is in history
+  - Max 20 items stored in localStorage
+
+- **`/src/lib/notifications.ts`** - Toast notification system:
+  - `toastSuccess()`, `toastError()`, `toastInfo()` - Base notification types
+  - `toastFavoriteAdded(storyTitle)` - Favorite success toast with action
+  - `toastFavoriteRemoved(storyTitle)` - Remove feedback
+  - `toastStoryShared(storyTitle)` - Share confirmation
+  - `toastNewsletterSubscribed(email)` - Newsletter signup success
+  - `toastPromise()` - Loading/promise-based notifications
+
+### New Components Created
+- **`/src/components/recently-viewed.tsx`** - Two components:
+  - `RecentlyViewedPanel` - Full panel with header, scrollable list, clear all
+  - `RecentlyViewedList` - Compact inline version for sidebars
+  - Time-ago formatting (e.g., "2h", "3d", "Agora")
+  - Remove individual items or clear all
+  - Auto-hides when empty
+
+- **`/src/components/share-button.tsx`** - Social sharing component:
+  - Dropdown menu with copy link, Twitter/X, WhatsApp
+  - Copy to clipboard with fallback for older browsers
+  - Success animation when copied
+  - Multiple size variants (sm/md/lg)
+  - Simple `ShareLink` variant without dropdown
+
+- **`/src/components/story-engagement-bar.tsx`** - Story action bar:
+  - Displays read count, reading time, rating stats
+  - Save button with localStorage persistence
+  - Integration with FavoriteButton and ShareButton
+  - Compact variant for mobile
+  - Auto-tracks recently viewed on mount
+
+### CSS Enhancements (`globals.css`)
+New animations added:
+- `animate-float` - Gentle up/down floating motion
+- `animate-pulse-glow` - Pulsing glow effect
+- `animate-slide-up-fade` - Slide up + fade in
+- `animate-scale-in-bounce` - Scale with bounce effect
+- `shimmer-border` - Animated gradient border effect
+- `interactive-card` - Hover lift with purple shadow
+- `glass-card` - Glass morphism card styling
+- `gradient-text-animated` - Animated gradient text
+- `focus-ring` - Accessibility focus ring
+- `transition-smooth` - Comprehensive transition utility
+
+Stage Summary:
+- **New Features**: ✅ Complete
+  - Recently viewed tracking with localStorage
+  - Social sharing (Twitter/X, WhatsApp, clipboard)
+  - Enhanced notification system with context-specific messages
+  - Story engagement/action bar
+- **Animations**: ✅ Complete
+  - 8+ new animation utility classes
+  - Glass morphism effects
+  - Interactive hover states
+  - Shimmer border animations
+- **Code Quality**: ✅ ESLint passing (0 errors)
+
+Unresolved Issues/Risks:
+- Newsletter API still simulates success (needs backend implementation)
+- Recently viewed data is lost when localStorage is cleared
+- No server-side sync for favorites/recently-viewed across devices
+
+Next Steps Recommendations:
+1. Implement /api/newsletter endpoint for real email capture
+2. Add user authentication for cloud-synced favorites/history
+3. Create reading statistics dashboard
+4. Implement story recommendations based on reading history

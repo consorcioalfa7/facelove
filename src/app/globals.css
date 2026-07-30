@@ -413,3 +413,160 @@
     transform: scale(1);
   }
 }
+
+/* Additional FaceLove animations */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px oklch(0.55 0.25 300 / 20%);
+  }
+  50% {
+    box-shadow: 0 0 40px oklch(0.55 0.25 300 / 40%), 0 0 60px oklch(0.6 0.22 350 / 20%);
+  }
+}
+
+@keyframes slide-up-fade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in-bounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer-border {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Animation utility classes */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-slide-up-fade {
+  animation: slide-up-fade 0.4s ease-out forwards;
+}
+
+.animate-scale-in-bounce {
+  animation: scale-in-bounce 0.4s ease-out forwards;
+}
+
+/* Shimmer border effect for special elements */
+.shimmer-border {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    oklch(0.55 0.25 300),
+    oklch(0.6 0.22 350),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer-border 3s linear infinite;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Interactive hover effects */
+.interactive-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interactive-card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 
+    0 12px 24px -8px oklch(0.55 0.25 300 / 15%),
+    0 8px 16px -6px oklch(0.6 0.22 350 / 10%);
+}
+
+/* Glass morphism card effect */
+.glass-card {
+  background: oklch(0.995 0.003 300 / 70%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid oklch(0.91 0.02 300 / 50%);
+}
+
+.dark .glass-card {
+  background: oklch(0.18 0.025 300 / 70%);
+  border: 1px solid oklch(0.3 0.03 300 / 50%);
+}
+
+/* Gradient text with animation */
+.gradient-text-animated {
+  background: linear-gradient(
+    90deg,
+    #9333ea 0%,
+    #ec4899 33%,
+    #a855f7 66%,
+    #ec4899 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 3s linear infinite;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* Focus visible ring for accessibility */
+.focus-ring:focus-visible {
+  outline: none;
+  box-shadow: 
+    0 0 0 2px white,
+    0 0 0 4px oklch(0.55 0.25 300);
+}
+
+/* Smooth transitions for all interactive elements */
+.transition-smooth {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 200ms;
+}
