@@ -13,6 +13,7 @@ import {
   Tags,
   Users,
   LayoutGrid,
+  Heart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,12 +26,14 @@ import {
 import { cn } from "@/lib/utils";
 import { FaceLoveLogo } from "@/components/facelove-logo";
 import { LanguageSelector } from "@/components/language-selector";
+import { useI18n } from "@/lib/i18n/I18nProvider";
 
 const navigation = [
-  { name: "home", href: "/", icon: "bookopen" },
-  { name: "genres", href: "/genres", icon: "layoutgrid" },
-  { name: "themes", href: "/themes", icon: "tags" },
-  { name: "authors", href: "/authors", icon: "users" },
+  { key: "home", href: "/", icon: "bookopen" },
+  { key: "genres", href: "/genres", icon: "layoutgrid" },
+  { key: "themes", href: "/themes", icon: "tags" },
+  { key: "authors", href: "/authors", icon: "users" },
+  { key: "favorites", href: "/favorites", icon: "heart" },
 ];
 
 // Icon component to avoid creating components during render
@@ -46,12 +49,15 @@ function NavIcon({ name, className }: { name: string; className?: string }) {
       return <Tags {...props} />;
     case "users":
       return <Users {...props} />;
+    case "heart":
+      return <Heart {...props} />;
     default:
       return <BookOpen {...props} />;
   }
 }
 
 export function Header() {
+  const { t } = useI18n();
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
@@ -110,7 +116,7 @@ export function Header() {
                     )}
                   >
                     <NavIcon name={item.icon} className="w-4 h-4" />
-                    {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+                    {t(`nav.${item.key}` as any)}
                   </Button>
                 </Link>
               );
@@ -123,7 +129,7 @@ export function Header() {
             <Link href="/search" className="hidden sm:block">
               <Button variant="outline" size="sm" className="gap-2">
                 <Search className="w-4 h-4" />
-                <span className="hidden lg:inline">Search</span>
+                <span className="hidden lg:inline">{t('nav.search')}</span>
               </Button>
             </Link>
 
@@ -172,7 +178,7 @@ export function Header() {
                           )}
                         >
                           <NavIcon name={item.icon} className="w-5 h-5" />
-                          {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+                          {t(`nav.${item.key}` as any)}
                         </Button>
                       </Link>
                     );
@@ -183,7 +189,7 @@ export function Header() {
                   <Link href="/search" onClick={closeMenu}>
                     <Button variant="ghost" className="w-full justify-start gap-3 py-3">
                       <Search className="w-5 h-5" />
-                      Search Stories
+                      {t('nav.search')}
                     </Button>
                   </Link>
                   

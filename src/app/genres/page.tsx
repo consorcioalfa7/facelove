@@ -101,7 +101,7 @@ export default async function GenresPage() {
                 </div>
                 <h2 className="text-2xl font-bold mb-3">Nenhum gênero encontrado</h2>
                 <p className="text-muted-foreground max-w-md mx-auto">
-                  Os gênero estarão disponíveis em breve. Volte mais tarde!
+                  Os gêneros estarão disponíveis em breve. Volte mais tarde!
                 </p>
               </div>
             )}

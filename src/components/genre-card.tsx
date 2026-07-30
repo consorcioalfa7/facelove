@@ -193,7 +193,7 @@ export function GenreCard({
           </div>
 
           <CardContent className="pt-4 pb-6">
-            <h3 className="font-bold text-lg mb-2 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+            <h3 className="font-bold text-lg mb-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
               {genre.name}
             </h3>
             {genre.description && (
@@ -228,7 +228,7 @@ export function GenreCard({
               <GenreIcon name={iconName} className="w-6 h-6" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-base group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+              <h3 className="font-semibold text-base group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
                 {genre.name}
               </h3>
               <Badge

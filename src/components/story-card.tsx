@@ -3,6 +3,7 @@ import { Star, Eye, Calendar, User, BookOpen } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ThemeBadge } from "./theme-badge";
+import { FavoriteButton } from "./favorite-button";
 import { cn } from "@/lib/utils";
 
 export interface StoryCardData {
@@ -33,6 +34,7 @@ interface StoryCardProps {
   story: StoryCardData;
   variant?: "default" | "compact" | "featured";
   className?: string;
+  showFavorite?: boolean;
 }
 
 function StarRating({ rating, size = "sm" }: { rating: number; size?: "sm" | "md" }) {
@@ -75,16 +77,24 @@ export function StoryCard({
   story,
   variant = "default",
   className,
+  showFavorite = true,
 }: StoryCardProps) {
   if (variant === "compact") {
     return (
       <Link href={`/story/${story.id}`}>
         <Card
           className={cn(
-            "card-hover cursor-pointer group p-4",
+            "card-hover cursor-pointer group p-4 relative",
             className
           )}
         >
+          {/* Favorite Button - Top Right */}
+          {showFavorite && (
+            <div className="absolute top-2 right-2 z-10">
+              <FavoriteButton storyId={story.id} size="sm" />
+            </div>
+          )}
+          
           <CardContent className="p-0 flex items-start gap-4">
             {/* Genre icon */}
             <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/10 to-pink-500/10 flex items-center justify-center group-hover:from-purple-500/20 group-hover:to-pink-500/20 transition-colors">
@@ -129,10 +139,21 @@ export function StoryCard({
       <Link href={`/story/${story.id}`}>
         <Card
           className={cn(
-            "card-hover cursor-pointer group overflow-hidden",
+            "card-hover cursor-pointer group overflow-hidden relative",
             className
           )}
         >
+          {/* Favorite Button - Top Right (overlapping gradient header) */}
+          {showFavorite && (
+            <div className="absolute top-3 right-3 z-10">
+              <FavoriteButton 
+                storyId={story.id} 
+                size="md"
+                className="bg-white/20 backdrop-blur-sm hover:bg-white/30 border border-white/30"
+              />
+            </div>
+          )}
+          
           {/* Gradient header */}
           <div className="h-32 bg-gradient-to-br from-purple-500 via-fuchsia-500 to-pink-600 relative overflow-hidden">
             <div className="absolute inset-0 bg-black/20" />
@@ -209,10 +230,17 @@ export function StoryCard({
     <Link href={`/story/${story.id}`}>
       <Card
         className={cn(
-          "card-hover cursor-pointer group h-full",
+          "card-hover cursor-pointer group h-full relative",
           className
         )}
       >
+        {/* Favorite Button - Top Right */}
+        {showFavorite && (
+          <div className="absolute top-3 right-3 z-10">
+            <FavoriteButton storyId={story.id} size="sm" />
+          </div>
+        )}
+        
         <CardContent className="pt-6 pb-6 flex flex-col h-full">
           {/* Header with genre badge and title */}
           <div className="mb-3">

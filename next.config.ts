@@ -2,7 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "standalone",
-  /* config options here */
+  // Image optimization configuration
+  images: {
+    // Local images from /public are allowed by default
+    // Add remotePatterns here when using external image sources
+    formats: ["image/avif", "image/webp"],
+  },
   typescript: {
     ignoreBuildErrors: true,
   },
