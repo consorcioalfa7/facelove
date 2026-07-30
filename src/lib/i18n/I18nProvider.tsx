@@ -13,7 +13,7 @@ import {
 
 interface I18nContextType {
   locale: Locale;
-  setLocale: (locale: Locale) => void;
+  setLocale: (locale:Locale) => void;
   t: (key: string, params?: Record<string, string | number>) => string;
   translations: TranslationKeys;
   availableLocales: typeof locales;
@@ -22,36 +22,41 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
+  // Start with default values immediately - don't block rendering!
   const [locale, setLocaleState] = useState<Locale>(defaultLocale);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [hasAttemptedDetection, setHasAttemptedDetection] = useState(false);
 
-  // Detect locale on mount
+  // Detect locale on mount - non-blocking
   useEffect(() => {
     const detectAndSetLocale = async () => {
       try {
-        // Try to get country from geolocation API
         let countryCode = '';
         
-        // Use a free geolocation API
+        // Use a free geolocation API with timeout
         try {
-          const response = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(2000) });
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
+          const response = await fetch('https://ipapi.co/json/', { 
+            signal: controller.signal 
+          });
           if (response.ok) {
             const data = await response.json();
             countryCode = data.country_code;
           }
         } catch {
-          // Fallback to browser language
+          // Silently continue - use browser language
+          console.log('[I18n] Geolocation API failed, using browser language');
         }
         
-        // Get browser language
         const acceptLanguage = navigator?.language || undefined;
-        
         const detectedLocale = detectLocale(acceptLanguage, countryCode);
         setLocaleState(detectedLocale);
-      } catch {
-        // Keep default locale on error
+      } catch (e) {
+        console.error('[I18n] Error detecting locale:', e);
       } finally {
         setIsInitialized(true);
+        setHasAttemptedDetection(true);
       }
     };
     
@@ -66,28 +71,26 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // Load saved preference
+  // Load saved preference immediately (synchronous for instant availability)
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('facelove-locale');
       if (saved && saved in locales) {
         setLocaleState(saved as Locale);
-        setIsInitialized(true);
       }
+      // Mark as initialized immediately since we have a value
+      setIsInitialized(true);
     }
-  }, [setLocale]);
+  }, []);
 
+  // Get translations - always provide valid defaults
   const translations = getTranslations(locale);
   
   const t = useCallback((key: string, params?: Record<string, string | number>) => {
     return translateFn(translations, key, params);
   }, [translations]);
 
-  // Prevent flash of wrong content
-  if (!isInitialized) {
-    return null;
-  }
-
+  // Always render children - never block rendering!
   return (
     <I18nContext.Provider value={{ locale, setLocale, t, translations, availableLocales: locales }}>
       {children}

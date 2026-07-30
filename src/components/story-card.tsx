@@ -78,7 +78,7 @@ export function StoryCard({
 }: StoryCardProps) {
   if (variant === "compact") {
     return (
-      <Link href={`/stories/${story.slug}`}>
+      <Link href={`/story/${story.id}/${story.slug}`}>
         <Card
           className={cn(
             "card-hover cursor-pointer group p-4",
@@ -87,12 +87,12 @@ export function StoryCard({
         >
           <CardContent className="p-0 flex items-start gap-4">
             {/* Genre icon */}
-            <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500/10 to-rose-500/10 flex items-center justify-center group-hover:from-amber-500/20 group-hover:to-rose-500/20 transition-colors">
-              <BookOpen className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+            <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/10 to-pink-500/10 flex items-center justify-center group-hover:from-purple-500/20 group-hover:to-pink-500/20 transition-colors">
+              <BookOpen className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             </div>
 
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-sm line-clamp-1 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+              <h3 className="font-semibold text-sm line-clamp-1 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
                 {story.title}
               </h3>
               <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
@@ -126,7 +126,7 @@ export function StoryCard({
 
   if (variant === "featured") {
     return (
-      <Link href={`/stories/${story.slug}`}>
+      <Link href={`/story/${story.id}/${story.slug}`}>
         <Card
           className={cn(
             "card-hover cursor-pointer group overflow-hidden",
@@ -134,7 +134,7 @@ export function StoryCard({
           )}
         >
           {/* Gradient header */}
-          <div className="h-32 bg-gradient-to-br from-amber-500 via-rose-500 to-emerald-600 relative overflow-hidden">
+          <div className="h-32 bg-gradient-to-br from-purple-500 via-fuchsia-500 to-pink-600 relative overflow-hidden">
             <div className="absolute inset-0 bg-black/20" />
             <div className="absolute bottom-4 left-6 right-6">
               <Badge className="bg-white/20 backdrop-blur-sm border-0 text-white hover:bg-white/30 mb-2">
@@ -194,7 +194,7 @@ export function StoryCard({
             <div className="mt-3 flex items-center gap-2 text-sm">
               <User className="w-4 h-4 text-muted-foreground" />
               <span className="text-muted-foreground">by</span>
-              <span className="font-medium hover:text-amber-600 transition-colors">
+              <span className="font-medium hover:text-purple-600 transition-colors">
                 {story.author.name}
               </span>
             </div>
@@ -206,7 +206,7 @@ export function StoryCard({
 
   // Default variant
   return (
-    <Link href={`/stories/${story.slug}`}>
+    <Link href={`/story/${story.id}/${story.slug}`}>
       <Card
         className={cn(
           "card-hover cursor-pointer group h-full",
@@ -218,11 +218,11 @@ export function StoryCard({
           <div className="mb-3">
             <Badge
               variant="secondary"
-              className="mb-2 bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-400"
+              className="mb-2 bg-purple-100 text-purple-700 hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-400"
             >
               {story.genre.name}
             </Badge>
-            <h3 className="font-semibold text-lg leading-tight line-clamp-2 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+            <h3 className="font-semibold text-lg leading-tight line-clamp-2 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
               {story.title}
             </h3>
           </div>

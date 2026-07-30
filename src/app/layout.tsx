@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "FaceLove - Descubra Histórias que Tocam o Coração",
     description:
-      "Explore milhares de histórias de romance, ficção, fantasia e mais.",
+      "Explore milhares de história de romance, ficção, fantasia e mais.",
     url: "https://facelove.com",
     siteName: "FaceLove",
     type: "website",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "FaceLove - Descubra Histórias que Tocam o Coração",
     description:
-      "Explore milhares de histórias de romance, ficção, fantasia e mais.",
+      "Explore milhares de história de romance, ficção, fantasia e mais.",
   },
   robots: {
     index: true,

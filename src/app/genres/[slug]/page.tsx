@@ -81,7 +81,7 @@ interface PaginationData {
 // Fetch genre data
 async function getGenre(slug: string): Promise<GenreData | null> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/genres/${slug}`, {
+    const res = await fetch(`/api/genres/${slug}`, {
       cache: "no-store",
     });
 
@@ -131,7 +131,7 @@ export async function generateMetadata({
 export async function generateStaticParams() {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/genres`,
+      `/api/genres`,
       { cache: "no-store" }
     );
 

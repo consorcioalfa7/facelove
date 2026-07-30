@@ -95,9 +95,8 @@ async function getAuthor(
   page: number = 1,
   sort: string = "date"
 ): Promise<AuthorResponse> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   const res = await fetch(
-    `${baseUrl}/api/authors/${slug}?page=${page}&limit=12`,
+    `/api/authors/${slug}?page=${page}&limit=12`,
     {
       cache: "no-store",
       headers: { "x-sort": sort },

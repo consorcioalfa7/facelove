@@ -77,7 +77,7 @@ interface PaginationData {
 // Fetch theme data
 async function getTheme(slug: string): Promise<ThemeData | null> {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/themes/${slug}`, {
+    const res = await fetch(`/api/themes/${slug}`, {
       cache: "no-store",
     });
 
@@ -127,7 +127,7 @@ export async function generateMetadata({
 export async function generateStaticParams() {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/themes`,
+      `/api/themes`,
       { cache: "no-store" }
     );
 
