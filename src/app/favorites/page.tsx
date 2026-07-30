@@ -4,7 +4,10 @@ import { FavoritesContent } from "./favorites-client";
 import { ReadingStatistics } from "@/components/reading-statistics";
 import { Bookshelf } from "@/components/bookshelf";
 import { SearchHistory } from "@/components/search-history";
-import { Heart, BookOpen, BarChart3, BookMarked, Clock, Layers } from "lucide-react";
+import { Achievements } from "@components/achievements";
+import { StoryCollections } from "@/components/story-collections";
+import { DataManager } from "@/components/data-manager";
+import { Heart, BookOpen, BarChart3, BookMarked, Clock, Layers, Trophy, Grid3X3, Database, Download } from "lucide-react";
 
 export const metadata = {
   title: "Favoritos | FaceLove",
