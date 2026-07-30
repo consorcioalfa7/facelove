@@ -330,3 +330,114 @@ Next Steps Recommendations:
 3. Add ReadingStatistics to user profile/favorites page
 4. Implement user authentication for cross-device sync
 5. Connect newsletter to real email service (SendGrid/Mailchimp)
+
+---
+Task ID: 6
+Agent: Main Developer (Z.ai)
+Task: Enhanced Features - Keyboard Shortcuts, Bookmarks, Reading Settings & UI Improvements
+
+Work Log:
+
+### New Components Created
+
+- **`/src/components/keyboard-shortcuts.tsx`** - Global keyboard shortcuts system:
+  - `KeyboardShortcuts` component with dialog showing all available shortcuts
+  - `KeyboardShortcutButton` floating button (bottom-left) for quick access
+  - Shortcuts: `?` = help, `h` = home, `s` = search, `g` = genres, `f` = favorites, `/` = focus search
+  - Auto-shows hint toast after 10 seconds on first visit
+  - Respects input fields (doesn't capture when typing)
+  - Escape key closes dialog
+
+- **`/src/components/reading-settings.tsx`** - Reading preferences system:
+  - Font size control (14px-24px) with slider
+  - Line height adjustment (1.4-2.0) with slider
+  - Text alignment options (left, center, justify)
+  - Compact dropdown variant for inline use
+  - Full settings panel variant for sidebar/dedicated section
+  - `useReadingSettings()` hook for consuming in other components
+  - localStorage persistence with custom events
+  - Reset to defaults functionality
+
+- **`/src/components/bookmark-button.tsx`** - Story bookmarks feature:
+  - `BookmarkButton` - Full bookmark dialog with position saving
+  - `BookmarksPanel` - Compact sidebar version
+  - Save current reading position with optional notes
+  - List all bookmarks with scroll-to-position functionality
+  - Delete individual bookmarks or clear all
+  - Max 50 bookmarks to prevent storage bloat
+  - Custom events for bookmark changes (`bookmarksChanged`)
+  - Toast notifications on add/remove actions
+
+- **`/src/lib/bookmarks.ts`** - Bookmarks utility module:
+  - `getBookmarks()` - Get all bookmarks sorted by date
+  - `getStoryBookmarks(storyId)` - Get bookmarks for specific story
+  - `addBookmark()` - Create new bookmark
+  - `removeBookmark()` - Remove by ID
+  - `clearBookmarks()` - Remove all bookmarks
+  - `hasBookmarks()` / `getLatestBookmark()` - Helper functions
+
+### Updated Components/Pages
+
+- **Homepage (`/src/app/page.tsx`) - Enhanced**:
+  - Added "Trending Stories" section before Recent Stories
+  - Integrated `StoryRecommendations` component showing popular stories
+  - Orange/pink gradient background for trending section
+  - Flame icon with pulse animation and "Trending" badge
+  - Links to sorted stories page
+
+- **Favorites Page (`/src/app/favorites/page.tsx`) - Enhanced**:
+  - Converted from single-column to dashboard layout (2/3 + 1/3 split)
+  - Added `ReadingStatistics` panel in sidebar with full details view
+  - Added Quick Links card (Stories, Genres, Themes)
+  - Statistics card is sticky for easy access while scrolling
+  - Better visual hierarchy with sidebar navigation
+
+- **Layout (`/src/app/layout.tsx`) - Updated**:
+  - Added `KeyboardShortcuts` global component
+  - Added `KeyboardShortcutButton` floating trigger button
+  - Both components wrapped inside I18nProvider
+
+### Code Quality Fixes
+- Fixed parsing error in bookmark-button.tsx (`hasBookmarkNearPosition` typo)
+- Fixed JSX closing tag error in keyboard-shortcuts.tsx (`</code>` → `</kbd>`)
+- Refactored ReadingSettings to use lazy initializers (avoid setState in effect warnings)
+
+Stage Summary:
+- **Keyboard Shortcuts**: ✅ Complete
+  - 7 global keyboard shortcuts implemented
+  - Dialog with visual key display
+  - First-time user hint system
+- **Reading Settings**: ✅ Complete
+  - Font size, line height, text alignment controls
+  - Compact dropdown + full panel variants
+  - Persistent storage with live updates
+- **Bookmarks System**: ✅ Complete
+  - Position-based bookmarking with notes
+  - List management with delete/clear
+  - Scroll-to-position integration ready
+- **UI Improvements**: ✅ Complete
+  - Trending stories section on homepage
+  - Dashboard-style favorites page
+  - Quick links sidebar widget
+- **Code Quality**: ✅ ESLint passing (0 errors)
+
+New Features Summary:
+| Feature | Description | Location |
+|---------|-------------|----------|
+| Keyboard Shortcuts | Global navigation shortcuts | All pages |
+| Reading Settings | Font/line-height/alignment | Dropdown or Panel |
+| Bookmarks | Save reading positions | Story pages |
+| Trending Section | Popular stories display | Homepage |
+| Stats Sidebar | Reading statistics | Favorites page |
+
+Unresolved Issues/Risks:
+- Dev server needs restart to test new features visually
+- Bookmark scroll-to-position requires story page integration
+- No server-side sync for bookmarks/settings (localStorage only)
+
+Next Steps Recommendations:
+1. Integrate BookmarkButton into story page action bar
+2. Add more keyboard shortcuts (e.g., arrow keys for prev/next story)
+3. Implement export/import of user preferences
+4. Add animation when scrolling to bookmarked position
+5. Consider adding a reading timer feature

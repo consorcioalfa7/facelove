@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { BackToTop } from "@/components/back-to-top";
+import { KeyboardShortcuts, KeyboardShortcutButton } from "@/components/keyboard-shortcuts";
 import { I18nProvider } from "@/lib/i18n/I18nProvider";
 
 const geistSans = Geist({
@@ -83,6 +84,8 @@ export default function RootLayout({
             <main className="flex-1">{children}</main>
             <Footer />
             <BackToTop />
+            <KeyboardShortcutButton />
+            <KeyboardShortcuts />
             <Toaster />
           </I18nProvider>
         </ThemeProvider>

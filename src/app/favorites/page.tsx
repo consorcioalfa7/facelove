@@ -1,7 +1,8 @@
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { FavoritesContent } from "./favorites-client";
-import { Heart, BookOpen } from "lucide-react";
+import { ReadingStatistics } from "@/components/reading-statistics";
+import { Heart, BookOpen, BarChart3, BookMarked } from "lucide-react";
 
 export const metadata = {
   title: "Favoritos | FaceLove",
@@ -61,8 +62,44 @@ export default function FavoritesPage() {
           </div>
         </section>
 
-        {/* Favorites Content - Client Component for localStorage access */}
-        <FavoritesContent />
+        {/* Dashboard Grid - Favorites + Stats */}
+        <div className="container mx-auto px-4 py-8 md:py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            {/* Main Content - Favorites (2/3 width) */}
+            <div className="lg:col-span-2">
+              <FavoritesContent />
+            </div>
+
+            {/* Sidebar - Statistics (1/3 width) */}
+            <div className="space-y-6">
+              {/* Reading Statistics Card */}
+              <ReadingStatistics showDetails={true} className="sticky top-24" />
+              
+              {/* Quick Links Card */}
+              <div className="rounded-xl border bg-card p-5 space-y-4">
+                <div className="flex items-center gap-2 text-sm font-semibold">
+                  <BookMarked className="w-4 h-4 text-purple-500" />
+                  Acesso Rápido
+                </div>
+                <div className="space-y-2">
+                  <a href="/stories" className="flex items-center gap-2.5 p-2.5 rounded-lg hover:bg-muted transition-colors group">
+                    <BookOpen className="w-4 h-4 text-muted-foreground group-hover:text-purple-500 transition-colors" />
+                    <span className="text-sm group-hover:text-purple-600 dark:group-hover:text-purple-400">Todas as Histórias</span>
+                  </a>
+                  <a href="/genres" className="flex items-center gap-2.5 p-2.5 rounded-lg hover:bg-muted transition-colors group">
+                    <Heart className="w-4 h-4 text-muted-foreground group-hover:text-pink-500 transition-colors" />
+                    <span className="text-sm group-hover:text-pink-600 dark:group-hover:text-pink-400">Explorar Gêneros</span>
+                  </a>
+                  <a href="/themes" className="flex items-center gap-2.5 p-2.5 rounded-lg hover:bg-muted transition-colors group">
+                    <BarChart3 className="w-4 h-4 text-muted-foreground group-hover:text-fuchsia-500 transition-colors" />
+                    <span className="text-sm group-hover:text-fuchsia-600 dark:group-hover:text-fuchsia-400">Temas Populares</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
 
       <Footer />

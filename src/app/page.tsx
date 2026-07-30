@@ -4,6 +4,7 @@ import { StoryCard } from "@/components/story-card";
 import { GenreCard } from "@/components/genre-card";
 import { ThemeBadge } from "@/components/theme-badge";
 import { Newsletter } from "@/components/newsletter";
+import { StoryRecommendations } from "@/components/story-recommendations";
 import { Button } from "@/components/ui/button";
 import {
   BookOpen,
@@ -16,6 +17,8 @@ import {
   Star,
   Clock,
   Heart,
+  Flame,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -326,6 +329,39 @@ export default async function HomePage() {
               </Button>
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* Trending Stories Section */}
+      <section className="py-16 md:py-20 bg-gradient-to-b from-orange-50/50 via-pink-50/30 to-transparent dark:from-orange-950/10 dark:via-pink-950/5 dark:to-transparent">
+        <div className="container mx-auto px-4">
+          {/* Section header */}
+          <div className="flex items-end justify-between mb-10">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-2">
+                <Flame className="w-7 h-7 text-orange-500 animate-pulse" />
+                Histórias em Alta
+              </h2>
+              <p className="text-muted-foreground">
+                As histórias mais populares da semana
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400 text-sm font-medium">
+                <Zap className="w-4 h-4" />
+                Trending
+              </span>
+              <Link href="/stories?sort=reads" className="hidden sm:block">
+                <Button variant="ghost" className="gap-2 group text-orange-600 hover:text-orange-700">
+                  Ver todas
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+            </div>
+          </div>
+
+          {/* Trending stories will be loaded client-side */}
+          <StoryRecommendations limit={4} showHeader={false} className="mb-0" />
         </div>
       </section>
 
