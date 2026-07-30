@@ -78,7 +78,7 @@ export function StoryCard({
 }: StoryCardProps) {
   if (variant === "compact") {
     return (
-      <Link href={`/story/${story.id}/${story.slug}`}>
+      <Link href={`/story/${story.id}`}>
         <Card
           className={cn(
             "card-hover cursor-pointer group p-4",
@@ -126,7 +126,7 @@ export function StoryCard({
 
   if (variant === "featured") {
     return (
-      <Link href={`/story/${story.id}/${story.slug}`}>
+      <Link href={`/story/${story.id}`}>
         <Card
           className={cn(
             "card-hover cursor-pointer group overflow-hidden",
@@ -206,7 +206,7 @@ export function StoryCard({
 
   // Default variant
   return (
-    <Link href={`/story/${story.id}/${story.slug}`}>
+    <Link href={`/story/${story.id}`}>
       <Card
         className={cn(
           "card-hover cursor-pointer group h-full",

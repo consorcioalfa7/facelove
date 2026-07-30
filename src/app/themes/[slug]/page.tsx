@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { db } from "@/lib/db";
 import {
   Tags,
   ArrowLeft,
@@ -74,19 +75,26 @@ interface PaginationData {
   hasPrev: boolean;
 }
 
-// Fetch theme data
+// Fetch theme data directly from database
 async function getTheme(slug: string): Promise<ThemeData | null> {
   try {
-    const res = await fetch(`/api/themes/${slug}`, {
-      cache: "no-store",
+    const theme = await db.theme.findUnique({
+      where: { slug },
     });
 
-    if (!res.ok) {
+    if (!theme) {
       return null;
     }
 
-    const json = await res.json();
-    return json.success ? json.data : null;
+    return {
+      id: theme.id,
+      name: theme.name,
+      slug: theme.slug,
+      description: theme.description,
+      sortOrder: theme.sortOrder,
+      storyCount: theme.storyCount,
+      createdAt: theme.createdAt,
+    };
   } catch (error) {
     console.error("Error fetching theme:", error);
     return null;
@@ -104,20 +112,20 @@ export async function generateMetadata({
 
   if (!theme) {
     return {
-      title: "Theme Not Found",
+      title: "Tema Não Encontrado | FaceLove",
     };
   }
 
   return {
-    title: `${theme.name} Stories - Browse ${theme.name} Theme`,
+    title: `${theme.name} - Explorar Tema | FaceLove`,
     description:
       theme.description ||
-      `Discover stories about ${theme.name} on StoryVault. Explore our collection of ${theme.storyCount} stories featuring this theme.`,
+      `Descubra histórias sobre ${theme.name} no FaceLove. Explore nossa coleção com ${theme.storyCount} histórias.`,
     openGraph: {
-      title: `${theme.name} Theme | StoryVault`,
+      title: `${theme.name} Tema | FaceLove`,
       description:
         theme.description ||
-        `Browse ${theme.storyCount} stories with ${theme.name} theme on StoryVault`,
+        `Explore ${theme.storyCount} histórias com o tema ${theme.name} no FaceLove`,
       type: "website",
     },
   };
@@ -126,20 +134,12 @@ export async function generateMetadata({
 // Static params generation for static generation
 export async function generateStaticParams() {
   try {
-    const res = await fetch(
-      `/api/themes`,
-      { cache: "no-store" }
-    );
+    const themes = await db.theme.findMany({
+      select: { slug: true },
+      take: 50,
+    });
 
-    if (!res.ok) {
-      return [];
-    }
-
-    const json = await res.json();
-    const themes = json.success ? json.data : [];
-
-    // Return first 50 themes for static generation
-    return themes.slice(0, 50).map((theme: { slug: string }) => ({
+    return themes.map((theme) => ({
       slug: theme.slug,
     }));
   } catch {
@@ -171,40 +171,81 @@ export default async function ThemePage({
   const sortBy = queryParams.sortBy || "date";
   const limit = parseInt(queryParams.limit || "20", 10) || 20;
 
-  // Build API URL for stories
-  const apiParams = new URLSearchParams({
-    page: page.toString(),
-    limit: limit.toString(),
-    theme: slug,
-    sortBy: sortBy,
-  });
-  const storiesUrl = `/api/stories?${apiParams.toString()}`;
-
-  // Fetch stories
-  let storiesData: StoriesResponse | null = null;
-  try {
-    const res = await fetch(storiesUrl, { cache: "no-store" });
-    if (res.ok) {
-      storiesData = await res.json();
-    }
-  } catch (error) {
-    console.error("Error fetching stories:", error);
+  // Build order by clause based on sortBy
+  let orderBy: Record<string, "asc" | "desc"> = { publishedAt: "desc" };
+  switch (sortBy) {
+    case "rating":
+      orderBy = { rating: "desc" };
+      break;
+    case "reads":
+      orderBy = { readsCount: "desc" };
+      break;
+    case "oldest":
+      orderBy = { publishedAt: "asc" };
+      break;
+    default:
+      orderBy = { publishedAt: "desc" };
   }
 
+  // Fetch stories directly from database
+  const skip = (page - 1) * limit;
+  const [storiesDb, total] = await Promise.all([
+    db.story.findMany({
+      where: {
+        publishedAt: { not: null },
+        themes: {
+          some: {
+            theme: { slug },
+          },
+        },
+      },
+      include: {
+        author: { select: { name: true, slug: true } },
+        genre: { select: { name: true, slug: true } },
+        themes: {
+          include: { theme: true },
+          take: 3,
+        },
+      },
+      orderBy,
+      take: limit,
+      skip,
+    }),
+    db.story.count({
+      where: {
+        publishedAt: { not: null },
+        themes: {
+          some: {
+            theme: { slug },
+          },
+        },
+      },
+    }),
+  ]);
+
   // Transform story data to match StoryCard format
-  const stories = (storiesData?.data || []).map((story) => ({
-    ...story,
-    themes: story.themes?.map((t: { theme: { id: string; name: string; slug: string } }) => t.theme) || [],
+  const stories = storiesDb.map((story) => ({
+    id: story.id,
+    title: story.title,
+    slug: story.slug,
+    description: story.description,
+    author: story.author,
+    genre: story.genre,
+    themes: story.themes.map((t) => t.theme),
+    rating: story.rating,
+    votesCount: story.votesCount,
+    readsCount: story.readsCount,
     publishedAt: story.publishedAt ? new Date(story.publishedAt) : null,
   }));
 
-  const pagination = storiesData?.pagination || {
-    page: 1,
-    limit: 20,
-    total: 0,
-    totalPages: 0,
-    hasNext: false,
-    hasPrev: false,
+  const totalPages = Math.ceil(total / limit);
+  const pagination: PaginationData = {
+    page,
+    limit,
+    total,
+    totalPages,
+    hasNext: page < totalPages,
+    hasPrev: page > 1,
   };
 
   return (
@@ -212,12 +253,13 @@ export default async function ThemePage({
       <Header />
 
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-rose-500/10 via-amber-500/5 to-emerald-500/10 border-b">
+        {/* Hero Section - FaceLove Pink/Purple Theme */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-pink-500/10 via-fuchsia-500/5 to-purple-500/10 border-b">
           {/* Background decorations */}
           <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute top-0 left-0 w-96 h-96 bg-rose-500/5 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 right-0 w-72 h-72 bg-emerald-500/5 rounded-full blur-3xl" />
+            <div className="absolute top-0 left-0 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 right-0 w-72 h-72 bg-fuchsia-500/5 rounded-full blur-3xl" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-500/3 rounded-full blur-3xl" />
           </div>
 
           <div className="container mx-auto px-4 py-12 md:py-16">
@@ -232,13 +274,11 @@ export default async function ThemePage({
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
-                    <Link href="/themes">Themes</Link>
+                    <Link href="/themes">Temas</Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{theme.name}</BreadcrumbPage>
-                </BreadcrumbItem>
+                <BreadcrumbPage>{theme.name}</BreadcrumbPage>
               </BreadcrumbList>
             </Breadcrumb>
 
@@ -246,15 +286,15 @@ export default async function ThemePage({
               <div className="max-w-2xl">
                 {/* Theme badge and title */}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-rose-500 to-amber-500 shadow-lg shadow-rose-500/25">
+                  <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-pink-500 to-fuchsia-600 shadow-lg shadow-pink-500/25">
                     <Tags className="w-7 h-7 text-white" />
                   </div>
                   <div>
                     <Badge
                       variant="secondary"
-                      className="bg-rose-100 text-rose-700 hover:bg-rose-200 dark:bg-rose-900/30 dark:text-rose-400 mb-1"
+                      className="bg-pink-100 text-pink-700 hover:bg-pink-200 dark:bg-pink-900/30 dark:text-pink-400 mb-1"
                     >
-                      Theme
+                      Tema
                     </Badge>
                     <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
                       {theme.name}
@@ -272,20 +312,20 @@ export default async function ThemePage({
                 {/* Stats */}
                 <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1.5">
-                    <FileText className="w-4 h-4 text-rose-500" />
+                    <FileText className="w-4 h-4 text-pink-500" />
                     <span className="font-medium text-foreground">
                       {theme.storyCount.toLocaleString()}
                     </span>{" "}
-                    stories
+                    histórias
                   </span>
                 </div>
               </div>
 
               {/* Back button */}
               <Link href="/themes">
-                <Button variant="outline" className="gap-2">
+                <Button variant="outline" className="gap-2 border-pink-200 text-pink-600 hover:bg-pink-50 dark:border-pink-700 dark:text-pink-400">
                   <ArrowLeft className="w-4 h-4" />
-                  All Themes
+                  Todos os Temas
                 </Button>
               </Link>
             </div>
@@ -311,6 +351,3 @@ export default async function ThemePage({
     </div>
   );
 }
-
-// Export loading skeleton
-

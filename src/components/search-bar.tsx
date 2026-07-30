@@ -162,11 +162,11 @@ export function SearchBar({
             placeholder={placeholder}
             className={cn(
               "pl-10 pr-10 rounded-xl border-2 transition-all duration-200",
-              "focus:border-amber-500 focus:ring-amber-500/20",
+              "focus:border-purple-500 focus:ring-purple-500/20",
               "placeholder:text-muted-foreground/70",
               sizeClasses[size],
               isFocused &&
-                "border-amber-500 shadow-lg shadow-amber-500/10"
+                "border-purple-500 shadow-lg shadow-purple-500/10"
             )}
           />
           {query && (
@@ -189,8 +189,8 @@ export function SearchBar({
           {/* Loading state */}
           {isLoading && (
             <div className="flex items-center justify-center gap-2 p-6">
-              <Loader2 className="w-5 h-5 animate-spin text-amber-500" />
-              <span className="text-sm text-muted-foreground">Searching...</span>
+              <Loader2 className="w-5 h-5 animate-spin text-purple-500" />
+              <span className="text-sm text-muted-foreground">Buscando...</span>
             </div>
           )}
 
@@ -217,11 +217,11 @@ export function SearchBar({
                         className={cn(
                           "text-xs font-medium uppercase tracking-wider px-2 py-0.5 rounded-full",
                           suggestion.type === "story" &&
-                            "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
+                            "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400",
                           suggestion.type === "genre" &&
-                            "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
+                            "bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-900/30 dark:text-fuchsia-400",
                           suggestion.type === "theme" &&
-                            "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400",
+                            "bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400",
                           suggestion.type === "author" &&
                             "bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400"
                         )}

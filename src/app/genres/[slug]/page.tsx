@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { db } from "@/lib/db";
 import {
   BookOpen,
   ArrowLeft,
@@ -24,7 +25,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Card, CardContent } from "@/components/ui/card";
 
 // Types
 interface GenreData {
@@ -78,19 +78,26 @@ interface PaginationData {
   hasPrev: boolean;
 }
 
-// Fetch genre data
+// Fetch genre data directly from database
 async function getGenre(slug: string): Promise<GenreData | null> {
   try {
-    const res = await fetch(`/api/genres/${slug}`, {
-      cache: "no-store",
+    const genre = await db.genre.findUnique({
+      where: { slug },
     });
 
-    if (!res.ok) {
+    if (!genre) {
       return null;
     }
 
-    const json = await res.json();
-    return json.success ? json.data : null;
+    return {
+      id: genre.id,
+      name: genre.name,
+      slug: genre.slug,
+      description: genre.description,
+      sortOrder: genre.sortOrder,
+      storyCount: genre.storyCount,
+      createdAt: genre.createdAt,
+    };
   } catch (error) {
     console.error("Error fetching genre:", error);
     return null;
@@ -108,20 +115,20 @@ export async function generateMetadata({
 
   if (!genre) {
     return {
-      title: "Genre Not Found",
+      title: "Gê Não Encontrado | FaceLove",
     };
   }
 
   return {
-    title: `${genre.name} Stories - Browse ${genre.name} Genre`,
+    title: `${genre.name} - Explorar Gênero | FaceLove`,
     description:
       genre.description ||
-      `Discover amazing ${genre.name} stories on StoryVault. Browse our collection of ${genre.storyCount} ${genre.name.toLowerCase()} stories.`,
+      `Descubra histórias incríveis de ${genre.name} no FaceLove. Explore nossa coleção com ${genre.storyCount} histórias.`,
     openGraph: {
-      title: `${genre.name} Stories | StoryVault`,
+      title: `${genre.name} Histórias | FaceLove`,
       description:
         genre.description ||
-        `Browse ${genre.storyCount} ${genre.name} stories on StoryVault`,
+        `Explore ${genre.storyCount} histórias de ${genre.name} no FaceLove`,
       type: "website",
     },
   };
@@ -130,19 +137,11 @@ export async function generateMetadata({
 // Static params generation for static generation
 export async function generateStaticParams() {
   try {
-    const res = await fetch(
-      `/api/genres`,
-      { cache: "no-store" }
-    );
+    const genres = await db.genre.findMany({
+      select: { slug: true },
+    });
 
-    if (!res.ok) {
-      return [];
-    }
-
-    const json = await res.json();
-    const genres = json.success ? json.data : [];
-
-    return genres.map((genre: { slug: string }) => ({
+    return genres.map((genre) => ({
       slug: genre.slug,
     }));
   } catch {
@@ -174,40 +173,73 @@ export default async function GenrePage({
   const sortBy = queryParams.sortBy || "date";
   const limit = parseInt(queryParams.limit || "20", 10) || 20;
 
-  // Build API URL for stories
-  const apiParams = new URLSearchParams({
-    page: page.toString(),
-    limit: limit.toString(),
-    genre: slug,
-    sortBy: sortBy,
-  });
-  const storiesUrl = `/api/stories?${apiParams.toString()}`;
-
-  // Fetch stories
-  let storiesData: StoriesResponse | null = null;
-  try {
-    const res = await fetch(storiesUrl, { cache: "no-store" });
-    if (res.ok) {
-      storiesData = await res.json();
-    }
-  } catch (error) {
-    console.error("Error fetching stories:", error);
+  // Build order by clause based on sortBy
+  let orderBy: Record<string, "asc" | "desc"> = { publishedAt: "desc" };
+  switch (sortBy) {
+    case "rating":
+      orderBy = { rating: "desc" };
+      break;
+    case "reads":
+      orderBy = { readsCount: "desc" };
+      break;
+    case "oldest":
+      orderBy = { publishedAt: "asc" };
+      break;
+    default:
+      orderBy = { publishedAt: "desc" };
   }
 
+  // Fetch stories directly from database
+  const skip = (page - 1) * limit;
+  const [storiesDb, total] = await Promise.all([
+    db.story.findMany({
+      where: {
+        publishedAt: { not: null },
+        genre: { slug },
+      },
+      include: {
+        author: { select: { name: true, slug: true } },
+        genre: { select: { name: true, slug: true } },
+        themes: {
+          include: { theme: true },
+          take: 3,
+        },
+      },
+      orderBy,
+      take: limit,
+      skip,
+    }),
+    db.story.count({
+      where: {
+        publishedAt: { not: null },
+        genre: { slug },
+      },
+    }),
+  ]);
+
   // Transform story data to match StoryCard format
-  const stories = (storiesData?.data || []).map((story) => ({
-    ...story,
-    themes: story.themes?.map((t: { theme: { id: string; name: string; slug: string } }) => t.theme) || [],
+  const stories = storiesDb.map((story) => ({
+    id: story.id,
+    title: story.title,
+    slug: story.slug,
+    description: story.description,
+    author: story.author,
+    genre: story.genre,
+    themes: story.themes.map((t) => t.theme),
+    rating: story.rating,
+    votesCount: story.votesCount,
+    readsCount: story.readsCount,
     publishedAt: story.publishedAt ? new Date(story.publishedAt) : null,
   }));
 
-  const pagination = storiesData?.pagination || {
-    page: 1,
-    limit: 20,
-    total: 0,
-    totalPages: 0,
-    hasNext: false,
-    hasPrev: false,
+  const totalPages = Math.ceil(total / limit);
+  const pagination: PaginationData = {
+    page,
+    limit,
+    total,
+    totalPages,
+    hasNext: page < totalPages,
+    hasPrev: page > 1,
   };
 
   return (
@@ -215,12 +247,13 @@ export default async function GenrePage({
       <Header />
 
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-amber-500/10 via-rose-500/5 to-emerald-500/10 border-b">
+        {/* Hero Section - FaceLove Purple/Pink Theme */}
+        <section className="relative overflow-hidden bg-gradient-to-br from-purple-500/10 via-fuchsia-500/5 to-pink-500/10 border-b">
           {/* Background decorations */}
           <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl" />
-            <div className="absolute bottom-0 left-0 w-72 h-72 bg-rose-500/5 rounded-full blur-3xl" />
+            <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-72 h-72 bg-pink-500/5 rounded-full blur-3xl" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-fuchsia-500/3 rounded-full blur-3xl" />
           </div>
 
           <div className="container mx-auto px-4 py-12 md:py-16">
@@ -235,13 +268,11 @@ export default async function GenrePage({
                 <BreadcrumbSeparator />
                 <BreadcrumbItem>
                   <BreadcrumbLink asChild>
-                    <Link href="/genres">Genres</Link>
+                    <Link href="/genres">Gêneros</Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{genre.name}</BreadcrumbPage>
-                </BreadcrumbItem>
+                <BreadcrumbPage>{genre.name}</BreadcrumbPage>
               </BreadcrumbList>
             </Breadcrumb>
 
@@ -249,15 +280,15 @@ export default async function GenrePage({
               <div className="max-w-2xl">
                 {/* Genre badge and title */}
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-rose-500 shadow-lg shadow-amber-500/25">
+                  <div className="flex items-center justify-center w-14 h-14 rounded-xl bg-gradient-to-br from-purple-500 to-fuchsia-600 shadow-lg shadow-purple-500/25">
                     <BookOpen className="w-7 h-7 text-white" />
                   </div>
                   <div>
                     <Badge
                       variant="secondary"
-                      className="bg-amber-100 text-amber-700 hover:bg-amber-200 dark:bg-amber-900/30 dark:text-amber-400 mb-1"
+                      className="bg-purple-100 text-purple-700 hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-400 mb-1"
                     >
-                      Genre
+                      Gênero
                     </Badge>
                     <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
                       {genre.name}
@@ -275,20 +306,20 @@ export default async function GenrePage({
                 {/* Stats */}
                 <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1.5">
-                    <FileText className="w-4 h-4 text-amber-500" />
+                    <FileText className="w-4 h-4 text-purple-500" />
                     <span className="font-medium text-foreground">
                       {genre.storyCount.toLocaleString()}
                     </span>{" "}
-                    stories
+                    histórias
                   </span>
                 </div>
               </div>
 
               {/* Back button */}
               <Link href="/genres">
-                <Button variant="outline" className="gap-2">
+                <Button variant="outline" className="gap-2 border-purple-200 text-purple-600 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-400">
                   <ArrowLeft className="w-4 h-4" />
-                  All Genres
+                  Todos os Gêneros
                 </Button>
               </Link>
             </div>
@@ -314,5 +345,3 @@ export default async function GenrePage({
     </div>
   );
 }
-
-
