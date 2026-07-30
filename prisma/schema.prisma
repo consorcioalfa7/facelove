@@ -1,0 +1,117 @@
+// Prisma Schema for Stories Application
+// Database: SQLite with Prisma ORM
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Author model - represents story authors
+model Author {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  bio         String?
+  avatarUrl   String? @map("avatar_url")
+  memberSince DateTime? @map("member_since")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  stories     Story[]
+
+  @@index([slug])
+  @@index([name])
+}
+
+// Genre model - main categories (Fiction, True Story, Fantasy, etc.)
+model Genre {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  sortOrder   Int      @default(0) @map("sort_order")
+  storyCount  Int      @default(0) @map("story_count")
+  externalId  Int?     @unique @map("external_id") // ID from source site
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  stories     Story[]
+
+  @@index([slug])
+  @@index([sortOrder])
+  @@index([externalId])
+}
+
+// Theme model - tags/themes (Romance, Anal, BDSM, etc.)
+model Theme {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  sortOrder   Int      @default(0) @map("sort_order")
+  storyCount  Int      @default(0) @map("story_count")
+  externalId  Int?     @unique @map("external_id") // ID from source site
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  stories     StoryTheme[]
+
+  @@index([slug])
+  @@index([sortOrder])
+  @@index([externalId])
+}
+
+// Story model - main content entity
+model Story {
+  id          String   @id @default(cuid())
+  externalId  Int?     @unique @map("external_id") // ID from source site
+  title       String
+  slug        String
+  description String?
+  content     String? // Full story text (SQLite handles large strings)
+  authorId    String   @map("author_id")
+  genreId     String   @map("genre_id")
+  
+  // Stats
+  rating      Float    @default(0)
+  votesCount  Int      @default(0) @map("votes_count")
+  readsCount  Int      @default(0) @map("reads_count")
+  commentsCount Int    @default(0) @map("comments_count")
+  
+  // Dates
+  publishedAt DateTime? @map("published_at")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  author      Author   @relation(fields: [authorId], references: [id])
+  genre       Genre    @relation(fields: [genreId], references: [id])
+  themes      StoryTheme[]
+
+  @@index([slug])
+  @@index([externalId])
+  @@index([authorId])
+  @@index([genreId])
+  @@index([publishedAt])
+  @@index([rating])
+  @@index([title])
+}
+
+// StoryTheme junction table - many-to-many relationship between stories and themes
+model StoryTheme {
+  id        String   @id @default(cuid())
+  storyId   String   @map("story_id")
+  themeId   String   @map("theme_id")
+  createdAt DateTime @default(now())
+
+  story     Story    @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  theme     Theme    @relation(fields: [themeId], references: [id], onDelete: Cascade)
+
+  @@unique([storyId, themeId])
+  @@index([storyId])
+  @@index([themeId])
+}
