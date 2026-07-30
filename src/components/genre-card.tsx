@@ -54,22 +54,22 @@ const genreIconMap: Record<string, string> = {
   "young-adult": "users",
 };
 
-// Gradient combinations for genres
+// Gradient combinations for genres - FaceLove Purple/Pink theme
 const genreGradients: Record<string, string> = {
-  default: "from-amber-500 to-orange-600",
-  romance: "from-rose-400 to-pink-600",
+  default: "from-purple-500 to-fuchsia-600",
+  romance: "from-pink-400 to-rose-600",
   fantasy: "from-violet-400 to-purple-600",
   "sci-fi": "from-cyan-400 to-blue-600",
   mystery: "from-slate-500 to-gray-700",
   thriller: "from-red-500 to-rose-700",
   horror: "from-gray-800 to-black",
-  drama: "from-amber-600 to-yellow-700",
+  drama: "from-purple-600 to-violet-700",
   comedy: "from-yellow-400 to-amber-500",
   adventure: "from-emerald-500 to-green-600",
-  fiction: "from-blue-400 to-indigo-600",
+  fiction: "from-indigo-400 to-purple-600",
   "true-story": "from-teal-500 to-cyan-600",
   "adult-fiction": "from-rose-500 to-red-600",
-  erotica: "from-pink-500 to-rose-600",
+  erotica: "from-pink-500 to-fuchsia-600",
   literary: "from-stone-500 to-neutral-700",
   historical: "from-amber-700 to-yellow-900",
   action: "from-orange-500 to-red-600",

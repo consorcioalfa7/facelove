@@ -5,6 +5,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { I18nProvider } from "@/lib/i18n/I18nProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,39 +19,41 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "StoryVault - Discover Amazing Stories",
-    template: "%s | StoryVault",
+    default: "FaceLove - Descubra Histórias que Tocam o Coração",
+    template: "%s | FaceLove",
   },
   description:
-    "Explore a vast library of stories across multiple genres and themes. From romance to fantasy, find your next favorite read at StoryVault.",
+    "Explore milhares de histórias de romance, ficção, fantasia e muito mais. Encontre sua próxima história favorita no FaceLove.",
   keywords: [
+    "facelove",
+    "histórias",
     "stories",
-    "fiction",
-    "reading",
-    "library",
-    "genres",
     "romance",
-    "fantasy",
-    "literature",
+    "ficção",
+    "fantasia",
+    "leitura",
+    "literatura",
+    "contos",
+    "amor",
   ],
-  authors: [{ name: "StoryVault Team" }],
+  authors: [{ name: "FaceLove by DarkToolsLabs" }],
   icons: {
     icon: "/favicon.ico",
   },
   openGraph: {
-    title: "StoryVault - Discover Amazing Stories",
+    title: "FaceLove - Descubra Histórias que Tocam o Coração",
     description:
-      "Explore a vast library of stories across multiple genres and themes.",
-    url: "https://storyvault.com",
-    siteName: "StoryVault",
+      "Explore milhares de histórias de romance, ficção, fantasia e mais.",
+    url: "https://facelove.com",
+    siteName: "FaceLove",
     type: "website",
-    locale: "en_US",
+    locale: "pt_BR",
   },
   twitter: {
     card: "summary_large_image",
-    title: "StoryVault - Discover Amazing Stories",
+    title: "FaceLove - Descubra Histórias que Tocam o Coração",
     description:
-      "Explore a vast library of stories across multiple genres and themes.",
+      "Explore milhares de histórias de romance, ficção, fantasia e mais.",
   },
   robots: {
     index: true,
@@ -64,7 +67,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="pt-BR" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground min-h-screen flex flex-col`}
       >
@@ -74,10 +77,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <Toaster />
+          <I18nProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <Toaster />
+          </I18nProvider>
         </ThemeProvider>
       </body>
     </html>

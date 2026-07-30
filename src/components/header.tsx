@@ -7,7 +7,6 @@ import { useTheme } from "next-themes";
 import {
   BookOpen,
   Menu,
-  X,
   Sun,
   Moon,
   Search,
@@ -24,12 +23,14 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { FaceLoveLogo } from "@/components/facelove-logo";
+import { LanguageSelector } from "@/components/language-selector";
 
 const navigation = [
-  { name: "Home", href: "/", icon: BookOpen },
-  { name: "Genres", href: "/genres", icon: LayoutGrid },
-  { name: "Themes", href: "/themes", icon: Tags },
-  { name: "Authors", href: "/authors", icon: Users },
+  { name: "home", href: "/", icon: "bookopen" },
+  { name: "genres", href: "/genres", icon: "layoutgrid" },
+  { name: "themes", href: "/themes", icon: "tags" },
+  { name: "authors", href: "/authors", icon: "users" },
 ];
 
 // Icon component to avoid creating components during render
@@ -86,14 +87,9 @@ export function Header() {
     >
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
+          {/* Logo - FaceLove */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="relative flex items-center justify-center w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500 to-rose-500 shadow-lg shadow-amber-500/25 group-hover:shadow-amber-500/40 transition-shadow">
-              <BookOpen className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold tracking-tight">
-              Story<span className="gradient-text">Vault</span>
-            </span>
+            <FaceLoveLogo size="md" />
           </Link>
 
           {/* Desktop Navigation */}
@@ -110,11 +106,11 @@ export function Header() {
                     size="sm"
                     className={cn(
                       "gap-2 transition-all",
-                      isActive && "font-medium"
+                      isActive && "font-medium bg-purple-100 text-purple-700 hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-300"
                     )}
                   >
-                    <NavIcon name={item.icon.name} className="w-4 h-4" />
-                    {item.name}
+                    <NavIcon name={item.icon} className="w-4 h-4" />
+                    {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
                   </Button>
                 </Link>
               );
@@ -130,6 +126,9 @@ export function Header() {
                 <span className="hidden lg:inline">Search</span>
               </Button>
             </Link>
+
+            {/* Language Selector */}
+            <LanguageSelector />
 
             {/* Theme toggle */}
             <Button
@@ -153,10 +152,7 @@ export function Header() {
               <SheetContent side="right" className="w-72">
                 <SheetHeader>
                   <SheetTitle className="flex items-center gap-2">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-rose-500">
-                      <BookOpen className="w-4 h-4 text-white" />
-                    </div>
-                    StoryVault
+                    <FaceLoveLogo size="sm" />
                   </SheetTitle>
                 </SheetHeader>
                 
@@ -172,11 +168,11 @@ export function Header() {
                           variant={isActive ? "secondary" : "ghost"}
                           className={cn(
                             "w-full justify-start gap-3 py-3",
-                            isActive && "font-medium"
+                            isActive && "font-medium bg-purple-100 text-purple-700"
                           )}
                         >
-                          <NavIcon name={item.icon.name} className="w-5 h-5" />
-                          {item.name}
+                          <NavIcon name={item.icon} className="w-5 h-5" />
+                          {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
                         </Button>
                       </Link>
                     );
@@ -190,6 +186,10 @@ export function Header() {
                       Search Stories
                     </Button>
                   </Link>
+                  
+                  <div className="mt-2 px-4">
+                    <LanguageSelector className="w-full justify-start" />
+                  </div>
                 </nav>
               </SheetContent>
             </Sheet>

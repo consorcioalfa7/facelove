@@ -14,6 +14,7 @@ import {
   Sparkles,
   Star,
   Clock,
+  Heart,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -113,7 +114,7 @@ function HomePageSkeleton() {
   );
 }
 
-// Stat card component
+// Stat card component - FaceLove themed
 function StatCard({
   icon: Icon,
   value,
@@ -130,7 +131,7 @@ function StatCard({
       className="text-center group animate-fade-in-up"
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/10 to-rose-500/10 text-amber-600 dark:text-amber-400 mb-3 group-hover:scale-110 transition-transform duration-300">
+      <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 text-purple-600 dark:text-purple-400 mb-3 group-hover:scale-110 transition-transform duration-300">
         <Icon className="w-6 h-6" />
       </div>
       <div className="text-3xl font-bold tracking-tight mb-1">
@@ -146,34 +147,34 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col">
-      {/* Hero Section */}
+      {/* Hero Section - FaceLove branded */}
       <section className="relative overflow-hidden py-16 md:py-24 lg:py-32">
-        {/* Background decorations */}
+        {/* Background decorations - Purple/Pink gradient blobs */}
         <div className="absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-rose-500/5 rounded-full blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/3 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-fuchsia-500/5 rounded-full blur-3xl" />
         </div>
 
         <div className="container mx-auto px-4 relative">
           <div className="max-w-4xl mx-auto text-center">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 text-sm font-medium mb-6 animate-fade-in">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-sm font-medium mb-6 animate-fade-in">
               <Sparkles className="w-4 h-4" />
-              Discover Your Next Favorite Story
+              ✨ Descubra Sua Próxima História Favorita
             </div>
 
             {/* Title */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 animate-fade-in-up animation-delay-100">
-              Welcome to{" "}
-              <span className="gradient-text">StoryVault</span>
+              Bem-vindo ao{" "}
+              <span className="gradient-text">FaceLove</span>
             </h1>
 
             {/* Subtitle */}
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up animation-delay-200">
-              Explore thousands of captivating stories across every genre. From
-              heartwarming romance to thrilling adventures, find your perfect
-              read today.
+              Explore milhares de histórias cativantes em cada gênero. De 
+              romances comoventes a aventuras emocionantes, encontre sua leitura 
+              perfeita hoje.
             </p>
 
             {/* Search bar */}
@@ -183,7 +184,7 @@ export default async function HomePage() {
 
             {/* Quick links */}
             <div className="flex flex-wrap items-center justify-center gap-3 mt-8 animate-fade-in-up animation-delay-400">
-              <span className="text-sm text-muted-foreground">Popular:</span>
+              <span className="text-sm text-muted-foreground">Populares:</span>
               {data.themes.slice(0, 5).map((theme) => (
                 <ThemeBadge
                   key={theme.id}
@@ -204,25 +205,25 @@ export default async function HomePage() {
             <StatCard
               icon={BookOpen}
               value={data.stats.totalStories}
-              label="Stories"
+              label="Histórias"
               delay={0}
             />
             <StatCard
               icon={Users}
               value={data.stats.totalAuthors}
-              label="Authors"
+              label="Autores"
               delay={100}
             />
             <StatCard
               icon={LayoutGrid}
               value={data.stats.totalGenres}
-              label="Genres"
+              label="Gêneros"
               delay={200}
             />
             <StatCard
               icon={Tags}
               value={data.stats.totalThemes}
-              label="Themes"
+              label="Temas"
               delay={300}
             />
           </div>
@@ -236,15 +237,15 @@ export default async function HomePage() {
           <div className="flex items-end justify-between mb-10">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold mb-2">
-                Browse by Genre
+                Explorar por Gênero
               </h2>
               <p className="text-muted-foreground">
-                Find stories in your favorite category
+                Encontre histórias em sua categoria favorita
               </p>
             </div>
             <Link href="/genres" className="hidden sm:block">
-              <Button variant="ghost" className="gap-2 group">
-                View all genres
+              <Button variant="ghost" className="gap-2 group text-purple-600 hover:text-purple-700">
+                Ver todos os gêneros
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
@@ -267,7 +268,7 @@ export default async function HomePage() {
           <div className="mt-8 text-center sm:hidden">
             <Link href="/genres">
               <Button variant="outline" className="gap-2 w-full sm:w-auto">
-                View all genres
+                Ver todos os gêneros
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
@@ -282,16 +283,16 @@ export default async function HomePage() {
           <div className="flex items-end justify-between mb-10">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-2">
-                <TrendingUp className="w-7 h-7 text-rose-500" />
-                Popular Themes
+                <TrendingUp className="w-7 h-7 text-pink-500" />
+                Temas Populares
               </h2>
               <p className="text-muted-foreground">
-                Explore trending topics and tags
+                Explore tópicos e tags em alta
               </p>
             </div>
             <Link href="/themes" className="hidden sm:block">
-              <Button variant="ghost" className="gap-2 group">
-                View all themes
+              <Button variant="ghost" className="gap-2 group text-purple-600 hover:text-purple-700">
+                Ver todos os temas
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
@@ -319,7 +320,7 @@ export default async function HomePage() {
           <div className="mt-8 text-center sm:hidden">
             <Link href="/themes">
               <Button variant="outline" className="gap-2 w-full sm:w-auto">
-                View all themes
+                Ver todos os temas
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
@@ -334,16 +335,16 @@ export default async function HomePage() {
           <div className="flex items-end justify-between mb-10">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-2">
-                <Clock className="w-7 h-7 text-emerald-500" />
-                Recent Stories
+                <Clock className="w-7 h-7 text-fuchsia-500" />
+                Histórias Recentes
               </h2>
               <p className="text-muted-foreground">
-                The latest additions to our library
+                As adições mais recentes à nossa biblioteca
               </p>
             </div>
             <Link href="/stories" className="hidden sm:block">
-              <Button variant="ghost" className="gap-2 group">
-                Browse all stories
+              <Button variant="ghost" className="gap-2 group text-purple-600 hover:text-purple-700">
+                Explorar todas as histórias
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
@@ -365,18 +366,18 @@ export default async function HomePage() {
           ) : (
             /* Empty state */
             <div className="text-center py-16">
-              <BookOpen className="w-16 h-16 text-muted-foreground/30 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">No stories yet</h3>
+              <Heart className="w-16 h-16 text-pink-500/30 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Nenhuma história ainda</h3>
               <p className="text-muted-foreground max-w-md mx-auto">
-                Check back soon for new stories, or explore our genres and
-                themes to discover what&apos;s coming.
+                Volte em breve para novas histórias, ou explore nossos gêneros 
+                e temas para descobrir o que está por vir.
               </p>
               <div className="flex gap-3 justify-center mt-6">
                 <Link href="/genres">
-                  <Button variant="outline">Browse Genres</Button>
+                  <Button variant="outline">Explorar Gêneros</Button>
                 </Link>
                 <Link href="/themes">
-                  <Button variant="outline">Explore Themes</Button>
+                  <Button variant="outline">Explorar Temas</Button>
                 </Link>
               </div>
             </div>
@@ -387,7 +388,7 @@ export default async function HomePage() {
             <div className="mt-8 text-center sm:hidden">
               <Link href="/stories">
                 <Button variant="outline" className="gap-2 w-full sm:w-auto">
-                  Browse all stories
+                  Explorar todas as histórias
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
@@ -396,8 +397,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-amber-500 via-rose-500 to-emerald-600 relative overflow-hidden">
+      {/* CTA Section - FaceLove Purple-Pink Gradient */}
+      <section className="py-16 md:py-24 facelove-gradient relative overflow-hidden">
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
@@ -410,20 +411,20 @@ export default async function HomePage() {
           <div className="max-w-3xl mx-auto text-center text-white">
             <Star className="w-12 h-12 mx-auto mb-6 opacity-80" />
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Ready to Start Reading?
+              Pronto para Começar?
             </h2>
             <p className="text-lg opacity-90 mb-8 leading-relaxed">
-              Join thousands of readers who have discovered their next favorite
-              story on StoryVault. Start exploring now!
+              Mergulhe em um mundo de histórias inesquecíveis no FaceLove. 
+              Comece a explorar agora!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/genres">
                 <Button
                   size="lg"
-                  className="bg-white text-gray-900 hover:bg-gray-100 shadow-lg font-semibold gap-2"
+                  className="bg-white text-purple-900 hover:bg-gray-100 shadow-lg font-semibold gap-2"
                 >
                   <LayoutGrid className="w-5 h-5" />
-                  Explore Genres
+                  Explorar Gêneros
                 </Button>
               </Link>
               <Link href="/search">
@@ -433,7 +434,7 @@ export default async function HomePage() {
                   className="border-white/30 text-white hover:bg-white/10 font-semibold gap-2"
                 >
                   <Sparkles className="w-5 h-5" />
-                  Find Something New
+                  Descobrir Novidades
                 </Button>
               </Link>
             </div>
