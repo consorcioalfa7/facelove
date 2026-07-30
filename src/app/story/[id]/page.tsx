@@ -41,6 +41,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { ReadingControls } from "@/components/story-reading-controls";
 import { StoryNavigation } from "@/components/story-navigation";
+import { StoryClientWrapper } from "@/components/story-client-wrapper";
 
 // Types
 interface StoryPageParams {
@@ -362,6 +363,7 @@ export default async function StoryDetailPage({
   const isLongStory = readingTime.minutes > 15;
 
   return (
+    <StoryClientWrapper>
     <div className="flex flex-col min-h-screen">
       <Header />
       
@@ -838,5 +840,6 @@ export default async function StoryDetailPage({
 
       <Footer />
     </div>
+    </StoryClientWrapper>
   );
 }

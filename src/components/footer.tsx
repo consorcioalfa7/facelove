@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Heart, Github, Twitter, Mail } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { FaceLoveLogo } from "@/components/facelove-logo";
+import { Newsletter } from "@/components/newsletter";
 import { useI18n } from "@/lib/i18n/I18nProvider";
 
 const footerLinks = {
@@ -128,6 +129,21 @@ export function Footer() {
                 </li>
               ))}
             </ul>
+          </div>
+        </div>
+
+        {/* Newsletter Section */}
+        <div className="my-8 p-6 rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 border border-border/50">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+              <h4 className="font-semibold text-foreground mb-1">Fique por dentro</h4>
+              <p className="text-sm text-muted-foreground">
+                Receba novidades e histórias selecionadas diretamente no seu email.
+              </p>
+            </div>
+            <div className="w-full md:w-auto md:min-w-[320px]">
+              <Newsletter variant="footer" />
+            </div>
           </div>
         </div>
 

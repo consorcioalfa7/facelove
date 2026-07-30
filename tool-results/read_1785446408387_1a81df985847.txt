@@ -1,0 +1,843 @@
+     1→import Link from "next/link";
+     2→import type { Metadata } from "next";
+     3→import { notFound } from "next/navigation";
+     4→import { db } from "@/lib/db";
+     5→import {
+     6→  ArrowLeft,
+     7→  Calendar,
+     8→  User,
+     9→  Star,
+    10→  Eye,
+    11→  Heart,
+    12→  BookOpen,
+    13→  Clock,
+    14→  Bookmark,
+    15→  Share2,
+    16→  ChevronRight,
+    17→  Sparkles,
+    18→  MessageSquare,
+    19→  ChevronLeft,
+    20→  ArrowRight,
+    21→  Type,
+    22→  BookMarked,
+    23→  Layers,
+    24→  Timer,
+    25→} from "lucide-react";
+    26→import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+    27→import { Badge } from "@/components/ui/badge";
+    28→import { Button } from "@/components/ui/button";
+    29→import { Separator } from "@/components/ui/separator";
+    30→import {
+    31→  Breadcrumb,
+    32→  BreadcrumbItem,
+    33→  BreadcrumbLink,
+    34→  BreadcrumbList,
+    35→  BreadcrumbPage,
+    36→  BreadcrumbSeparator,
+    37→} from "@/components/ui/breadcrumb";
+    38→import { ThemeBadge } from "@/components/theme-badge";
+    39→import { StoryCard, StoryCardData } from "@/components/story-card";
+    40→import { Header } from "@/components/header";
+    41→import { Footer } from "@/components/footer";
+    42→import { ReadingControls } from "@/components/story-reading-controls";
+    43→import { StoryNavigation } from "@/components/story-navigation";
+    44→
+    45→// Types
+    46→interface StoryPageParams {
+    47→  params: Promise<{ id: string; slug?: string[] }>;
+    48→}
+    49→
+    50→interface StoryAuthor {
+    51→  id: string;
+    52→  name: string;
+    53→  slug: string;
+    54→  bio: string | null;
+    55→  memberSince?: Date | null;
+    56→}
+    57→
+    58→interface StoryGenre {
+    59→  id: string;
+    60→  name: string;
+    61→  slug: string;
+    62→}
+    63→
+    64→interface StoryTheme {
+    65→  id: string;
+    66→  name: string;
+    67→  slug: string;
+    68→}
+    69→
+    70→interface StoryData {
+    71→  id: string;
+    72→  title: string;
+    73→  slug: string;
+    74→  description: string | null;
+    75→  content: string | null;
+    76→  rating: number;
+    77→  votesCount: number;
+    78→  readsCount: number;
+    79→  commentsCount: number;
+    80→  publishedAt: Date | null | string;
+    81→  author: StoryAuthor;
+    82→  genre: StoryGenre;
+    83→  themes: StoryTheme[];
+    84→}
+    85→
+    86→interface StoryResponse {
+    87→  success: boolean;
+    88→  data: StoryData;
+    89→  error?: string;
+    90→}
+    91→
+    92→// Fetch story data directly from database
+    93→async function getStory(id: string): Promise<StoryResponse> {
+    94→  try {
+    95→    const story = await db.story.findUnique({
+    96→      where: { id },
+    97→      include: {
+    98→        author: true,
+    99→        genre: { select: { id: true, name: true, slug: true } },
+   100→        themes: {
+   101→          include: { theme: true },
+   102→        },
+   103→      },
+   104→    });
+   105→
+   106→    if (!story) {
+   107→      return { success: false, data: {} as StoryData, error: "Story not found" };
+   108→    }
+   109→
+   110→    return {
+   111→      success: true,
+   112→      data: {
+   113→        id: story.id,
+   114→        title: story.title,
+   115→        slug: story.slug,
+   116→        description: story.description,
+   117→        content: story.content,
+   118→        rating: story.rating,
+   119→        votesCount: story.votesCount,
+   120→        readsCount: story.readsCount,
+   121→        commentsCount: story.commentsCount,
+   122→        publishedAt: story.publishedAt,
+   123→        author: {
+   124→          id: story.author.id,
+   125→          name: story.author.name,
+   126→          slug: story.author.slug,
+   127→          bio: story.author.bio,
+   128→          memberSince: story.author.memberSince as Date | null | undefined,
+   129→        },
+   130→        genre: story.genre,
+   131→        themes: story.themes.map((st) => ({
+   132→          id: st.theme.id,
+   133→          name: st.theme.name,
+   134→          slug: st.theme.slug,
+   135→        })),
+   136→      },
+   137→    };
+   138→  } catch (error) {
+   139→    console.error("Error fetching story:", error);
+   140→    return { success: false, data: {} as StoryData, error: String(error) };
+   141→  }
+   142→}
+   143→
+   144→// Get previous and next stories for navigation
+   145→async function getAdjacentStories(
+   146→  currentId: string,
+   147→  genreId: string
+   148→): Promise<{
+   149→  previous: { id: string; title: string; slug: string; authorName: string } | null;
+   150→  next: { id: string; title: string; slug: string; authorName: string } | null;
+   151→}> {
+   152→  try {
+   153→    // Get stories in the same genre ordered by published date
+   154→    const stories = await db.story.findMany({
+   155→      where: {
+   156→        publishedAt: { not: null },
+   157→        genreId,
+   158→      },
+   159→      select: {
+   160→        id: true,
+   161→        title: true,
+   162→        slug: true,
+   163→        publishedAt: true,
+   164→        author: { select: { name: true } },
+   165→      },
+   166→      orderBy: { publishedAt: "desc" },
+   167→      take: 50, // Get enough to find neighbors
+   168→    });
+   169→
+   170→    const currentIndex = stories.findIndex((s) => s.id === currentId);
+   171→    
+   172→    if (currentIndex === -1) {
+   173→      return { previous: null, next: null };
+   174→    }
+   175→
+   176→    return {
+   177→      previous: currentIndex < stories.length - 1
+   178→        ? {
+   179→            id: stories[currentIndex + 1].id,
+   180→            title: stories[currentIndex + 1].title,
+   181→            slug: stories[currentIndex + 1].slug,
+   182→            authorName: stories[currentIndex + 1].author.name,
+   183→          }
+   184→        : null,
+   185→      next: currentIndex > 0
+   186→        ? {
+   187→            id: stories[currentIndex - 1].id,
+   188→            title: stories[currentIndex - 1].title,
+   189→            slug: stories[currentIndex - 1].slug,
+   190→            authorName: stories[currentIndex - 1].author.name,
+   191→          }
+   192→        : null,
+   193→    };
+   194→  } catch (error) {
+   195→    console.error("Error fetching adjacent stories:", error);
+   196→    return { previous: null, next: null };
+   197→  }
+   198→}
+   199→
+   200→// Generate metadata for SEO
+   201→export async function generateMetadata({
+   202→  params,
+   203→}: StoryPageParams): Promise<Metadata> {
+   204→  const { id } = await params;
+   205→  const response = await getStory(id);
+   206→
+   207→  if (!response.success || !response.data?.title) {
+   208→    return {
+   209→      title: "História Não Encontrada | FaceLove",
+   210→      description: "A história solicitada não foi encontrada.",
+   211→    };
+   212→  }
+   213→
+   214→  const story = response.data;
+   215→  return {
+   216→    title: `${story.title} - ${story.genre.name} | FaceLove`,
+   217→    description:
+   218→      story.description ||
+   219→      `Leia "${story.title}" por ${story.author.name}. Uma história ${story.genre.name.toLowerCase()} no FaceLove.`,
+   220→    keywords: [
+   221→      story.title,
+   222→      story.author.name,
+   223→      story.genre.name,
+   224→      ...story.themes.map((t) => t.name),
+   225→      "história",
+   226→      "leitura",
+   227→    ],
+   228→    openGraph: {
+   229→      title: `${story.title} por ${story.author.name}`,
+   230→      description:
+   231→        story.description || `Uma história ${story.genre.name.toLowerCase()}`,
+   232→      type: "article",
+   233→      publishedTime: story.publishedAt ? new Date(story.publishedAt as string).toISOString() : undefined,
+   234→      authors: [story.author.name],
+   235→      tags: [story.genre.name, ...story.themes.map((t) => t.name)],
+   236→    },
+   237→  };
+   238→}
+   239→
+   240→// Format date helper
+   241→function formatDate(date: Date | string | null): string {
+   242→  if (!date) return "N/A";
+   243→  return new Intl.DateTimeFormat("pt-BR", {
+   244→    day: "numeric",
+   245→    month: "long",
+   246→    year: "numeric",
+   247→  }).format(new Date(date));
+   248→}
+   249→
+   250→// Calculate reading time with more detail
+   251→function calculateReadingTime(content: string): {
+   252→  minutes: number;
+   253→  words: number;
+   254→  displayText: string;
+   255→} {
+   256→  const words = content.split(/\s+/).filter(w => w.length > 0).length;
+   257→  const readingSpeed = 200; // words per minute
+   258→  const minutes = Math.ceil(words / readingSpeed);
+   259→  
+   260→  let displayText: string;
+   261→  if (minutes < 1) {
+   262→    displayText = "< 1 min";
+   263→  } else if (minutes === 1) {
+   264→    displayText = "1 min de leitura";
+   265→  } else if (minutes <= 5) {
+   266→    displayText = `${minutes} mins de leitura`;
+   267→  } else if (minutes <= 15) {
+   268→    displayText = `${minutes} mins de leitura • Curta`;
+   269→  } else if (minutes <= 30) {
+   270→    displayText = `${minutes} mins de leitura • Média`;
+   271→  } else {
+   272→    displayText = `${minutes} mins de leitura • Longa`;
+   273→  }
+   274→  
+   275→  return { minutes, words, displayText };
+   276→}
+   277→
+   278→export default async function StoryDetailPage({
+   279→  params,
+   280→}: StoryPageParams) {
+   281→  const { id } = await params;
+   282→
+   283→  const response = await getStory(id);
+   284→
+   285→  // Handle 404
+   286→  if (!response.success || !response.data?.title) {
+   287→    notFound();
+   288→  }
+   289→
+   290→  const story = response.data;
+   291→
+   292→  // Get adjacent stories for navigation
+   293→  const { previous: previousStory, next: nextStory } = await getAdjacentStories(
+   294→    id,
+   295→    story.genre.id
+   296→  );
+   297→
+   298→  // Parse content
+   299→  const rawContent = story.content || "";
+   300→  const hasIntro = rawContent.includes("Introduction:");
+   301→
+   302→  let introduction = "";
+   303→  let mainContent = "";
+   304→
+   305→  if (hasIntro) {
+   306→    const parts = rawContent.split("Introduction:");
+   307→    introduction = parts[0]?.trim() || "";
+   308→    mainContent = parts.slice(1).join("Introduction:").trim();
+   309→  } else {
+   310→    mainContent = rawContent;
+   311→  }
+   312→
+   313→  // Better paragraph splitting - handle various formats
+   314→  const paragraphs = mainContent
+   315→    .split(/\n\s*\n|\n(?=[A-Z])/)
+   316→    .filter((p) => p.trim().length > 0)
+   317→    .map((p) => p.trim());
+   318→
+   319→  // Get related stories directly from database
+   320→  let relatedStories: StoryCardData[] = [];
+   321→  try {
+   322→    const storiesDb = await db.story.findMany({
+   323→      where: {
+   324→        publishedAt: { not: null },
+   325→        genreId: story.genre.id,
+   326→        id: { not: id },
+   327→      },
+   328→      include: {
+   329→        author: { select: { name: true, slug: true } },
+   330→        genre: { select: { name: true, slug: true } },
+   331→        themes: {
+   332→          include: { theme: true },
+   333→          take: 3,
+   334→        },
+   335→      },
+   336→      take: 6,
+   337→      orderBy: { rating: "desc" },
+   338→    });
+   339→
+   340→    relatedStories = storiesDb.map((s) => ({
+   341→      id: s.id,
+   342→      title: s.title,
+   343→      slug: s.slug,
+   344→      description: s.description,
+   345→      author: s.author,
+   346→      genre: s.genre,
+   347→      themes: s.themes.map((t) => ({
+   348→        id: t.theme.id,
+   349→        name: t.theme.name,
+   350→        slug: t.theme.slug,
+   351→      })),
+   352→      rating: s.rating,
+   353→      votesCount: s.votesCount,
+   354→      readsCount: s.readsCount,
+   355→      publishedAt: s.publishedAt ? new Date(s.publishedAt) : null,
+   356→    }));
+   357→  } catch (e) {
+   358→    // Silently fail - related stories are optional
+   359→  }
+   360→
+   361→  const readingTime = calculateReadingTime(rawContent);
+   362→  const isLongStory = readingTime.minutes > 15;
+   363→
+   364→  return (
+   365→    <div className="flex flex-col min-h-screen">
+   366→      <Header />
+   367→      
+   368→      {/* Reading Controls - Progress Bar & Font Size Toggle */}
+   369→      <ReadingControls contentId="story-content" />
+   370→
+   371→      <main className="flex-1">
+   372→        {/* Enhanced Hero Section */}
+   373→        <section className="relative overflow-hidden bg-gradient-to-br from-purple-500/15 via-fuchsia-500/10 to-pink-500/10 py-10 md:py-14 lg:py-18 border-b border-purple-200/30 dark:border-purple-800/30">
+   374→          {/* Background decorations */}
+   375→          <div className="absolute inset-0 -z-10 overflow-hidden">
+   376→            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-purple-400/20 to-transparent rounded-full blur-3xl" />
+   377→            <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-gradient-to-tr from-pink-400/20 to-transparent rounded-full blur-3xl" />
+   378→            <div className="absolute top-1/2 left-1/2 w-[300px] h-[300px] bg-fuchsia-400/10 rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2" />
+   379→          </div>
+   380→          
+   381→          {/* Subtle pattern overlay */}
+   382→          <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]" 
+   383→               style={{ 
+   384→                 backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` 
+   385→               }} 
+   386→          />
+   387→
+   388→          <div className="container mx-auto px-4">
+   389→            <div className="max-w-4xl mx-auto">
+   390→              {/* Breadcrumb */}
+   391→              <Breadcrumb className="mb-6">
+   392→                <BreadcrumbList>
+   393→                  <BreadcrumbItem>
+   394→                    <BreadcrumbLink asChild>
+   395→                      <Link href="/" className="text-muted-foreground hover:text-purple-600 transition-colors">
+   396→                        Home
+   397→                      </Link>
+   398→                    </BreadcrumbLink>
+   399→                  </BreadcrumbItem>
+   400→                  <BreadcrumbSeparator />
+   401→                  <BreadcrumbItem>
+   402→                    <BreadcrumbLink asChild>
+   403→                      <Link href={`/genres/${story.genre.slug}`} className="text-muted-foreground hover:text-purple-600 transition-colors">
+   404→                        {story.genre.name}
+   405→                      </Link>
+   406→                    </BreadcrumbLink>
+   407→                  </BreadcrumbItem>
+   408→                  <BreadcrumbSeparator />
+   409→                  <BreadcrumbPage className="font-medium text-purple-700 dark:text-purple-300 max-w-[200px] truncate">
+   410→                    {story.title}
+   411→                  </BreadcrumbPage>
+   412→                </BreadcrumbList>
+   413→              </Breadcrumb>
+   414→
+   415→              {/* Genre badge with enhanced styling */}
+   416→              <Badge 
+   417→                variant="secondary"
+   418→                className="bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 hover:from-purple-200 hover:to-pink-200 dark:from-purple-900/50 dark:to-pink-900/50 dark:text-purple-300 border border-purple-200/50 dark:border-purple-700/50 transition-all duration-300 mb-4 px-4 py-1.5"
+   419→              >
+   420→                <BookOpen className="w-3.5 h-3.5 mr-1.5" />
+   421→                {story.genre.name}
+   422→              </Badge>
+   423→
+   424→              {/* Title with enhanced typography */}
+   425→              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4 bg-gradient-to-r from-purple-900 via-fuchsia-800 to-pink-900 dark:from-purple-100 dark:via-fuchsia-200 dark:to-pink-100 bg-clip-text text-transparent leading-tight">
+   426→                {story.title}
+   427→              </h1>
+   428→
+   429→              {/* Description if available */}
+   430→              {story.description && (
+   431→                <p className="text-base md:text-lg text-muted-foreground mb-5 max-w-2xl leading-relaxed">
+   432→                  {story.description}
+   433→                </p>
+   434→              )}
+   435→
+   436→              {/* Meta info with better layout */}
+   437→              <div className="flex flex-wrap items-center gap-x-5 gap-y-3 mt-5 text-sm text-muted-foreground bg-white/40 dark:bg-gray-900/40 backdrop-blur-sm rounded-xl p-4 border border-white/20 dark:border-gray-700/20">
+   438→                <span className="flex items-center gap-2">
+   439→                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-sm font-bold">
+   440→                    {story.author.name.charAt(0)}
+   441→                  </div>
+   442→                  <span>
+   443→                    por{" "}
+   444→                    <Link 
+   445→                      href={`/authors/${story.author.slug}`}
+   446→                      className="font-semibold text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 underline decoration-purple-300 dark:decoration-purple-700 underline-offset-2 transition-colors"
+   447→                    >
+   448→                      {story.author.name}
+   449→                    </Link>
+   450→                  </span>
+   451→                </span>
+   452→                
+   453→                <span className="hidden sm:inline-flex items-center gap-1 text-muted-foreground/50">•</span>
+   454→                
+   455→                <span className="flex items-center gap-1.5 text-muted-foreground">
+   456→                  <Calendar className="w-4 h-4 text-purple-500/70" />
+   457→                  <time dateTime={story.publishedAt ? new Date(story.publishedAt as string).toISOString() : ""}>
+   458→                    {formatDate(story.publishedAt)}
+   459→                  </time>
+   460→                </span>
+   461→                
+   462→                <span className="hidden md:inline-flex items-center gap-1 text-muted-foreground/50">•</span>
+   463→                
+   464→                <span className="flex items-center gap-1.5 text-muted-foreground">
+   465→                  <Eye className="w-4 h-4 text-pink-500/70" />
+   466→                  <span className="font-medium">{story.readsCount.toLocaleString()}</span>
+   467→                  <span className="hidden sm:inline">leituras</span>
+   468→                </span>
+   469→
+   470→                <span className="hidden md:inline-flex items-center gap-1 text-muted-foreground/50">•</span>
+   471→
+   472→                <span className="flex items-center gap-1.5 text-muted-foreground">
+   473→                  <Timer className="w-4 h-4 text-fuchsia-500/70" />
+   474→                  <span className="font-medium">{readingTime.displayText}</span>
+   475→                </span>
+   476→              </div>
+   477→
+   478→              {/* Tags with enhanced styling */}
+   479→              <div className="flex flex-wrap gap-2 mt-4">
+   480→                {story.themes.map((theme) => (
+   481→                  <ThemeBadge key={theme.id} theme={theme} size="sm" />
+   482→                ))}
+   483→              </div>
+   484→            </div>
+   485→          </div>
+   486→        </section>
+   487→
+   488→        {/* Enhanced Stats Bar */}
+   489→        <section className="border-b bg-gradient-to-r from-muted/50 via-purple-50/30 to-muted/50 dark:from-muted/30 dark:via-purple-950/20 dark:to-muted/30 sticky top-[33px] z-30 backdrop-blur-md bg-opacity-80">
+   490→          <div className="container mx-auto px-4 py-4">
+   491→            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+   492→              <div className="p-3 md:p-4 rounded-xl bg-card/80 border border-purple-100/50 dark:border-purple-800/30 shadow-sm hover:shadow-md hover:border-purple-300/60 dark:hover:border-purple-700/50 transition-all duration-300 group">
+   493→                <div className="flex items-center justify-center gap-2 mb-1">
+   494→                  <Star className="w-5 h-5 text-yellow-500 fill-yellow-500 group-hover:scale-110 transition-transform" />
+   495→                </div>
+   496→                <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-yellow-600 to-orange-500 bg-clip-text text-transparent">
+   497→                  {story.rating.toFixed(1)}
+   498→                </div>
+   499→                <div className="text-xs text-muted-foreground flex items-center justify-center gap-1 mt-0.5">
+   500→                  <span>{story.votesCount}</span> votos
+   501→                </div>
+   502→              </div>
+   503→              
+   504→              <div className="p-3 md:p-4 rounded-xl bg-card/80 border border-pink-100/50 dark:border-pink-800/30 shadow-sm hover:shadow-md hover:border-pink-300/60 dark:hover:border-pink-700/50 transition-all duration-300 group">
+   505→                <div className="flex items-center justify-center gap-2 mb-1">
+   506→                  <Eye className="w-5 h-5 text-pink-500 group-hover:scale-110 transition-transform" />
+   507→                </div>
+   508→                <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-pink-600 to-rose-500 bg-clip-text text-transparent">
+   509→                  {story.readsCount.toLocaleString()}
+   510→                </div>
+   511→                <div className="text-xs text-muted-foreground mt-0.5">leituras</div>
+   512→              </div>
+   513→              
+   514→              <div className="p-3 md:p-4 rounded-xl bg-card/80 border border-fuchsia-100/50 dark:border-fuchsia-800/30 shadow-sm hover:shadow-md hover:border-fuchsia-300/60 dark:hover:border-fuchsia-700/50 transition-all duration-300 group">
+   515→                <div className="flex items-center justify-center gap-2 mb-1">
+   516→                  <Clock className="w-5 h-5 text-fuchsia-500 group-hover:scale-110 transition-transform" />
+   517→                </div>
+   518→                <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-fuchsia-600 to-purple-500 bg-clip-text text-transparent">
+   519→                  {readingTime.minutes}
+   520→                </div>
+   521→                <div className="text-xs text-muted-foreground mt-0.5">min de leitura</div>
+   522→              </div>
+   523→              
+   524→              <div className="p-3 md:p-4 rounded-xl bg-card/80 border border-purple-100/50 dark:border-purple-800/30 shadow-sm hover:shadow-md hover:border-purple-300/60 dark:hover:border-purple-700/50 transition-all duration-300 group">
+   525→                <div className="flex items-center justify-center gap-2 mb-1">
+   526→                  <MessageSquare className="w-5 h-5 text-purple-500 group-hover:scale-110 transition-transform" />
+   527→                </div>
+   528→                <div className="text-xl md:text-2xl font-bold bg-gradient-to-r from-purple-600 to-indigo-500 bg-clip-text text-transparent">
+   529→                  {story.commentsCount}
+   530→                </div>
+   531→                <div className="text-xs text-muted-foreground mt-0.5">comentários</div>
+   532→              </div>
+   533→            </div>
+   534→            
+   535→            {/* Reading tips bar */}
+   536→            <div className="flex items-center justify-center gap-4 mt-3 pt-3 border-t border-dashed border-purple-200/30 dark:border-purple-700/20 text-xs text-muted-foreground">
+   537→              <span className="flex items-center gap-1">
+   538→                <Type className="w-3.5 h-3.5 text-purple-500/70" />
+   539→                Ajuste a fonte acima
+   540→              </span>
+   541→              <span className="text-muted-foreground/30">|</span>
+   542→              <span className="flex items-center gap-1">
+   543→                <BookMarked className="w-3.5 h-3.5 text-pink-500/70" />
+   544→                Barra de progresso ativa
+   545→              </span>
+   546→            </div>
+   547→          </div>
+   548→        </section>
+   549→
+   550→        {/* Introduction Section - Enhanced */}
+   551→        {introduction && (
+   552→          <section className="border-b bg-gradient-to-r from-purple-50 via-fuchsia-50/50 to-pink-50 dark:from-purple-950/30 dark:via-fuchsia-950/20 dark:to-pink-950/30 relative overflow-hidden">
+   553→            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-purple-200/20 to-transparent rounded-full blur-3xl pointer-events-none" />
+   554→            
+   555→            <div className="container mx-auto px-4 py-10 md:py-14 relative z-10">
+   556→              <div className="max-w-3xl mx-auto">
+   557→                <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-2xl p-6 md:p-10 shadow-xl shadow-purple-500/10 border border-purple-200/50 dark:border-purple-700/30 relative overflow-hidden">
+   558→                  {/* Decorative corner gradient */}
+   559→                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-purple-500/10 to-transparent rounded-bl-full" />
+   560→                  
+   561→                  <div className="relative z-10">
+   562→                    <div className="flex items-center gap-3 mb-5">
+   563→                      <div className="p-2.5 rounded-xl bg-gradient-to-br from-purple-500 via-fuchsia-500 to-pink-500 text-white shadow-lg shadow-purple-500/25">
+   564→                        <Sparkles className="w-5 h-5" />
+   565→                      </div>
+   566→                      <div>
+   567→                        <h2 className="text-lg md:text-xl font-bold text-purple-800 dark:text-purple-300">
+   568→                          Introdução
+   569→                        </h2>
+   570→                        <p className="text-xs text-purple-500 dark:text-purple-400 font-medium">
+   571→                          Sobre esta história
+   572→                        </p>
+   573→                      </div>
+   574→                    </div>
+   575→                    
+   576→                    <div className="prose prose-purple dark:prose-invert max-w-none">
+   577→                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-base md:text-lg whitespace-pre-wrap">
+   578→                        {introduction}
+   579→                      </p>
+   580→                    </div>
+   581→                  </div>
+   582→                </div>
+   583→              </div>
+   584→            </div>
+   585→          </section>
+   586→        )}
+   587→
+   588→        {/* Main Content - Enhanced Typography */}
+   589→        <article 
+   590→          id="story-content"
+   591→          className="container mx-auto px-4 py-10 md:py-14 transition-all duration-300 text-lg leading-8"
+   592→        >
+   593→          <div className="max-w-3xl mx-auto">
+   594→            {/* Chapter/Section indicator */}
+   595→            <div className="flex items-center gap-3 mb-8 pb-4 border-b border-dashed border-purple-200/40 dark:border-purple-700/30">
+   596→              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center text-white text-sm font-bold shadow-md shadow-purple-500/20">
+   597→                <Layers className="w-4 h-4" />
+   598→              </div>
+   599→              <div>
+   600→                <h2 className="font-semibold text-purple-800 dark:text-purple-300">Capítulo 1</h2>
+   601→                <p className="text-xs text-muted-foreground">O começo da história</p>
+   602→              </div>
+   603→            </div>
+   604→
+   605→            {/* Content paragraphs with enhanced styling */}
+   606→            <div className="space-y-7">
+   607→              {paragraphs.map((paragraph, index) => {
+   608→                // Check if paragraph looks like dialogue or special formatting
+   609→                const isDialogue = paragraph.startsWith('"') || paragraph.startsWith('"');
+   610→                const isFirstParagraph = index === 0;
+   611→                
+   612→                return (
+   613→                  <p 
+   614→                    key={index} 
+   615→                    className={`text-gray-700 dark:text-gray-300 leading-relaxed md:leading-loose animate-fade-in-up first-letter:first-letter:text-3xl first-letter:md:first-letter:text-4xl first-letter:font-bold first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:text-purple-700 dark:first-letter:text-purple-400 ${
+   616→                      isDialogue ? 'pl-4 md:pl-6 border-l-2 border-purple-200 dark:border-purple-800 italic bg-purple-50/30 dark:bg-purple-950/20 py-2 rounded-r-lg' : ''
+   617→                    } ${
+   618→                      isFirstParagraph ? '' : ''
+   619→                    }`}
+   620→                    style={{ animationDelay: `${index * 50}ms` }}
+   621→                  >
+   622→                    {paragraph}
+   623→                  </p>
+   624→                );
+   625→              })}
+   626→            </div>
+   627→            
+   628→            {/* Story End Indicator */}
+   629→            <div className="mt-12 pt-8 border-t-2 border-dashed border-purple-200 dark:border-purple-800">
+   630→              <div className="text-center space-y-4">
+   631→                <div className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-purple-100 via-fuchsia-100 to-pink-100 dark:from-purple-900/30 dark:via-fuchsia-900/20 dark:to-pink-900/30 border border-purple-200/50 dark:border-purple-700/30">
+   632→                  <Sparkles className="w-5 h-5 text-purple-500 animate-pulse" />
+   633→                  <span className="font-semibold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+   634→                    ✨ Fim da História ✨
+   635→                  </span>
+   636→                  <Sparkles className="w-5 h-5 text-pink-500 animate-pulse" />
+   637→                </div>
+   638→                
+   639→                {isLongStory && (
+   640→                  <p className="text-sm text-muted-foreground max-w-md mx-auto">
+   641→                    Obrigado por ler até o final! Esta é uma história extensa com aproximadamente{' '}
+   642→                    <span className="font-medium text-purple-600 dark:text-purple-400">{readingTime.words.toLocaleString()}</span> palavras.
+   643→                  </p>
+   644→                )}
+   645→              </div>
+   646→            </div>
+   647→          </div>
+   648→        </article>
+   649→
+   650→        {/* Story Navigation - Previous / Next */}
+   651→        <StoryNavigation 
+   652→          previousStory={previousStory}
+   653→          nextStory={nextStory}
+   654→        />
+   655→
+   656→        {/* Author Info Section - Enhanced */}
+   657→        <section className="border-t bg-gradient-to-b from-muted/30 to-background py-12">
+   658→          <div className="container mx-auto px-4">
+   659→            <div className="max-w-2xl mx-auto">
+   660→              <Card className="overflow-hidden border-0 shadow-xl shadow-purple-500/10 hover:shadow-2xl hover:shadow-purple-500/15 transition-all duration-500">
+   661→                {/* Gradient header */}
+   662→                <CardHeader className="bg-gradient-to-r from-purple-600 via-fuchsia-600 to-pink-600 text-white p-6 relative overflow-hidden">
+   663→                  {/* Background pattern */}
+   664→                  <div className="absolute inset-0 opacity-10">
+   665→                    <div className="absolute top-0 left-0 w-full h-full" 
+   666→                         style={{
+   667→                           backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='1' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E")`
+   668→                         }}
+   669→                    />
+   670→                  </div>
+   671→                  <CardTitle className="flex items-center gap-3 relative z-10">
+   672→                    <div className="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+   673→                      <User className="w-5 h-5" />
+   674→                    </div>
+   675→                    <span className="text-lg">Sobre o Autor</span>
+   676→                  </CardTitle>
+   677→                </CardHeader>
+   678→                
+   679→                <CardContent className="p-6 md:p-8">
+   680→                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+   681→                    {/* Avatar */}
+   682→                    <div className="relative">
+   683→                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-400 via-fuchsia-400 to-pink-400 p-0.5">
+   684→                        <div className="w-full h-full rounded-full bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center">
+   685→                          <span className="text-2xl font-bold bg-gradient-to-br from-purple-600 to-pink-600 bg-clip-text text-transparent">
+   686→                            {story.author.name.charAt(0)}
+   687→                          </span>
+   688→                        </div>
+   689→                      </div>
+   690→                      <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-white dark:border-gray-800 flex items-center justify-center">
+   691→                        <div className="w-2 h-2 bg-white rounded-full" />
+   692→                      </div>
+   693→                    </div>
+   694→                    
+   695→                    <div className="flex-1">
+   696→                      <h3 className="font-bold text-xl text-gray-900 dark:text-gray-100">
+   697→                        {story.author.name}
+   698→                      </h3>
+   699→                      {story.author.bio && (
+   700→                        <p className="text-sm text-muted-foreground mt-2 line-clamp-3 leading-relaxed">
+   701→                          {story.author.bio}
+   702→                        </p>
+   703→                      )}
+   704→                      {story.author.memberSince && (
+   705→                        <p className="text-xs text-muted-foreground mt-3 flex items-center gap-1.5">
+   706→                          <Calendar className="w-3.5 h-3.5" />
+   707→                          Membro desde {formatDate(story.author.memberSince)}
+   708→                        </p>
+   709→                      )}
+   710→                    </div>
+   711→                  </div>
+   712→                  
+   713→                  <div className="mt-6 pt-5 border-t border-gray-100 dark:border-gray-800">
+   714→                    <Button 
+   715→                      variant="outline"
+   716→                      size="lg"
+   717→                      className="w-full sm:w-auto border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-300 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-950/50 font-medium transition-all duration-300"
+   718→                      asChild
+   719→                    >
+   720→                      <Link href={`/authors/${story.author.slug}`}>
+   721→                        <BookOpen className="w-4 h-4 mr-2" />
+   722→                        Ver todas as histórias do autor
+   723→                        <ArrowRight className="w-4 h-4 ml-2" />
+   724→                      </Link>
+   725→                    </Button>
+   726→                  </div>
+   727→                </CardContent>
+   728→              </Card>
+   729→            </div>
+   730→          </div>
+   731→        </section>
+   732→
+   733→        {/* Related Stories Section - Enhanced */}
+   734→        {relatedStories.length > 0 && (
+   735→          <section className="border-t bg-gradient-to-b from-background to-muted/20 py-12 md:py-16">
+   736→            <div className="container mx-auto px-4">
+   737→              {/* Section header */}
+   738→              <div className="max-w-6xl mx-auto">
+   739→                <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8">
+   740→                  <div className="flex items-center gap-3">
+   741→                    <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-lg shadow-purple-500/25">
+   742→                      <BookOpen className="w-6 h-6" />
+   743→                    </div>
+   744→                    <div>
+   745→                      <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
+   746→                        Histórias Relacionadas
+   747→                      </h2>
+   748→                      <p className="text-sm text-muted-foreground mt-0.5">
+   749→                        Mais histórias de {story.genre.name.toLowerCase()}
+   750→                      </p>
+   751→                    </div>
+   752→                  </div>
+   753→                  
+   754→                  <Link 
+   755→                    href={`/genres/${story.genre.slug}`}
+   756→                    className="group inline-flex items-center gap-2 text-sm font-semibold text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 transition-colors px-4 py-2 rounded-full bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/30 dark:hover:bg-purple-950/50"
+   757→                  >
+   758→                    Ver todos em {story.genre.name.toLowerCase()}
+   759→                    <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+   760→                  </Link>
+   761→                </div>
+   762→                
+   763→                {/* Stories grid */}
+   764→                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+   765→                  {relatedStories.slice(0, 6).map((relatedStory, index) => (
+   766→                    <div
+   767→                      key={relatedStory.id}
+   768→                      className="animate-fade-in-up"
+   769→                      style={{ animationDelay: `${index * 80}ms` }}
+   770→                    >
+   771→                      <StoryCard story={relatedStory} variant="compact" />
+   772→                    </div>
+   773→                  ))}
+   774→                </div>
+   775→
+   776→                {/* Show more link for mobile */}
+   777→                <div className="mt-8 text-center sm:hidden">
+   778→                  <Link 
+   779→                    href={`/genres/${story.genre.slug}`}
+   780→                    className="inline-flex items-center gap-2 text-sm font-medium text-purple-600 dark:text-purple-400"
+   781→                  >
+   782→                    Ver mais histórias
+   783→                    <ChevronRight className="w-4 h-4" />
+   784→                  </Link>
+   785→                </div>
+   786→              </div>
+   787→            </div>
+   788→          </section>
+   789→        )}
+   790→        
+   791→        {/* Call to Action Section */}
+   792→        <section className="border-t py-12 bg-gradient-to-r from-purple-50 via-fuchsia-50 to-pink-50 dark:from-purple-950/20 dark:via-fuchsia-950/10 dark:to-pink-950/20">
+   793→          <div className="container mx-auto px-4">
+   794→            <div className="max-w-2xl mx-auto text-center space-y-4">
+   795→              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border border-purple-200/50 dark:border-purple-700/30 shadow-sm">
+   796→                <Heart className="w-4 h-4 text-pink-500 fill-pink-500" />
+   797→                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+   798→                  Gostou desta história?
+   799→                </span>
+   800→              </div>
+   801→              
+   802→              <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100">
+   803→                Explore mais histórias incríveis no FaceLove
+   804→              </h3>
+   805→              
+   806→              <p className="text-muted-foreground max-w-md mx-auto">
+   807→                Descubra milhares de romances e histórias de autores talentosos de todo o mundo.
+   808→              </p>
+   809→              
+   810→              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+   811→                <Button 
+   812→                  size="lg"
+   813→                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg shadow-purple-500/25 font-semibold px-8"
+   814→                  asChild
+   815→                >
+   816→                  <Link href="/genres">
+   817→                    <BookOpen className="w-5 h-5 mr-2" />
+   818→                    Explorar Gêneros
+   819→                  </Link>
+   820→                </Button>
+   821→                
+   822→                <Button 
+   823→                  variant="outline"
+   824→                  size="lg"
+   825→                  className="border-purple-200 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-950/50 font-semibold px-8"
+   826→                  asChild
+   827→                >
+   828→                  <Link href="/">
+   829→                    <ArrowLeft className="w-5 h-5 mr-2" />
+   830→                    Voltar ao Início
+   831→                  </Link>
+   832→                </Button>
+   833→              </div>
+   834→            </div>
+   835→          </div>
+   836→        </section>
+   837→      </main>
+   838→
+   839→      <Footer />
+   840→    </div>
+   841→  );
+   842→}
+   843→

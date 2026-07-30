@@ -3,6 +3,7 @@ import { SearchBar } from "@/components/search-bar";
 import { StoryCard } from "@/components/story-card";
 import { GenreCard } from "@/components/genre-card";
 import { ThemeBadge } from "@/components/theme-badge";
+import { Newsletter } from "@/components/newsletter";
 import { Button } from "@/components/ui/button";
 import {
   BookOpen,
@@ -439,6 +440,13 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="py-16 md:py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <Newsletter variant="default" />
         </div>
       </section>
     </div>
