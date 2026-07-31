@@ -34,7 +34,7 @@ const STAT_CONFIG = [
   {
     key: "totalStories" as const,
     icon: BookOpen,
-    label: "Histórias",
+    label: "Histórias publicadas",
     colorClass: "text-pink-500",
     bgClass: "bg-pink-500/10",
     borderColor: "border-pink-500/20",
@@ -42,7 +42,7 @@ const STAT_CONFIG = [
   {
     key: "totalAuthors" as const,
     icon: Users,
-    label: "Autores",
+    label: "Autores ativos",
     colorClass: "text-purple-500",
     bgClass: "bg-purple-500/10",
     borderColor: "border-purple-500/20",
@@ -50,7 +50,7 @@ const STAT_CONFIG = [
   {
     key: "totalReaders" as const,
     icon: Eye,
-    label: "Leitores",
+    label: "Leitores mensais",
     colorClass: "text-fuchsia-500",
     bgClass: "bg-fuchsia-500/10",
     borderColor: "border-fuchsia-500/20",
@@ -58,7 +58,7 @@ const STAT_CONFIG = [
   {
     key: "totalCountries" as const,
     icon: Globe,
-    label: "Países",
+    label: "Países alcançados",
     colorClass: "text-violet-500",
     bgClass: "bg-violet-500/10",
     borderColor: "border-violet-500/20",

@@ -24,7 +24,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { FaceLoveLogo } from "@/components/facelove-logo";
+import { FaceLoveLogo, FaceLoveLogoFull } from "@/components/facelove-logo";
 import { LanguageSelector } from "@/components/language-selector";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useI18n } from "@/lib/i18n/I18nProvider";
@@ -123,13 +123,11 @@ export function Header() {
               ======================================== */}
           <Link 
             href="/" 
-            className="flex items-center gap-2 group relative"
+            className="flex items-center group relative"
             aria-label="FaceLove - Página Inicial"
           >
-            {/* Glow effect behind logo on hover */}
-            <div className="absolute -inset-2 bg-gradient-to-r from-pink-500/20 to-purple-500/20 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            
-            <FaceLoveLogo size="md" />
+            {/* Neon Logo with integrated text */}
+            <FaceLoveLogoFull />
           </Link>
 
           {/* ========================================
@@ -270,8 +268,8 @@ export function Header() {
                 {/* Mobile Drawer Header */}
                 <div className="px-6 pt-6 pb-4 border-b border-[var(--fl-border-subtle)]">
                   <SheetHeader className="flex flex-row items-center justify-between">
-                    <SheetTitle className="flex items-center gap-3">
-                      <FaceLoveLogo size="sm" />
+                    <SheetTitle className="flex items-center">
+                      <FaceLoveLogo size="sm" variant="neon" />
                     </SheetTitle>
                     
                     {/* Quick actions in header */}

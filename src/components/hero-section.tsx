@@ -137,7 +137,7 @@ export function HeroSection({ featuredStory }: HeroSectionProps) {
               <div className="animate-fade-in-up mb-6">
                 <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--fl-secondary-glow)]/20 border border-[var(--fl-border)] backdrop-blur-sm text-sm font-medium text-[var(--fl-text-secondary)]">
                   <Sparkles className="w-4 h-4 text-[var(--fl-primary)]" />
-                  Descubra histórias inesquecíveis
+                  A plataforma premium de storytelling
                 </span>
               </div>
 
@@ -150,8 +150,8 @@ export function HeroSection({ featuredStory }: HeroSectionProps) {
 
               {/* Subheadline */}
               <p className="text-lg md:text-xl text-[var(--fl-text-muted)] max-w-xl leading-relaxed mb-8 animate-fade-in-up animation-delay-200">
-                Mergulhe em um universo de narrativas cativantes onde cada história 
-                é uma porta para novas emoções. Encontre sua próxima leitura favorita.
+                Mergulhe em um universo de narrativas envolventes onde cada história 
+                desperta emoções e cria conexões autênticas. Sua próxima leitura favorita espera por você.
               </p>
 
               {/* CTA Buttons */}
@@ -170,7 +170,7 @@ export function HeroSection({ featuredStory }: HeroSectionProps) {
                     "
                   >
                     <BookOpen className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                    Explorar histórias
+                    Explorar agora
                   </Button>
                 </Link>
                 
@@ -189,7 +189,7 @@ export function HeroSection({ featuredStory }: HeroSectionProps) {
                       hover:-translate-y-0.5
                     "
                   >
-                    Cadastrar-se
+                    Criar conta gratuita
                     <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>

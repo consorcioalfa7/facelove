@@ -4,7 +4,6 @@ import { PlatformStats } from "@/components/platform-stats";
 import { ExploreCards } from "@/components/explore-cards";
 import { TrendingStories } from "@/components/trending-stories";
 import { ValueProps } from "@/components/value-props";
-import { Footer } from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import {
   BookOpen,
@@ -261,22 +260,22 @@ function CommunitySection() {
   const communityFeatures = [
     {
       icon: MessageSquare,
-      title: "Discussões ativas",
-      description: "Participe de conversas sobre suas histórias favoritas",
+      title: "Fóruns ativos",
+      description: "Participe de discussões apaixonantes sobre suas histórias favoritas",
       href: "/community/discussions",
       gradient: "from-purple-500 to-violet-600",
     },
     {
       icon: UserPlus,
-      title: "Novos autores",
-      description: "Descubra talentos emergentes da comunidade",
+      title: "Autores em destaque",
+      description: "Descubra novos talentos e acompanhe seus criadores favoritos",
       href: "/authors?sort=newest",
       gradient: "from-pink-500 to-rose-600",
     },
     {
       icon: Activity,
-      title: "Atividade recente",
-      description: "Acompanhe o que está acontecendo agora",
+      title: "Ao vivo agora",
+      description: "Veja o que está acontecendo na comunidade neste momento",
       href: "/community/activity",
       gradient: "from-fuchsia-500 to-purple-600",
     },
@@ -288,10 +287,10 @@ function CommunitySection() {
         {/* Section Header */}
         <div className="text-center mb-12">
           <h2 className="text-2xl md:text-3xl font-bold text-[var(--fl-text-primary)] mb-3">
-            Comunidade
+            Junte-se à comunidade
           </h2>
           <p className="text-[var(--fl-text-muted)] max-w-lg mx-auto">
-            Conecte-se e compartilhe experiências com outros leitores e autores
+            Faça parte de uma comunidade vibrante de leitores e autores apaixonados por boas histórias
           </p>
         </div>
 
@@ -488,12 +487,6 @@ export default async function HomePage() {
           Preview cards for discussions, authors, activity
           ========================================== */}
       <CommunitySection />
-
-      {/* ==========================================
-          7. FOOTER
-          Site footer with links and newsletter
-          ========================================== */}
-      <Footer />
     </div>
   );
 }

@@ -12,7 +12,7 @@ const exploreCards = [
   {
     id: "genres",
     title: "Gêneros",
-    description: "Fiction, True Story, Fantasy, Romance e mais.",
+    description: "Romance, Drama, Ficção Científica, Fantasia e muito mais para explorar.",
     countLabel: (count?: number) => `${count ?? 12} gêneros`,
     href: "/genres",
     Icon: BookOpen,
@@ -21,7 +21,7 @@ const exploreCards = [
   {
     id: "themes",
     title: "Temas",
-    description: "Romance, BDSM, Traição, Primeira vez e mais.",
+    description: "Amor proibido, Reencontros, Aventuras, Paixões intensas e outros temas.",
     countLabel: (count?: number) => `${count ?? 50}+ temas`,
     href: "/themes",
     Icon: Heart,
@@ -30,7 +30,7 @@ const exploreCards = [
   {
     id: "authors",
     title: "Autores",
-    description: "Histórias de autores incríveis da comunidade.",
+    description: "Conheça os talentosos criadores por trás das suas histórias favoritas.",
     countLabel: (count?: number) => `${count ?? 120}+ autores`,
     href: "/authors",
     Icon: PenTool,
@@ -39,8 +39,8 @@ const exploreCards = [
   {
     id: "community",
     title: "Comunidade",
-    description: "Participe, comente e compartilhe experiências.",
-    countLabel: () => "Entrar agora",
+    description: "Conecte-se com leitores, compartilhe opiniões e faça novas amizades.",
+    countLabel: () => "Participar",
     href: "/community",
     Icon: Users,
     gradient: "from-fuchsia-500 to-pink-600",
@@ -83,14 +83,19 @@ export function ExploreCards({
     <section className="w-full py-10 md:py-14 lg:py-16">
       {/* Section Header */}
       <div className="flex items-center justify-between mb-8 md:mb-10">
-        <h2 className="text-2xl md:text-3xl font-bold text-[var(--fl-text-primary)]">
-          Explorar por
-        </h2>
+        <div>
+          <h2 className="text-2xl md:text-3xl font-bold text-[var(--fl-text-primary)]">
+            Explore o universo FaceLove
+          </h2>
+          <p className="text-sm text-[var(--fl-text-muted)] mt-1">
+            Descubra histórias que combinam com você
+          </p>
+        </div>
         <Link
           href="/explore"
           className="group flex items-center gap-1.5 text-sm font-medium text-[var(--fl-primary)] hover:text-[var(--fl-primary-hover)] transition-colors"
         >
-          Ver todos
+          Ver tudo
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </Link>
       </div>

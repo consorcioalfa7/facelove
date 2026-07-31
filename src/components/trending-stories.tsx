@@ -376,10 +376,10 @@ export function TrendingStories({
             </div>
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-[var(--fl-text-primary)]">
-                Mais lidas da semana
+                Histórias em alta
               </h2>
               <p className="text-sm text-[var(--fl-text-muted)] mt-0.5">
-                As histórias que estão bombando
+                O que a comunidade está lendo agora
               </p>
             </div>
           </div>
@@ -393,7 +393,7 @@ export function TrendingStories({
               "transition-colors duration-200"
             )}
           >
-            Ver ranking completo
+            Ver todas
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
