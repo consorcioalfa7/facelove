@@ -449,7 +449,8 @@ export function QuickDataActions({ className }: { className?: string }) {
           lastAction === "copied" ? "text-green-500" : ""
         )} />
       </Button>
-    </div  );
+    </div>
+  );
 }
 
 // Hook for listening to data changes

@@ -608,24 +608,26 @@ export function Achievements({
   categoryFilter = "all",
   className,
 }: AchievementsProps) {
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  // Initialize state with current achievements
+  const [achievements, setAchievements] = useState<Achievement[]>(() => {
+    if (typeof window !== 'undefined') {
+      return checkAndUnlockAchievements();
+    }
+    return [];
+  });
   const [activeCategory, setActiveCategory] = useState(categoryFilter);
 
   useEffect(() => {
-    // Initialize and unlock any pending
-    const updated = checkAndUnlockAchievements();
-    setAchievements(updated);
-
+    // Event handlers that update state (allowed in callbacks)
     const handleChange = () => {
       setAchievements(loadAchievements());
     };
 
-    window.addEventListener("achievementsChanged", handleChange);
-    
-    // Listen for unlock events
-    const handleUnlock = (e: CustomEvent) => {
+    const handleUnlock = () => {
       setAchievements(loadAchievements());
     };
+
+    window.addEventListener("achievementsChanged", handleChange);
     window.addEventListener("achievementUnlocked", handleUnlock as EventListener);
 
     return () => {

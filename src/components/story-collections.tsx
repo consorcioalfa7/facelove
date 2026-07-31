@@ -22,6 +22,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
+import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
@@ -259,21 +266,28 @@ export function StoryCollections({
   className,
   onSelect,
 }: CollectionsProps) {
-  const [allCollections, setAllCollections] = useState<StoryCollection[]>([]);
+  // Initialize state with current collections
+  const [allCollections, setAllCollections] = useState<StoryCollection[]>(() => {
+    if (typeof window !== 'undefined') {
+      const custom = getCustomCollections().map((c) => ({ ...c, type: "custom" as const }));
+      return [...PREDEFINED_COLLECTIONS, ...custom];
+    }
+    return [];
+  });
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  useEffect(() => {
-    loadCollections();
-    
-    const handleChange = () => loadCollections();
-    window.addEventListener("collectionsChanged", handleChange);
-    return () => window.removeEventListener("collectionsChanged", handleChange);
-  }, []);
-
+  // Define loadCollections for event-driven updates
   function loadCollections() {
     const custom = getCustomCollections().map((c) => ({ ...c, type: "custom" as const }));
     setAllCollections([...PREDEFINED_COLLECTIONS, ...custom]);
   }
+
+  useEffect(() => {
+    // Only set up event listeners - no direct setState calls
+    const handleChange = () => loadCollections();
+    window.addEventListener("collectionsChanged", handleChange);
+    return () => window.removeEventListener("collectionsChanged", handleChange);
+  }, []);
 
   const featured = allCollections.filter((c) => c.isFeatured).slice(0, maxFeatured);
   const regular = allCollections.filter((c) => !c.isFeatured);
@@ -730,21 +744,32 @@ export function CreateCollectionDialog({
 
 // Hook for using collections
 export function useStoryCollections() {
-  const [collections, setCollections] = useState<StoryCollection[]>([]);
-  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+  // Initialize state with current data
+  const [collections, setCollections] = useState<StoryCollection[]>(() => {
+    if (typeof window !== 'undefined') {
+      return [...PREDEFINED_COLLECTIONS, ...getCustomCollections()];
+    }
+    return [];
+  });
+  const [favoriteIds, setFavoriteIds] = useState<string[]>(() => {
+    if (typeof window !== 'undefined') {
+      return getFavoriteCollections();
+    }
+    return [];
+  });
 
-  useEffect(() => {
-    updateData();
-
-    const handleChange = () => updateData();
-    window.addEventListener("collectionsChanged", handleChange);
-    return () => window.removeEventListener("collectionsChanged", handleChange);
-  }, []);
-
+  // Define updateData for event-driven updates
   function updateData() {
     setCollections([...PREDEFINED_COLLECTIONS, ...getCustomCollections()]);
     setFavoriteIds(getFavoriteCollections());
   }
+
+  useEffect(() => {
+    // Only set up event listeners - no direct setState calls
+    const handleChange = () => updateData();
+    window.addEventListener("collectionsChanged", handleChange);
+    return () => window.removeEventListener("collectionsChanged", handleChange);
+  }, []);
 
   return {
     collections,

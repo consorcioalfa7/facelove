@@ -1,726 +1,730 @@
-# FaceLove 🩷
+# FaceLove - Premium Storytelling Platform
 
-<p align="center">
-  <strong>Histórias reais. Conexões que ficam.</strong>
-</p>
+<div align="center">
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js" alt="Next.js 16" />
-  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript 5" />
-  <img src="https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="Tailwind CSS 4" />
-  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License MIT" />
-</p>
+![FaceLove Logo](public/logo-facelove.png)
 
----
+**Histórias reais. Conexões que ficam.**
 
-## 📝 Descrição
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-**FaceLove** é uma plataforma premium de storytelling e comunidade, focada em conteúdo adulto (18+), romance, ficção e confissões. Construída com as tecnologias mais modernas do ecossistema web, oferece uma experiência imersiva e sofisticada para criadores e leitores de histórias.
-
-### 💎 O que torna o FaceLove especial?
-
-- **Conteúdo Premium**: Histórias de alta qualidade com curadoria cuidadosa
-- **Comunidade Ativa**: Espaço para conexões reais entre autores e leitores
-- **Experiência Imersiva**: Design premium com animações suaves e estética "Purple Velvet"
-- **Acessibilidade Total**: PWA instalável, responsivo em todos os dispositivos
-- **Multi-idioma**: Suporte para PT-BR, EN-US, ES, FR, DE e mais idiomas
-
-> ⚠️ **Aviso**: Este projeto cont conteúdo destinado exclusivamente a maiores de 18 anos.
+</div>
 
 ---
 
-## 📸 Screenshots/Preview
+## Table of Contents
 
-As screenshots e previews do projeto estão disponíveis na pasta `/upload` do repositório.
+- [Overview](#overview)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Development Guide](#development-guide)
+- [Design System](#design-system)
+- [PWA Configuration](#pwa-configuration)
+- [SEO Optimization](#seo-optimization)
+- [Internationalization (i18n)](#internationalization-i18n)
+- [Database Schema](#database-schema)
+- [API Endpoints](#api-endpoints)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## Overview
+
+FaceLove is a premium storytelling platform designed for adult audiences (18+). It provides a sophisticated, immersive reading experience with a focus on romantic and emotional narratives. The platform features a stunning "Purple Velvet" dark theme aesthetic with glass morphism effects, smooth animations, and full PWA support.
+
+### Key Highlights
+
+- **Premium Dark Theme**: Purple Velvet + Pink Glow design system
+- **Age Verification**: Animated 18+ gate with floating hearts and cinematic effects
+- **PWA Support**: Installable app with offline capabilities
+- **Multi-language**: 14 languages supported
+- **SEO Optimized**: JSON-LD structured data, OpenGraph, Twitter Cards
+- **Responsive Design**: Mobile-first approach, works on all devices
+
+---
+
+## Features
+
+### Core Features
+
+| Feature | Description |
+|---------|-------------|
+| Story Browsing | Browse stories by genre, theme, or author |
+| Reading Experience | Immersive reader with progress tracking |
+| Favorites System | Save and organize favorite stories |
+| Bookmarks | Auto-save reading position |
+| Search & Filter | Advanced search with multiple filters |
+| Author Profiles | Dedicated author pages with bios |
+| Community Features | Discussions, comments, activity feed |
+
+### Premium Features
+
+| Feature | Implementation |
+|---------|----------------|
+| Age Gate (18+) | Animated verification with localStorage persistence |
+| PWA Install | Custom install prompt with iOS instructions |
+| Offline Mode | Service worker with cache strategies |
+| Push Notifications | Background sync support (ready) |
+| Dark Theme | Premium "Purple Velvet" aesthetic |
+| Glass Morphism | Backdrop blur effects throughout |
+| Animations | Floating hearts, pulse glow, shimmer effects |
+
+---
+
+## Tech Stack
+
+### Core Framework
+
+```yaml
+Framework: Next.js 16 (App Router)
+Language: TypeScript 5
+Styling: Tailwind CSS 4
+Components: shadcn/ui (New York style)
+Icons: Lucide React
+```
+
+### Database & Backend
+
+```yaml
+Database: SQLite via Prisma ORM
+State Management: Zustand (client), TanStack Query (server)
+Authentication: NextAuth.js v4 (ready)
+Real-time: Socket.IO (mini-service)
+```
+
+### Development Tools
+
+```yaml
+Package Manager: Bun
+Linting: ESLint
+Formatting: Prettier (ready)
+Testing: Ready for implementation
+```
+
+---
+
+## Project Structure
 
 ```
-/upload/
-├── hero-preview.png
-├── age-gate-demo.png
-├── story-card-examples.png
-└── mobile-responsive.png
-```
-
----
-
-## ✨ Features Principais
-
-### 1. Sistema de Histórias Completo
-- 🔧 **CRUD completo**: Criar, ler, atualizar e excluir histórias
-- ⭐ **Sistema de ratings**: Avalie histórias com estrelas
-- 👁️ **Contador de views**: Acompanhe a popularidade
-- ❤️ **Favoritos**: Salve suas histórias preferidas
-- 📖 **Leitor imersivo**: Experiência de leitura otimizada
-
-### 2. Gêneros & Temas Diversificados
-- 📚 **12+ gêneros**: Romance, Erotica, Drama, Comédia, Suspense, Fantasy, Sci-Fi, e mais
-- 🏷️ **100+ temas**: Tags específicas para categorização precisa
-- 🔍 **Filtragem avançada**: Encontre exatamente o que procura
-
-### 3. Comunidade Interativa
-- 💬 **Comentários**: Discuta histórias com outros usuários
-- 👥 **Seguidores**: Siga seus autores favoritos
-- 🎭 **Perfis de autor**: Descubra novos criadores
-- 🔥 **Trending**: Acompanhe o que está em alta
-
-### 4. Age Gate Premium (18+)
-- 🎬 **Animações sofisticadas**: Floating hearts, glow effects
-- 🔒 **Verificação segura**: Persistência via localStorage
-- ♿ **Acessível**: Suporte completo a teclado e screen readers
-- 🎨 **Design premium**: Experiência visual única na entrada
-
-### 5. Progressive Web App (PWA)
-- 📲 **Instalável**: Adicione à tela inicial como app nativo
-- 🔄 **Offline-ready**: Service Worker para cache inteligente
-- ⚡ **Performance**: Carregamento rápido e responsivo
-- 🔔 **Notificações**: Pronto para push notifications
-
-### 6. Multi-idioma (i18n)
-- 🇧🇷 Português (Brasil) - PT-BR
-- 🇺🇸 English (US) - EN-US  
-- 🇪🇸 Español - ES
-- 🇫🇷 Français - FR
-- 🇩🇪 Deutsch - DE
-- ➕ Mais idiomas em breve
-
-### 7. Dark Theme Premium
-- 🌙 **Purple Velvet Theme**: Estética escura e sofisticada
-- 🎨 **Design tokens customizados**: Cores únicas da marca
-- ☀️ **Toggle suave**: Transição perfeita entre temas
-- 👁️ **Comfort visual**: Otimizado para longas sessões de leitura
-
-### 8. SEO Otimizado
-- 🏷️ **Meta tags completas**: Title, description, keywords
-- 📱 **Open Graph**: Preview perfeito em redes sociais
-- 🐦 **Twitter Cards**: Compartilhamento otimizado
-- 🗺️ **Sitemap dinâmico**: Indexação eficiente
-- 🤖 **Robots.txt configurado**: Controle de crawling
-- 🔗 **Canonical URLs**: Evita conteúdo duplicado
-
-### 9. Design Responsivo
-- 📱 **Mobile-first**: Otimizado para smartphones
-- 💻 **Desktop perfeito**: Experiência completa em telas grandes
-- 📐 **Breakpoints inteligentes**: 375px, 768px, 1024px, 1440px
-- 👆 **Touch-friendly**: Mínimo de 44px para elementos interativos
-
----
-
-## 🛠 Tech Stack
-
-| Tecnologia | Versão | Propósito |
-|------------|--------|-----------|
-| **Next.js** | 16 (App Router) | Framework React full-stack |
-| **TypeScript** | 5 | Tipagem estática |
-| **Tailwind CSS** | 4 | Estilização utility-first |
-| **shadcn/ui** | Latest | Componentes UI premium |
-| **Prisma ORM** | Latest | Banco de dados e ORM |
-| **SQLite** | 3 | Banco de dados local |
-| **Lucide Icons** | Latest | Ícones consistentes |
-| **next-themes** | Latest | Dark/Light mode |
-| **z-ai-web-dev-sdk** | Latest | Geração de imagens IA |
-| **Zustand** | Latest | State management client |
-| **TanStack Query** | Latest | State management server |
-
----
-
-## 📁 Estrutura do Projeto
-
-```
-src/
-├── app/                          # Páginas (App Router)
-│   ├── page.tsx                 # Homepage principal
-│   ├── layout.tsx               # Layout raiz com providers
-│   ├── globals.css              # Estilos globais e tokens
-│   ├── story/
-│   │   └── [id]/
-│   │       └── page.tsx         # Detalhe da história
-│   ├── genres/
-│   │   └── page.tsx             # Página de gêneros
-│   ├── themes/
-│   │   └── page.tsx             # Página de temas
-│   ├── authors/
-│   │   └── page.tsx             # Lista de autores
-│   ├── search/
-│   │   └── page.tsx             # Busca avançada
-│   └── api/                     # API routes
-│       ├── stories/             # CRUD de histórias
-│       ├── genres/              # API de gêneros
-│       ├── themes/              # API de temas
-│       └── authors/             # API de autores
+facelove/
+├── public/                      # Static assets
+│   ├── icons/                   # PWA icons (SVG format)
+│   │   ├── icon-72x72.svg
+│   │   ├── icon-192x192.svg
+│   │   ├── icon-512x512.svg
+│   │   └── ... (all sizes)
+│   ├── images/
+│   │   ├── hero/
+│   │   │   └── main-hero.png    # Hero background image
+│   │   ├── stories/
+│   │   │   ├── story-placeholder-1.png
+│   │   │   ├── story-placeholder-2.png
+│   │   │   ├── story-placeholder-3.png
+│   │   │   └── story-placeholder-4.png
+│   │   └── og-image.png         # OpenGraph social sharing image
+│   ├── manifest.json            # PWA manifest
+│   ├── sw.js                    # Service worker
+│   ├── logo.svg                 # SVG logo
+│   └── logo-facelove.png        # PNG logo
 │
-├── components/
-│   ├── ui/                      # shadcn/ui base components
-│   │   ├── button.tsx
-│   │   ├── card.tsx
-│   │   ├── dialog.tsx
-│   │   ├── input.tsx
+├── src/
+│   ├── app/                     # Next.js App Router pages
+│   │   ├── layout.tsx           # Root layout with metadata
+│   │   ├── page.tsx             # Homepage
+│   │   ├── globals.css          # Global styles & design tokens
+│   │   ├── sitemap.ts           # Dynamic sitemap generation
+│   │   ├── robots.ts            # Robots.txt configuration
+│   │   ├── offline/page.tsx     # Offline fallback page
+│   │   ├── story/[id]/page.tsx  # Individual story page
+│   │   ├── stories/page.tsx     # Stories listing
+│   │   ├── genres/page.tsx      # Genres listing
+│   │   ├── genres/[slug]/page.tsx # Genre detail page
+│   │   ├── themes/page.tsx      # Themes listing
+│   │   ├── themes/[slug]/page.tsx # Theme detail page
+│   │   ├── authors/page.tsx     # Authors listing
+│   │   ├── authors/[slug]/page.tsx # Author profile page
+│   │   ├── search/page.tsx      # Search page
+│   │   ├── favorites/page.tsx   # User favorites
+│   │   └── api/                 # API routes
+│   │       ├── route.ts         # Health check
+│   │       ├── stories/route.ts # Stories CRUD
+│   │       ├── genres/route.ts  # Genres CRUD
+│   │       ├── themes/route.ts  # Themes CRUD
+│   │       ├── authors/route.ts # Authors CRUD
+│   │       ├── search/route.ts  # Search endpoint
+│   │       └── newsletter/route.ts # Newsletter signup
+│   │
+│   ├── components/              # React components
+│   │   ├── ui/                  # shadcn/ui base components
+│   │   │   ├── button.tsx
+│   │   │   ├── card.tsx
+│   │   │   ├── dialog.tsx
+│   │   │   └── ... (50+ components)
+│   │   ├── age-gate.tsx         # 18+ age verification
+│   │   ├── hero-section.tsx     # Cinematic hero banner
+│   │   ├── header.tsx           # Navigation header
+│   │   ├── footer.tsx           # Site footer
+│   │   ├── story-card.tsx       # Story card component
+│   │   ├── genre-card.tsx       # Genre card component
+│   │   ├── platform-stats.tsx   # Statistics display
+│   │   ├── explore-cards.tsx    # Category navigation cards
+│   │   ├── trending-stories.tsx # Trending stories list
+│   │   ├── value-props.tsx      # Trust badges section
+│   │   ├── pwa-install-prompt.tsx    # PWA install UI
+│   │   ├── pwa-register-sw.tsx        # Service worker registration
+│   │   ├── facelove-logo.tsx    # Brand logo component
+│   │   ├── language-selector.tsx # Language switcher
+│   │   ├── search-bar.tsx       # Search input component
+│   │   ├── theme-badge.tsx      # Theme tag badge
+│   │   ├── bookmark-button.tsx  # Bookmark action
+│   │   ├── favorite-button.tsx  # Favorite action
+│   │   ├── reading-progress.tsx # Progress indicator
+│   │   ├── reading-timer.tsx    # Reading time tracker
+│   │   ├── story-comments.tsx   # Comments section
+│   │   ├── achievements.tsx     # User achievements
 │   │   └── ...
 │   │
-│   ├── hero-section.tsx         # Hero banner principal
-│   ├── age-gate.tsx             # Validador 18+ animado
-│   ├── header.tsx               # Navegação principal
-│   ├── footer.tsx               # Rodapé do site
-│   ├── story-card.tsx           # Card de história
-│   ├── trending-stories.tsx     # Stories em destaque
-│   ├── platform-stats.tsx       # Estatísticas da plataforma
-│   ├── explore-cards.tsx        # Cards de exploração
-│   ├── value-props.tsx          # Propostas de valor
-│   ├── pwa-install-prompt.tsx   # Prompt de instalação PWA
-│   ├── theme-provider.tsx       # Provider de tema
-│   └── language-switcher.tsx    # Seletor de idioma
+│   ├── hooks/                   # Custom React hooks
+│   │   ├── use-mobile.ts        # Mobile detection hook
+│   │   └── use-toast.ts         # Toast notification hook
+│   │
+│   ├── lib/                     # Utilities & configurations
+│   │   ├── db.ts                # Prisma client instance
+│   │   ├── utils.ts             # General utilities (cn function)
+│   │   ├── i18n/                # Internationalization system
+│   │   │   ├── index.ts
+│   │   │   ├── I18nProvider.tsx
+│   │   │   ├── locales.ts
+│   │   │   └── locales/
+│   │   │       ├── pt-BR.ts
+│   │   │       ├── en-US.ts
+│   │   │       └── es.ts
+│   │   ├── favorites.ts         # Favorites management
+│   │   ├── bookmarks.ts         # Bookmarks management
+│   │   ├── recently-viewed.ts   # Reading history
+│   │   ├── notifications.ts     # Notification helpers
+│   │   └── reading-stats.ts     # Reading statistics
+│   │
+│   └── middleware.ts            # Next.js middleware (optional)
 │
-├── lib/
-│   ├── db.ts                    # Prisma client singleton
-│   ├── utils.ts                 # Utilitários gerais
-│   └── i18n/                    # Internacionalização
-│       ├── index.ts             # Configuração i18n
-│       ├── pt-BR.json           # Traduções PT-BR
-│       ├── en-US.json           # Traduções EN-US
-│       └── ...
+├── prisma/
+│   └── schema.prisma            # Database schema definition
 │
-├── hooks/                       # Custom React hooks
-│   ├── use-age-verified.ts      # Hook age gate
-│   └── use-stories.ts           # Hook stories data
+├── mini-services/               # Independent services
+│   └── (socket.io services)
 │
-└── types/                       # TypeScript types
-    ├── story.ts                 # Types de story
-    ├── genre.ts                 # Types de genre
-    └── index.ts                 # Types exportados
-
-public/
-├── images/                      # Imagens otimizadas
-│   ├── hero/                    # Hero backgrounds
-│   ├── genres/                  # Capas de gêneros
-│   └── stories/                 # Capas de histórias
-├── icons/                       # Ícones PWA
-│   ├── icon-72x72.png
-│   ├── icon-96x96.png
-│   ├── icon-128x128.png
-│   ├── icon-144x144.png
-│   ├── icon-152x152.png
-│   ├── icon-192x192.png
-│   ├── icon-384x384.png
-│   └── icon-512x512.png
-├── manifest.json                # PWA manifest
-├── sw.js                        # Service Worker
-└── robots.txt                   # SEO robots
+├── docs/                        # Documentation (optional)
+├── tests/                       # Test files (ready)
+├── package.json
+├── tsconfig.json
+├── tailwind.config.ts
+├── next.config.ts
+├── bun.lockb
+└── README.md                    # This file
 ```
 
 ---
 
-## 🚀 Instalação e Setup
+## Getting Started
 
-### Pré-requisitos
+### Prerequisites
 
-Certifique-se de ter as seguintes ferramentas instaladas:
+- **Bun** >= 1.0.0 ([Installation guide](https://bun.sh/docs/installation))
+- **Node.js** >= 20 LTS (for compatibility)
 
-- **Node.js** 18 ou superior ([Download](https://nodejs.org/))
-- **Bun** ou **npm** ([Bun](https://bun.sh/) recomendado)
-- **SQLite3** (geralmente incluído com o sistema operacional)
-
-### Passos de Instalação
+### Installation
 
 ```bash
-# 1. Clonar o repositório
+# Clone the repository
 git clone https://github.com/consorcioalfa7/facelove.git
-
-# 2. Entrar no diretório do projeto
 cd facelove
 
-# 3. Instalar dependências
+# Install dependencies
 bun install
 
-# 4. Configurar variáveis de ambiente (ver seção abaixo)
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your configuration
 
-# 5. Inicializar o banco de dados
+# Initialize database
 bun run db:push
 
-# 6. Rodar o servidor de desenvolvimento
-bun run dev
+# Seed database with sample data (optional)
+bun run db:seed
 
-# 7. Acesse http://localhost:3000
+# Start development server
+bun run dev
 ```
 
-### Scripts Disponíveis
+The application will be available at `http://localhost:3000`
 
-| Script | Descrição |
-|--------|-----------|
-| `bun run dev` | Servidor de desenvolvimento (hot reload) |
-| `bun run build` | Build de produção |
-| `bun run start` | Iniciar servidor de produção |
-| `bun run lint` | Executar ESLint |
-| `bun run db:push` | Push schema para o banco |
-| `bun run db:studio` | Abrir Prisma Studio |
-
----
-
-## 🔧 Configuração
-
-### Variáveis de Ambiente
-
-Crie um arquivo `.env.local` na raiz do projeto:
+### Environment Variables
 
 ```env
 # Database
 DATABASE_URL="file:./dev.db"
 
-# Opcional: Configurações futuras
-# NEXTAUTH_URL="http://localhost:3000"
-# NEXTAUTH_SECRET="your-secret-key"
+# Authentication (NextAuth) - Optional
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-secret-key-here"
+
+# External APIs - Optional
+IPAPI_KEY=""  # For country detection
 ```
 
-### Configuração PWA
+---
 
-O FaceLove é um Progressive Web App totalmente instalável:
+## Development Guide
 
-- **Manifest**: `/public/manifest.json` - Configurações do app
-- **Service Worker**: `/public/sw.js` - Cache e offline support
-- **Ícones**: `/public/icons/` - Todos os tamanhos necessários
+### Available Scripts
 
-#### Manifest Configuration
+```bash
+# Development
+bun run dev          # Start development server with hot reload
+bun run build        # Create production build
+bun run start        # Start production server
+bun run lint         # Run ESLint checks
 
-```json
-{
-  "name": "FaceLove - Histórias & Conexões",
-  "short_name": "FaceLove",
-  "description": "Plataforma premium de storytelling",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#0a0a0f",
-  "theme_color": "#ec4899",
-  "orientation": "portrait-primary"
+# Database
+bun run db:push      # Push schema changes to database
+bun run db:studio    # Open Prisma Studio GUI
+bun run db:seed      # Seed database with sample data
+bun run db:reset     # Reset database to empty state
+```
+
+### Code Style Guidelines
+
+1. **TypeScript Strict**: All files must have proper types
+2. **Components**: Use functional components with hooks
+3. **Naming**: 
+   - Components: PascalCase (`HeroSection.tsx`)
+   - Files: kebab-case (`hero-section.tsx`)
+   - Utils: camelCase (`formatDate()`)
+4. **Imports**: Use path aliases (`@/components/...`)
+5. **CSS**: Use Tailwind classes, custom properties for theming
+
+### Component Architecture
+
+```tsx
+// Example component structure
+"use client"; // Add for interactive components
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+
+interface ComponentProps {
+  /** Prop description */
+  title: string;
+}
+
+export function Component({ title }: ComponentProps) {
+  return (
+    <div className="container">
+      <h1>{title}</h1>
+    </div>
+  );
 }
 ```
 
 ---
 
-## 🎨 Design System
+## Design System
 
-### FaceLove Design Tokens
+### Color Palette (CSS Custom Properties)
 
-O FaceLove utiliza um sistema de design único chamado **"Purple Velvet"**, inspirado em luxo e sofisticação:
+The FaceLove design system uses CSS custom properties prefixed with `--fl-*`:
 
 ```css
-/* === Core Colors === */
---fl-background: #0a0a0f;         /* Quase preto - fundo principal */
---fl-surface: #12121a;            /* Superfície elevada */
---fl-surface-elevated: #1a1a2e;   /* Superfície mais elevada */
+/* Core Colors */
+--fl-background: #0a0a0f;        /* Near-black with purple undertone */
+--fl-surface: #12121a;           /* Elevated surfaces */
+--fl-surface-elevated: #1a1a24; /* Higher elevation */
+--fl-primary: #9333ea;           /* Purple primary */
+--fl-secondary: #ec4899;         /* Pink secondary */
+--fl-accent: #f472b6;            /* Light pink accent */
 
-/* === Brand Colors === */
---fl-primary: #ec4899;            /* Rosa/Magenta - cor primária */
---fl-secondary: #9333ea;          /* Roxo vibrante - secundária */
---fl-accent: #f472b6;             /* Pink - destaques */
+/* Text Colors */
+--fl-text-primary: #ffffff;
+--fl-text-secondary: #a1a1aa;
+--fl-text-muted: #71717a;
+--fl-text-disabled: #52525b;
 
-/* === Text Colors === */
---fl-text-primary: #ffffff;       /* Texto principal */
---fl-text-secondary: #a1a1aa;     /* Texto secundário */
---fl-text-muted: #71717a;         /* Texto sutil */
-
-/* === Effects === */
---fl-glow: rgba(236, 72, 153, 0.4);      /* Efeito brilho rosa */
---fl-glow-purple: rgba(147, 51, 234, 0.4); /* Efeito brilho roxo */
---fl-shadow-glow: 0 0 30px rgba(236, 72, 153, 0.3);
-
-/* === Gradients === */
---fl-gradient-primary: linear-gradient(135deg, #ec4899, #9333ea);
---fl-gradient-accent: linear-gradient(135deg, #f472b6, #ec4899);
---fl-gradient-dark: linear-gradient(180deg, #0a0a0f, #12121a);
+/* Effects */
+--fl-glow-purple: rgba(147, 51, 234, 0.3);
+--fl-glow-pink: rgba(236, 72, 153, 0.25);
+--fl-shadow-glow: 0 0 30px rgba(147, 51, 234, 0.2);
 ```
 
-### Componentes Premium
+### Utility Classes
 
-Todos os componentes seguem princípios de design de alta qualidade:
-
-#### Glass Morphism
 ```css
+/* Glass morphism effect */
 .glass {
-  background: rgba(18, 18, 26, 0.7);
+  background: rgba(18, 18, 26, 0.8);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
-```
 
-#### Glow Effects
-```css
-.glow {
-  box-shadow: 
-    0 0 20px rgba(236, 72, 153, 0.3),
-    0 0 40px rgba(236, 72, 153, 0.2),
-    0 0 60px rgba(236, 72, 153, 0.1);
+.glass-card {
+  @apply glass rounded-2xl p-6;
 }
-```
 
-#### Gradient Text
-```css
+/* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #ec4899, #f472b6, #9333ea);
+  background: linear-gradient(135deg, var(--fl-primary), var(--fl-secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 ```
 
-#### Smooth Animations
-```css
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
+### Animation Library
 
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-```
+| Class | Duration | Effect |
+|-------|----------|--------|
+| `animate-fade-in-up` | 600ms | Fade in with upward movement |
+| `animate-pulse-glow` | 2s | Soft pulsing glow |
+| `animate-shimmer` | 2s | Shimmer sweep effect |
+| `animate-float` | 6s | Gentle floating motion |
+| `animate-logo-pulse` | 3s | Logo glow pulse |
 
 ---
 
-## 📱 PWA & Responsividade
+## PWA Configuration
 
-### Breakpoints
+### Manifest Details
 
-| Breakpoint | Largura | Dispositivo |
-|------------|---------|-------------|
-| `sm` | ≥640px | Smartphones grandes |
-| `md` | ≥768px | Tablets |
-| `lg` | ≥1024px | Laptops |
-| `xl` | ≥1280px | Desktops |
-| `2xl` | ≥1536px | Telas grandes |
+The PWA manifest is configured at `/public/manifest.json`:
 
-### Mobile-First Principles
+```json
+{
+  "name": "FaceLove",
+  "short_name": "FaceLove",
+  "description": "Histórias reais. Conexões que ficam.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0f",
+  "theme_color": "#ec4899",
+  "orientation": "portrait-primary",
+  "categories": ["social", "entertainment", "lifestyle"]
+}
+```
 
-- **Touch targets**: Mínimo 44px x 44px para elementos clicáveis
-- **Thumb zones**: Áreas importantes na zona fácil de alcance
-- **Font sizes**: Mínimo 16px para evitar zoom no iOS
-- **Navigation**: Bottom nav em mobile, sidebar em desktop
-- **Gestures**: Swipe, pinch-to-zoom onde aplicável
+### Service Worker Strategies
+
+| Resource Type | Strategy | Cache Duration |
+|---------------|----------|----------------|
+| Static Assets (JS/CSS) | Cache-First | 30 days |
+| Images | Stale-While-Revalidate | 7 days |
+| API Calls | Network-First | 5 minutes |
+| Navigation | Network-First with Fallback | - |
 
 ### Install Prompt
 
-O prompt de instalação PWA é customizado e não intrusivo:
-
-- Aparece após 30 segundos de uso
-- Pode ser dispensado pelo usuário
-- Reaparece após 7 dias se dispensado
-- Design consistente com o tema Purple Velvet
-
----
-
-## 🔒 Age Gate (18+)
-
-O Age Gate é um componente crítico do FaceLove, garantindo conformidade legal:
-
-### Funcionalidades
-
-- ✅ Verificação obrigatória na primeira visita
-- ✅ Persistência via localStorage
-- ✅ Animações premium (floating hearts, particles)
-- ✅ Suporte total a acessibilidade
-- ✅ Redirecionamento se menor de idade
-
-### Implementação Técnica
-
-```typescript
-// Hook useAgeVerified
-const [isVerified, setIsVerified] = useState<boolean | null>(null);
-
-useEffect(() => {
-  const verified = localStorage.getItem('age-verified');
-  setIsVerified(verified === 'true');
-}, []);
-
-const verifyAge = () => {
-  localStorage.setItem('age-verified', 'true');
-  setIsVerified(true);
-};
-```
-
-### Acessibilidade
-
-- Teclado: Enter/Space para confirmar
-- Screen readers: ARIA labels completos
-- Focus trap dentro do modal
-- Escape key fecha (se permitido)
+The custom install prompt:
+- Detects installability via `beforeinstallprompt`
+- Shows after 3-second delay on first visit
+- Respects dismissal for 7 sessions
+- Provides iOS installation instructions
 
 ---
 
-## 🌐 SEO & Metadados
+## SEO Optimization
 
-### Open Graph Configuration
+### Metadata Configuration
+
+Located in `src/app/layout.tsx`:
 
 ```typescript
-// app/layout.tsx
 export const metadata: Metadata = {
-  title: 'FaceLove - Histórias Reais, Conexões Que Ficam',
-  description: 'Plataforma premium de storytelling e comunidade...',
-  openGraph: {
-    title: 'FaceLove 🩷',
-    description: 'Histórias reais. Conexões que ficam.',
-    url: 'https://facelove.app',
-    siteName: 'FaceLove',
-    images: [{ url: '/images/og-image.png', width: 1200, height: 630 }],
-    locale: 'pt_BR',
-    type: 'website',
+  title: {
+    default: "FaceLove - Histórias Reais. Conexões que Ficam.",
+    template: "%s | FaceLove",
   },
+  description: "Plataforma premium de storytelling para adultos...",
+  
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    siteName: "FaceLove",
+    images: [{ url: "/images/og-image.png", width: 1200, height: 630 }],
+  },
+  
   twitter: {
-    card: 'summary_large_image',
-    title: 'FaceLove 🩷',
-    description: 'Histórias reais. Conexões que ficam.',
-    images: ['/images/twitter-card.png'],
+    card: "summary_large_image",
+    creator: "@darktoolslabs",
   },
 };
 ```
 
-### Sitemap Dinâmico
+### Structured Data (JSON-LD)
 
-```typescript
-// app/sitemap.ts
-export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    { url: 'https://facelove.app', lastModified: new Date() },
-    { url: 'https://facelove.app/stories', lastModified: new Date() },
-    { url: 'https://facelove.app/genres', lastModified: new Date() },
-    // ... mais URLs
-  ];
+Homepage includes comprehensive schema.org markup:
+
+- **WebSite** with SearchAction
+- **Organization** details
+- **CreativeWork** for featured story
+- **ItemList** for trending stories
+- **WebPage** with audience targeting
+
+### Sitemap & Robots
+
+- Dynamic sitemap at `/sitemap.xml` with hreflang support
+- Configured robots.txt allowing all crawlers
+- Proper canonical URLs set
+
+---
+
+## Internationalization (i18n)
+
+### Supported Languages
+
+| Code | Language |
+|------|----------|
+| pt-BR | Portuguese (Brazil) - Default |
+| en-US | English (US) |
+| es | Spanish |
+| fr | French |
+| de | German |
+| it | Italian |
+| zh-CN | Chinese Simplified |
+| ja | Japanese |
+| ko | Korean |
+| ar | Arabic |
+| ru | Russian |
+| hi | Hindi |
+| pt-PT | Portuguese (Portugal) |
+| en-GB | English (UK) |
+
+### Usage
+
+```tsx
+import { useI18n } from "@/lib/i18n/I18nProvider";
+
+function MyComponent() {
+  const { t, locale, setLocale } = useI18n();
+  
+  return (
+    <h1>{t('welcome.title')}</h1>
+  );
 }
 ```
 
 ---
 
-## 📊 Database Schema (Prisma)
+## Database Schema
 
-### Modelos Principais
+### Entity Relationship Diagram
+
+```
+Author (1) ----< (N) Story >---- (N) Theme
+                        |
+                       (N) Genre
+                        |
+               (N) StoryTheme >---- (N) Theme
+```
+
+### Key Models
 
 ```prisma
-// prisma/schema.prisma
-
 model Author {
-  id          String   @id @default(cuid())
-  name        String
-  username    String   @unique
-  bio         String?
-  avatar      String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  stories     Story[]
-}
-
-model Genre {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  slug        String   @unique
-  description String?
-  icon        String?
-  color       String?
-  createdAt   DateTime @default(now())
-  
-  stories     Story[]
-}
-
-model Theme {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  slug        String   @unique
-  createdAt   DateTime @default(now())
-  
-  stories     StoryTheme[]
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  bio       String?
+  avatar    String?
+  stories   Story[]
+  createdAt DateTime @default(now())
 }
 
 model Story {
   id          String   @id @default(cuid())
   title       String
   slug        String   @unique
-  synopsis    String
   content     String   @db.Text
-  coverImage  String?
-  
+  synopsis    String?
   authorId    String
   author      Author   @relation(fields: [authorId], references: [id])
   genreId     String
   genre       Genre    @relation(fields: [genreId], references: [id])
-  
-  views       Int      @default(0)
   rating      Float    @default(0)
-  isPublished Boolean  @default(false)
-  isFeatured  Boolean  @default(false)
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
+  readsCount  Int      @default(0)
+  publishedAt DateTime?
   themes      StoryTheme[]
-  comments    Comment[]
-  favorites   Favorite[]
+  createdAt   DateTime @default(now())
+}
+
+model Genre {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  sortOrder   Int      @default(0)
+  stories     Story[]
+}
+
+model Theme {
+  id         String   @id @default(cuid())
+  name       String
+  slug       String   @unique
+  storyCount Int      @default(0)
+  stories    StoryTheme[]
 }
 
 model StoryTheme {
-  id      String @id @default(cuid())
   storyId String
-  themeId String
-  
-  story   Story @relation(fields: [storyId], references: [id])
-  theme   Theme @relation(fields: [themeId], references: [id])
-  
-  @@unique([storyId, themeId])
-}
-
-model Comment {
-  id        String   @id @default(cuid())
-  content   String
-  authorName String
-  
-  storyId   String
-  story     Story    @relation(fields: [storyId], references: [id])
-  
-  createdAt DateTime @default(now())
-}
-
-model Favorite {
-  id      String @id @default(cuid())
-  storyId String
-  story   Story  @relation(fields: [storyId], references: [id])
-  
-  @@unique([storyId])
-}
-
-// Preparado para futura implementação
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  image     String?
-  createdAt DateTime @default(now())
+  themeId  String
+  story   Story   @relation(fields: [storyId], references: [id])
+  theme   Theme   @relation(fields: [themeId], references: [id])
+  @@id([storyId, themeId])
 }
 ```
 
 ---
 
-## 🔮 Roadmap Futuro
+## API Endpoints
 
-### Q1 2025
-- [ ] Integração com Supabase (Auth + Realtime)
-- [ ] Sistema de autenticação completo (NextAuth.js)
-- [ ] Perfil de usuário personalizado
+### Base URL: `/api`
 
-### Q2 2025
-- [ ] Chat/comunidade em tempo real (WebSocket)
-- [ ] Sistema de notificações push
-- [ ] Upload de histórias por usuários
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api` | Health check |
+| GET | `/api/stories` | List all stories |
+| GET | `/api/stories/:id` | Get single story |
+| GET | `/api/genres` | List all genres |
+| GET | `/api/genres/:slug` | Get genre by slug |
+| GET | `/api/themes` | List all themes |
+| GET | `/api/themes/:slug` | Get theme by slug |
+| GET | `/api/authors` | List all authors |
+| GET | `/api/authors/:slug` | Get author by slug |
+| GET | `/api/search?q=` | Search stories |
+| POST | `/api/newsletter` | Subscribe to newsletter |
 
-### Q3 2025
-- [ ] IA para recomendações personalizadas
-- [ ] Busca semântica (pgvector)
-- [ ] Sistema de assinatura/Premium
+### Response Format
 
-### Q4 2025
-- [ ] App nativo (React Native / Capacitor)
-- [ ] Marketplace de autores
-- [ ] Eventos e lives
+```json
+{
+  "success": true,
+  "data": [],
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 100
+  }
+}
+```
 
 ---
 
-## 👥 Contribuição
+## Deployment
 
-Quer contribuir com o FaceLove? Siga os passos abaixo:
+### Vercel (Recommended)
 
-### Como Contribuir
+```bash
+# Install Vercel CLI
+npm i -g vercel
 
-1. **Fork** o repositório
-2. Crie uma branch para sua feature:
-   ```bash
-   git checkout -b feature/AmazingFeature
-   ```
-3. Faça commit das suas mudanças:
-   ```bash
-   git commit -m 'Add amazing feature'
-   ```
-4. Push para a branch:
-   ```bash
-   git push origin feature/AmazingFeature
-   ```
-5. Abra um **Pull Request**
+# Deploy
+vercel --prod
+```
 
-### Código de Conduta
+Environment variables to configure in Vercel dashboard:
+- `DATABASE_URL` (use Vercel Postgres or external DB)
+- `NEXTAUTH_SECRET`
+- `NEXTAUTH_URL`
 
-- Respeite todos os contribuidores
-- Mantenha o código limpo e documentado
-- Siga os padrões de código existentes
-- Teste suas alterações antes de submeter
+### Docker
 
-### Convenções de Commit
+```dockerfile
+FROM node:20-alpine AS base
 
-- `feat:` Nova funcionalidade
+FROM base AS deps
+WORKDIR /app
+COPY package.json bun.lockb ./
+RUN npm install -g bun && bun install --frozen-lockfile
+
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN bun run build
+
+FROM base AS runner
+WORKDIR /app
+ENV NODE_ENV production
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
+EXPOSE 3000
+CMD ["node", "server.js"]
+```
+
+### Build & Run
+
+```bash
+docker build -t facelove .
+docker run -p 3000:3000 facelove
+```
+
+---
+
+## Contributing
+
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Make your changes
+4. Run linting: `bun run lint`
+5. Commit your changes: `git commit -m 'Add amazing feature'`
+6. Push to branch: `git push origin feature/amazing-feature`
+7. Open a Pull Request
+
+### Commit Message Convention
+
+- `feat:` New feature
 - `fix:` Bug fix
-- `docs:` Documentação
-- `style:` Formatação, ponto e vírgula, etc.
-- `refactor:` Refatoração de código
-- `test:` Adicionar testes
-- `chore:` Tarefas de manutenção
+- `docs:` Documentation changes
+- `style:` Code style changes (formatting)
+- `refactor:` Code refactoring
+- `test:` Adding tests
+- `chore:` Maintenance tasks
 
 ---
 
-## 📄 Licença
+## License
 
-Este projeto está sob a licença **MIT License**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
-```
-MIT License
-
-Copyright (c) 2024 DarkToolsLabs
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-```
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 👨‍💻 Autor
+## Acknowledgments
+
+- **[Next.js](https://nextjs.org/)** - The React framework
+- **[shadcn/ui](https://ui.shadcn.com/)** - Beautiful component library
+- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
+- **[Prisma](https://www.prisma.io/)** - Next-generation ORM
+- **[Lucide](https://lucide.dev/)** - Beautiful icons
+
+---
+
+## Contact
+
+- **GitHub**: [consorcioalfa7/facelove](https://github.com/consorcioalfa7/facelove)
+- **Creator**: [@DarkToolsLabs](https://github.com/DarkToolsLabs)
+
+---
 
 <div align="center">
 
-**DarkToolsLabs**
+**Built with ❤️ by DarkToolsLabs**
 
-| Plataforma | Link |
-|------------|------|
-| GitHub | [@consorcioalfa7](https://github.com/consorcioalfa7) |
-| Projeto | [FaceLove](https://github.com/consorcioalfa7/facelove) |
+*Histórias reais. Conexões que ficam.*
 
 </div>
-
----
-
-## 🙏 Agradecimentos
-
-Agradecemos a todas as tecnologias e comunidades que tornam este projeto possível:
-
-- **[Next.js](https://nextjs.org/)** - Framework React incrível
-- **[shadcn/ui](https://ui.shadcn.com/)** - Componentes beautiful e acessíveis
-- **[Lucide](https://lucide.dev/)** - Ícones elegantes e consistentes
-- **[Vercel](https://vercel.com/)** - Hosting e infraestrutura
-- **[Prisma](https://www.prisma.io/)** - ORM moderno e type-safe
-- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
-
----
-
-## 📞 Contato
-
-Tem dúvidas, sugestões ou quer conversar?
-
-- Abra uma **Issue** no GitHub
-- Faça um **Pull Request** com melhorias
-- Entre em contato através do perfil do GitHub
-
----
-
-<p align="center">
-  Feito com ❤️ e muito ☕ por <strong>DarkToolsLabs</strong>
-</p>
-
-<p align="center">
-  <sub><em>"Histórias reais. Conexões que ficam."</em></sub>
-</p>

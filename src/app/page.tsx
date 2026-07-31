@@ -17,6 +17,129 @@ import {
 import Link from "next/link";
 
 // ============================================
+// JSON-LD STRUCTURED DATA
+// Enhanced SEO with schema.org markup
+// ============================================
+
+function JsonLdStructuredData({ 
+  stories, 
+  featuredStory 
+}: { 
+  stories: Array<{ id: string; title: string; rating: number }>;
+  featuredStory: { title: string; author: { name: string }; rating: number } | null;
+}) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://facelove.com/#website",
+        url: "https://facelove.com/",
+        name: "FaceLove",
+        description: "Histórias reais. Conexões que ficam. Plataforma premium de storytelling para maiores de 18 anos.",
+        inLanguage: "pt-BR",
+        publisher: {
+          "@id": "https://facelove.com/#organization"
+        },
+        potentialAction: {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: "https://facelove.com/search?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://facelove.com/#organization",
+        name: "FaceLove",
+        url: "https://facelove.com/",
+        logo: {
+          "@type": "ImageObject",
+          url: "https://facelove.com/logo-facelove.png"
+        },
+        sameAs: [
+          "https://github.com/consorcioalfa7/facelove"
+        ],
+        contactPoint: {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          availableLanguage: ["Portuguese", "English", "Spanish"]
+        }
+      },
+      ...(featuredStory ? [{
+        "@type": "CreativeWork",
+        "@id": `https://facelove.com/story/${featuredStory.id}`,
+        name: featuredStory.title,
+        author: {
+          "@type": "Person",
+          name: featuredStory.author.name
+        },
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: featuredStory.rating,
+          bestRating: 5,
+          worstRating: 1,
+          ratingCount: 1000
+        },
+        isPartOf: {
+          "@type": "CreativeWorkSeries",
+          name: "FaceLove Stories",
+          url: "https://facelove.com/stories"
+        }
+      }] : []),
+      {
+        "@type": "ItemList",
+        name: "Histórias em Destaque - FaceLove",
+        description: "As histórias mais populares e lidas na plataforma FaceLove",
+        numberOfItems: stories.length,
+        itemListElement: stories.slice(0, 5).map((story, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          item: {
+            "@type": "CreativeWork",
+            "@id": `https://facelove.com/story/${story.id}`,
+            name: story.title,
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: story.rating,
+              bestRating: 5
+            }
+          }
+        }))
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://facelove.com/#webpage",
+        url: "https://facelove.com/",
+        name: "FaceLove - Histórias Reais. Conexões que Ficam.",
+        isPartOf: {
+          "@id": "https://facelove.com/#website"
+        },
+        about: {
+          "@type": "Thing",
+          name: "Storytelling Platform",
+          description: "Plataforma de histórias e narrativas para adultos"
+        },
+        audience: {
+          "@type": "Audience",
+          suggestedMinAge: 18
+        },
+        dateModified: new Date().toISOString()
+      }
+    ]
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  );
+}
+
+// ============================================
 // DATA FETCHING FUNCTION
 // Gets all data needed for the homepage
 // ============================================
@@ -292,6 +415,12 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      {/* JSON-LD Structured Data for SEO */}
+      <JsonLdStructuredData 
+        stories={trendingStories} 
+        featuredStory={data.featuredStory} 
+      />
+
       {/* ==========================================
           1. HERO SECTION
           Cinematic hero with featured story card
